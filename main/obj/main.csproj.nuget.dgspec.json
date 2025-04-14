@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/camillevignes/Library/Mobile Documents/com~apple~CloudDocs/ENSemenC/projet-ensemenc-tonon_vignes/main/main.csproj": {}
+    "C:\\Users\\Tonon\\OneDrive\\Documents\\ENSC\\1A ENSC\\Semestre 6\\POO\\Projet\\ensemenc\\projet-ensemenc-tonon_vignes\\main\\main.csproj": {}
   },
   "projects": {
-    "/Users/camillevignes/Library/Mobile Documents/com~apple~CloudDocs/ENSemenC/projet-ensemenc-tonon_vignes/main/main.csproj": {
+    "C:\\Users\\Tonon\\OneDrive\\Documents\\ENSC\\1A ENSC\\Semestre 6\\POO\\Projet\\ensemenc\\projet-ensemenc-tonon_vignes\\main\\main.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/camillevignes/Library/Mobile Documents/com~apple~CloudDocs/ENSemenC/projet-ensemenc-tonon_vignes/main/main.csproj",
+        "projectUniqueName": "C:\\Users\\Tonon\\OneDrive\\Documents\\ENSC\\1A ENSC\\Semestre 6\\POO\\Projet\\ensemenc\\projet-ensemenc-tonon_vignes\\main\\main.csproj",
         "projectName": "main",
-        "projectPath": "/Users/camillevignes/Library/Mobile Documents/com~apple~CloudDocs/ENSemenC/projet-ensemenc-tonon_vignes/main/main.csproj",
-        "packagesPath": "/Users/camillevignes/.nuget/packages/",
-        "outputPath": "/Users/camillevignes/Library/Mobile Documents/com~apple~CloudDocs/ENSemenC/projet-ensemenc-tonon_vignes/main/obj/",
+        "projectPath": "C:\\Users\\Tonon\\OneDrive\\Documents\\ENSC\\1A ENSC\\Semestre 6\\POO\\Projet\\ensemenc\\projet-ensemenc-tonon_vignes\\main\\main.csproj",
+        "packagesPath": "C:\\Users\\Tonon\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Tonon\\OneDrive\\Documents\\ENSC\\1A ENSC\\Semestre 6\\POO\\Projet\\ensemenc\\projet-ensemenc-tonon_vignes\\main\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/camillevignes/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Tonon\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -58,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
