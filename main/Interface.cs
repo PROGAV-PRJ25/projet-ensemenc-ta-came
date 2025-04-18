@@ -2,23 +2,32 @@ using System.Security.Principal;
 
 public class Interface
 {
-    private char[,] TexteComplet = new char[Console.WindowHeight, Console.WindowWidth]; //tableau rassemblant tout ce qu'il y a à afficher
+    private string[,] TexteComplet = new string[Console.WindowHeight, Console.WindowWidth]; //tableau rassemblant tout ce qu'il y a à afficher
 
-    private void AjouterInterface(char[,] texte, int positionLigne, int positionColonne, string direction)
+    private void AjouterInterface(string[,] texte, int positionLigne, int positionColonne, string direction)
     {
-        if (direction == "haut-droite") 
+        string ligne = "";
+        if (direction == "haut-droite")
         {
+
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++) {}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
 
         else if (direction == "haut-gauche")
         {
+
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++) {}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
 
@@ -26,28 +35,43 @@ public class Interface
         {
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++) {}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
         else if (direction == "bas-gauche")
         {
+
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++){}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
         else if (direction == "droite-haut")
         {
+
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++){}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
         else if (direction == "droite-bas")
         {
+
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++) {}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
 
@@ -55,14 +79,20 @@ public class Interface
         {
             for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
             {
-                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++) {}
+                for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
         else if (direction == "gauche-bas")
         {
             for (int indiceColonne = 0; indiceColonne < texte.GetLength(0); indiceColonne++)
             {
-                for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++) {}
+                for (int indiceLigne = 0; indiceLigne < texte.GetLength(0); indiceLigne++)
+                {
+                    ligne += texte[indiceLigne, indiceColonne];
+                }
             }
         }
 
