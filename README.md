@@ -1,11 +1,13 @@
 # ENSemenCe - Carcassonne
+> *Salutations jardinier.e ! Atteri.e depuis peu dans la forteresse de Carcassonne, tu as été placé.e à la gestion du potager de la forteresse. Cultive, entretiens et aggrandis ton potager tout en prenant garde aux différents s'obstacles qui pourront s'opposer à toi !*
+
 
 Ce travail concerne le projet de programmation orientée objet en c#, unité d'enseignement de première année à l'ENSC.
 Le projet consiste en un jeu de gestion de potager intégrant différentes temporalités.
 Réalisé par **TONON Thiméo** et **VIGNES Camille**
 
 ## Affichage
-Le jeu est une application console.
+Le jeu se présente sous la forme d'une application console.
 Ce dernier est programmé de manière à permettre une taille de fenêtre flexible. 
 L'affichage j'ajuste donc dynamiquement selon la taille de la fenêtre.
 La fenêtre comporte une taille d'affichage minimum, si cette dernière est trop réduite, l'écran indique à l'utilisateur de la réajuster.
@@ -19,12 +21,14 @@ La page d'accueil comporte un titre principal et une image formés en caractère
 
 ### Interface de jeu
 
-L'interface comporte 3 partie principales :
+L'interface comporte 3 parties principales :
 - le volet supérieur regroupant les informations générales et renseignant sur l'avancement actuel du jeu
 - le volet intermédiaire permettant une visualisation des récoltes et permettant d'interagir avec
 - le volet inférieur comprenant les menus de jeu et des commandes d'actions (sélectionner un outil, prendre une décision, etc...)
 
 #### Volet supérieur
+
+Le volet supérieur comporte des informations générales sur l'état du jeu comme la date, la météo, le lieu et le mode de jeu dans lequel le joueur se trouve. 
 
 #### Volet intermédiaire
 
