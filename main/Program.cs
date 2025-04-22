@@ -20,22 +20,14 @@
 //         }
 // Console.SetWindowSize(40, 40);
 
-int[] curseur = new int[] {0,0};
+using System.Net.Security;
+
+int[] curseur = new int[] { 0, 0 };
 
 Console.Clear();
-Interface Ecran = new Interface();
-Ecran.AfficherGrille();
-void LancerPartie()
-{
-    while(Console.ReadKey().Key != ConsoleKey.A){
-        string contenu = File.ReadAllText("AffichageAccueil.txt");
-        
+ZoneAffichage Ecran = new ZoneAffichage();
 
-    }
-    
-    
-}
+Partie Jeu = new Partie();
+Jeu.Demarrer();
 
-
-// LancerPartie();
 

@@ -1,17 +1,18 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
-public class Interface
+public class ZoneAffichage
 {
-    ConsoleColor[] COULEURS = (ConsoleColor[])ConsoleColor.GetValues(typeof(ConsoleColor));
+    public int[] encadremenentVoletSuperieur = new int[4];
     public int WinHeight = Console.WindowHeight - 1;
     public int WinWidth = Console.WindowWidth;
-    public Case[,] Grille { set; get; }
-    public Interface()
+    public CelluleAffichage[,] Grille { set; get; }
+    public ZoneAffichage()
     {
-        Grille = new Case[WinHeight, WinWidth];
+        Grille = new CelluleAffichage[WinHeight, WinWidth];
         InitialiserGrille();
-        TracerInterface();
+        TracerZoneAffichage();
     }
 
     public void InitialiserGrille()
@@ -20,10 +21,10 @@ public class Interface
         {
             for (int colonne = 0; colonne < WinWidth; colonne++)
             {
-                Grille[ligne, colonne] = new Case();
+                Grille[ligne, colonne] = new CelluleAffichage();
             }
         }
-        
+
     }
 
     public string CreerVoletSuperieur()
@@ -50,48 +51,48 @@ public class Interface
     {
         for (int colonne = 0; colonne < WinWidth - 1; colonne++)
         {
-            Grille[indiceLigne, colonne].Contenu = '═';
+            Grille[indiceLigne, colonne].Contenu = '─';
         }
         if (typeDeLigne == "debut")
         {
-            Grille[indiceLigne, 0].Contenu = '╔';
-            Grille[indiceLigne, WinWidth - 1].Contenu = '╗';
+            Grille[indiceLigne, 0].Contenu = '┌';
+            Grille[indiceLigne, WinWidth - 1].Contenu = '┐';
         }
         else if (typeDeLigne == "fin")
         {
-            Grille[indiceLigne, 0].Contenu = '╚';
-            Grille[indiceLigne, WinWidth - 1].Contenu = '╝';
+            Grille[indiceLigne, 0].Contenu = '└';
+            Grille[indiceLigne, WinWidth - 1].Contenu = '┘';
         }
         else
         {
-            Grille[indiceLigne, 0].Contenu = '╠';
-            Grille[indiceLigne, WinWidth - 1].Contenu = '╣';
+            Grille[indiceLigne, 0].Contenu = '├';
+            Grille[indiceLigne, WinWidth - 1].Contenu = '┤';
         }
     }
-    public void TracerColonne(int indiceColonne)
+    public void TracerColonne(int indiceColonne, int sommet = 0, int pied = -1)
     {
-        for (int ligne = 0; ligne < WinHeight; ligne++)
+        if (pied == -1)
         {
-            Grille[ligne, indiceColonne].Contenu = '║';
+            pied = WinHeight;
+        }
+        for (int ligne = sommet; ligne < pied; ligne++)
+        {
+            Grille[ligne, indiceColonne].Contenu = '│';
         }
     }
 
-    public void TracerInterface()
+    public void TracerZoneAffichage()
     {
+        
+    }
+    void ConstruireEcranDeJeu(){
         TracerColonne(0);
         TracerColonne(WinWidth - 1);
         TracerLigne(0, "debut");
-        TracerLigne(4);
-        TracerLigne(WinHeight - 1, "fin");
+        TracerLigne(2);
         TracerLigne(WinHeight - 1 - (WinHeight / 3));
-
-        // for (int ligne = 0; ligne < WinHeight; ligne++)
-        // {
-        //     for (int colonne = 0; colonne < WinWidth; colonne++)
-        //     {
-        //         Grille[ligne, colonne]=""
-        //     }
-        // }
+        TracerLigne(WinHeight - 3);
+        TracerLigne(WinHeight - 1, "fin");
     }
 
     public string RécupererASCII(string nomFichierTxt)
@@ -102,15 +103,14 @@ public class Interface
 
         return Grille;
     }
-    void InsererTexte(int positionLigne, int positionColonne, string texte, ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
-    {
+    void InsererTexte(string texte, int positionLigne, int positionColonne, ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
+    { // consiste à ajouter du texte dans la grille
+        int ligne = positionLigne;
         for (int colonne = positionColonne; colonne < positionColonne + texte.Length; colonne++)
         {
-            if (positionLigne<WinHeight || colonne < WinWidth )
+            if (ligne < WinHeight || colonne < WinWidth)
             {
-                Grille[positionLigne, colonne].Contenu = Convert.ToChar(texte);
-                Grille[positionLigne, colonne].CouleurTexte =  couleurTexte;
-                Grille[positionLigne, colonne].CouleurFond =  couleurFond;
+                Grille[ligne, colonne].Actualiser(texte[colonne], couleurTexte, couleurFond);
             }
         }
     }
