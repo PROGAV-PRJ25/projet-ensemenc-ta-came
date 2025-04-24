@@ -30,4 +30,11 @@ ZoneAffichage Ecran = new ZoneAffichage();
 Partie Jeu = new Partie();
 Jeu.Demarrer();
 
+Console.BackgroundColor = ConsoleColor.DarkYellow;
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("🥬");
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+🟦🟫
 
