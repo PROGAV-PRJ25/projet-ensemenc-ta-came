@@ -8,13 +8,12 @@ public class Partie
 
   public void Demarrer()
   {
+    Console.ResetColor();
     EcranDeJeu.AfficherGrille();
     Console.SetCursorPosition(1, 1);
     while (Console.ReadLine() != "hello")
     {
-
     }
-    Console.Clear();
 
 
   }
