@@ -9,19 +9,19 @@ public class Partie
   public void Demarrer()
   {
     Console.ResetColor();
-    EcranDeJeu.AfficherGrille();
-    Console.SetCursorPosition(1, 1);
-    while (Console.ReadLine() != "hello")
-    {
-    }
+    //Console.CursorVisible = false;
 
+    EcranDeJeu.Afficher();
+    ConsoleKeyInfo AppuiTouche = new ConsoleKeyInfo();
+    do
+    {
+      AppuiTouche = Console.ReadKey();
+
+    } while (AppuiTouche.Key != ConsoleKey.A);
 
   }
   public void DemanderDebutPartie() { }
   public void Naviguer() { }
   public void DemanderFinPartie() { }
-
-
-
 
 };

@@ -12,7 +12,7 @@ public class ZoneAffichage
     {
         Grille = new CelluleAffichage[WinHeight, WinWidth];
         InitialiserGrille();
-        TracerZoneAffichage();
+        ConstruireEcranDeJeu();
     }
 
     public void InitialiserGrille()
@@ -31,7 +31,7 @@ public class ZoneAffichage
     {
         return "";
     }
-    public void AfficherGrille()
+    public void Afficher()
     {
         for (int ligne = 0; ligne < Grille.GetLength(0); ligne++)
         {
@@ -83,13 +83,14 @@ public class ZoneAffichage
 
     public void TracerZoneAffichage()
     {
-        
+
     }
-    void ConstruireEcranDeJeu(){
+    void ConstruireEcranDeJeu()
+    {
         TracerColonne(0);
         TracerColonne(WinWidth - 1);
         TracerLigne(0, "debut");
-        TracerLigne(2);
+        TracerLigne(3);
         TracerLigne(WinHeight - 1 - (WinHeight / 3));
         TracerLigne(WinHeight - 3);
         TracerLigne(WinHeight - 1, "fin");
