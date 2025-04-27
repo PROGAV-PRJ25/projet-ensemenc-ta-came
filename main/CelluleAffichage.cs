@@ -9,15 +9,15 @@ public class CelluleAffichage
         CouleurTexte = couleurTexte;
         CouleurFond = couleurFond;
     }
-    public void Actualiser(char contenu = ' ', ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
+    public void Appliquer(char contenu = ' ', ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
     {
         Contenu = contenu;
         CouleurTexte = couleurTexte;
         CouleurFond = couleurFond;
     }
-    public void Actualiser(string contenu, ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
+    public void Appliquer(string contenu, ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
     {
-        Actualiser(Convert.ToChar(contenu), couleurTexte, couleurFond);
+        Appliquer(Convert.ToChar(contenu), couleurTexte, couleurFond);
     }
 
 

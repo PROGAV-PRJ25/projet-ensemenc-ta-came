@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 public class ZoneAffichage
 {
-    public int[] encadremenentVoletSuperieur = new int[4];
+    public List<ZoneAffichage> ZonesInternes = new List<ZoneAffichage> {};
     public int WinHeight = Console.WindowHeight - 1;
     public int WinWidth = Console.WindowWidth;
     public CelluleAffichage[,] Grille { set; get; }
@@ -24,7 +24,6 @@ public class ZoneAffichage
                 Grille[ligne, colonne] = new CelluleAffichage();
             }
         }
-
     }
 
     public string CreerVoletSuperieur()
@@ -47,7 +46,7 @@ public class ZoneAffichage
         }
         Console.ResetColor();
     }
-    public void TracerLigne(int indiceLigne, string typeDeLigne = "")
+    public void InsererLigne(int indiceLigne, string typeDeLigne = "")
     {
         for (int colonne = 0; colonne < WinWidth - 1; colonne++)
         {
@@ -69,7 +68,7 @@ public class ZoneAffichage
             Grille[indiceLigne, WinWidth - 1].Contenu = '┤';
         }
     }
-    public void TracerColonne(int indiceColonne, int sommet = 0, int pied = -1)
+    public void InsererColonne(int indiceColonne, int sommet = 0, int pied = -1)
     {
         if (pied == -1)
         {
@@ -87,13 +86,13 @@ public class ZoneAffichage
     }
     void ConstruireEcranDeJeu()
     {
-        TracerColonne(0);
-        TracerColonne(WinWidth - 1);
-        TracerLigne(0, "debut");
-        TracerLigne(3);
-        TracerLigne(WinHeight - 1 - (WinHeight / 3));
-        TracerLigne(WinHeight - 3);
-        TracerLigne(WinHeight - 1, "fin");
+        InsererColonne(0);
+        InsererColonne(WinWidth - 1);
+        InsererLigne(0, "debut");
+        InsererLigne(3);
+        InsererLigne(WinHeight - 1 - (WinHeight / 3));
+        InsererLigne(WinHeight - 3);
+        InsererLigne(WinHeight - 1, "fin");
     }
 
     public string RécupererASCII(string nomFichierTxt)
@@ -106,12 +105,15 @@ public class ZoneAffichage
     }
     void InsererTexte(string texte, int positionLigne, int positionColonne, ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
     { // consiste à ajouter du texte dans la grille
+
+        string[] mots = texte.Split(' ');
         int ligne = positionLigne;
+
         for (int colonne = positionColonne; colonne < positionColonne + texte.Length; colonne++)
         {
             if (ligne < WinHeight || colonne < WinWidth)
             {
-                Grille[ligne, colonne].Actualiser(texte[colonne], couleurTexte, couleurFond);
+                Grille[ligne, colonne].Appliquer(texte[colonne], couleurTexte, couleurFond);
             }
         }
     }

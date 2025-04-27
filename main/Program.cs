@@ -24,11 +24,8 @@ using System.Net.Security;
 
 int[] curseur = new int[] { 0, 0 };
 
-
-ZoneAffichage Ecran = new ZoneAffichage();
-
-Partie Jeu = new Partie();
-Jeu.Demarrer();
+SessionJeu Partie = new SessionJeu();
+Partie.Demarrer();
 
 
 // Console.WriteLine(" ");
