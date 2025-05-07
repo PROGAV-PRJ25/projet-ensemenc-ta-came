@@ -20,15 +20,16 @@
 //         }
 // Console.SetWindowSize(40, 40);
 
-using System.Net.Security;
+
 
 int[] curseur = new int[] { 0, 0 };
 
-Console.Clear();
-ZoneAffichage Ecran = new ZoneAffichage();
 
-Partie Jeu = new Partie();
-Jeu.Demarrer();
+//Console.Clear();
+//Console.CursorVisible = false;
+
+SessionJeu Partie = new SessionJeu();
+Partie.Demarrer();
 
 Console.BackgroundColor = ConsoleColor.DarkYellow;
 Console.WriteLine(" ");
@@ -36,6 +37,6 @@ Console.WriteLine(" ");
 Console.WriteLine("🥬");
 Console.WriteLine(" ");
 Console.WriteLine(" ");
-//🟦🟫
+🟦🟫
 
 

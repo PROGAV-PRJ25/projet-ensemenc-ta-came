@@ -1,0 +1,20 @@
+{
+    // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+    // Pointez pour afficher la description des attributs existants.
+    // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+    
+    "version": "0.2.0",
+    "configurations": [
+        {
+        "name": ".NET Core Launch",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "C:/Users/Tonon/OneDrive/Documents/ENSC/1A ENSC/Semestre 6/POO/Projet/ensemenc/projet-ensemenc-tonon_vignes/main/bin/Debug/net8.0/main.dll",
+        "console": "externalTerminal",
+        "requireExactSource": false,
+    }
+    
+    ]
+    
+}
