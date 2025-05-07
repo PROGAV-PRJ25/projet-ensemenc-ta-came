@@ -11,20 +11,39 @@ public abstract class Plante{
     public bool CrainFroid {set;get;}
     public bool CrainSecheresse {set;get;}
     public string Nuisible {set;get;}
-    public string Défense {set;get;}
+    public string Defense {set;get;}
     public int Espace {set;get;}
     public int Rendement  {set;get;}
     public string Recolte {set;get;}
     public int TemperaturePref {set;get;}
-
-
-        public Plante(string nom){
-        Nom=nom;
-    }
     
 
 
+    public class Pommier : Plante
+    {
+
+    }
+    public class Blé : Plante
+    {
+
+    }
+    public class Carotte : Plante
+    {
+
+    }
+    public class Pêcher : Plante
+    {
+
+    }
+    public class VignesArtaban : Plante
+    {
+
+    }
     public class Olivier : Plante
+    {
+
+    }
+    public class Tournesol : Plante
     {
 
     }
