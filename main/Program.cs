@@ -31,12 +31,12 @@ int[] curseur = new int[] { 0, 0 };
 SessionJeu Partie = new SessionJeu();
 Partie.Demarrer();
 
-Console.BackgroundColor = ConsoleColor.DarkYellow;
-Console.WriteLine(" ");
-Console.WriteLine(" ");
-Console.WriteLine("🥬");
-Console.WriteLine(" ");
-Console.WriteLine(" ");
-🟦🟫
+
+// Console.WriteLine(" ");
+// Console.WriteLine(" ");
+// Console.WriteLine("🥬");
+// Console.WriteLine(" ");
+// Console.WriteLine(" ");
+
 
 
