@@ -10,7 +10,9 @@ public abstract class Plante{
     public string terrainPrefere {set;get;}
     public int vitesseCroissance {set;get;}
     public int besoinEau {set;get;}
-    public Plante(string nom){
+    
+    public Plante(string nom) 
+    {
         Nom=nom;
     }
 
