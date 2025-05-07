@@ -9,3 +9,9 @@ public abstract class Terrain(){
         //retirer une plante
     }
 }
+public class Parcelle : CelluleAffichage
+{
+    public Parcelle() : base(){
+
+    }
+}

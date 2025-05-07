@@ -19,6 +19,10 @@ public class CelluleAffichage
     {
         Appliquer(Convert.ToChar(contenu), couleurTexte, couleurFond);
     }
+    public void Appliquer(CelluleAffichage cellule) 
+    {
+        Appliquer(cellule.Contenu,cellule.CouleurTexte,cellule.CouleurFond);
+    }
 
 
 

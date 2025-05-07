@@ -20,9 +20,13 @@
 //         }
 // Console.SetWindowSize(40, 40);
 
-using System.Net.Security;
+
 
 int[] curseur = new int[] { 0, 0 };
+
+
+//Console.Clear();
+//Console.CursorVisible = false;
 
 SessionJeu Partie = new SessionJeu();
 Partie.Demarrer();
