@@ -7,7 +7,7 @@ public class SessionJeu
   Classe qui combine affichage, gestion des données et Navigation
   */
   public ZoneEcranJeu EcranDeJeu { set; get; }
-  public ConsoleKeyInfo PressionTouche = new ConsoleKeyInfo();
+  public ConsoleKeyInfo PressionTouche { set; get; }
   public ZoneInteractive? ZoneActive { set; get; }
   public ZoneMenu? Accueil { set; get; }
   
@@ -17,6 +17,7 @@ public class SessionJeu
   public SessionJeu()
   {
     EcranDeJeu = new ZoneEcranJeu();
+    PressionTouche = new ConsoleKeyInfo();
     //Accueil = new ZoneMenu("Accueil", new MenuItem("Accueil"));
   }
   public void Demarrer()

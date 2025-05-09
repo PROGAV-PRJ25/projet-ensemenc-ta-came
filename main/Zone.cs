@@ -57,7 +57,7 @@ public abstract class Zone
             {// pour chaque mot
                 if (pointeurLigne < Hauteur + Position[1])
                 { // si on ne dépasse pas de la zone verticalement
-                    if (indiceColonne + ligne[indiceMot].Length + 2 <= Largeur + Position[0])
+                    if (indiceColonne + ligne[indiceMot].Length + 1 <= Largeur + Position[0])
                     {//si le mot suivant ne dépasse pas de la zone horizontalement (+1 pour indiceLigne'espace, +1 pour la ligne du cadre)
                         texteEnAttente += ligne[indiceMot] + " ";
                         indiceColonne += ligne[indiceMot].Length + 1;

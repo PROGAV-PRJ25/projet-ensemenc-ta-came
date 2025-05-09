@@ -20,22 +20,11 @@
 //         }
 // Console.SetWindowSize(40, 40);
 
-
-
 int[] curseur = new int[] { 0, 0 };
 
-
-//Console.Clear();
-//Console.CursorVisible = false;
 
 SessionJeu Partie = new SessionJeu();
 Partie.Demarrer();
 
-
-// Console.WriteLine(" ");
-// Console.WriteLine(" ");
-// Console.WriteLine("🥬");
-// Console.WriteLine(" ");
-// Console.WriteLine(" ");
 
 
