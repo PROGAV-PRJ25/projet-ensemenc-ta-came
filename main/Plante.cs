@@ -77,16 +77,16 @@ public abstract class Plante{
         saisonSemi: 4,
         terrainPref: "riche et humifère",
         vitesseCroissance: 16,
-        besoinEau: 5,
+        besoinEau: 7,
         besoinSoleil: 8,
         crainFroid: true,
         crainSecheresse: false,
         nuisible: "pucerons , Oïdium", 
         defence: "Traitement , coccinnelle",
         espace: 4,
-        rendement: 10,
+        rendement: 20,
         recolte: 3,
-        temperaturePref: 18)
+        temperaturePref: 16)
         {
             //corps du constructeur
         }
@@ -95,20 +95,20 @@ public abstract class Plante{
     public class Carotte : Plante
     {
         public Carotte() : 
-        base(nom: "Blé",
+        base(nom: "Carotte",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
-        type: "céréale",
-        saisonSemi: 4,
-        terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
-        besoinEau: 5,
-        besoinSoleil: 8,
-        crainFroid: true,
+        type: "racine",
+        saisonSemi: 2,
+        terrainPref: "meuble , sablonneu",
+        vitesseCroissance: 3,
+        besoinEau: 4,
+        besoinSoleil: 9,
+        crainFroid: false,
         crainSecheresse: false,
-        nuisible: "pucerons , Oïdium", 
-        defence: "Traitement , coccinnelle",
+        nuisible: "lapins, mouches", 
+        defence: "filets, fermier en colère",
         espace: 4,
-        rendement: 10,
+        rendement: 6,
         recolte: 3,
         temperaturePref: 18)
         {
@@ -118,20 +118,20 @@ public abstract class Plante{
     public class Pecher : Plante
     {
         public Pecher() : 
-        base(nom: "Blé",
+        base(nom: "Pêcher",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
-        type: "céréale",
-        saisonSemi: 4,
-        terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
+        type: "arbre fruitier",
+        saisonSemi: 1,
+        terrainPref: "caillouteu, à l'abbri du vent",
+        vitesseCroissance: 6,
         besoinEau: 5,
         besoinSoleil: 8,
-        crainFroid: true,
-        crainSecheresse: false,
-        nuisible: "pucerons , Oïdium", 
+        crainFroid: false,
+        crainSecheresse: true,
+        nuisible: "pucerons , champignons, oïdium, gelées", 
         defence: "Traitement , coccinnelle",
-        espace: 4,
-        rendement: 10,
+        espace: 8,
+        rendement: 30,
         recolte: 3,
         temperaturePref: 18)
         {
@@ -142,22 +142,22 @@ public abstract class Plante{
     public class VignesArtaban : Plante
     {
         public VignesArtaban() : 
-        base(nom: "Blé",
+        base(nom: "Vignes Artaban",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
-        type: "céréale",
-        saisonSemi: 4,
-        terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
+        type: "vignes",
+        saisonSemi: 2,
+        terrainPref: "calcaire, drainé",
+        vitesseCroissance: 8,
         besoinEau: 5,
         besoinSoleil: 8,
         crainFroid: true,
         crainSecheresse: false,
-        nuisible: "pucerons , Oïdium", 
-        defence: "Traitement , coccinnelle",
+        nuisible: "mildiou , Oïdium, gelée", 
+        defence: "Traitement , taille",
         espace: 4,
-        rendement: 10,
-        recolte: 3,
-        temperaturePref: 18)
+        rendement: 30,
+        recolte: 4,
+        temperaturePref: 25)
         {
             //corps du constructeur
         }
@@ -166,22 +166,22 @@ public abstract class Plante{
     public class Olivier : Plante
     {
         public Olivier() : 
-        base(nom: "Blé",
+        base(nom: "Olivier",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
-        type: "céréale",
-        saisonSemi: 4,
-        terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
-        besoinEau: 5,
-        besoinSoleil: 8,
-        crainFroid: true,
+        type: "arbre fruitier",
+        saisonSemi: 2,
+        terrainPref: "drainé",
+        vitesseCroissance: 5,
+        besoinEau: 3,
+        besoinSoleil: 9,
+        crainFroid: false,
         crainSecheresse: false,
-        nuisible: "pucerons , Oïdium", 
-        defence: "Traitement , coccinnelle",
-        espace: 4,
-        rendement: 10,
-        recolte: 3,
-        temperaturePref: 18)
+        nuisible: "cochenilles, gelées", 
+        defence: "Taille, tratement",
+        espace: 8,
+        rendement: 50,
+        recolte: 4,
+        temperaturePref: 30)
         {
             //corps du constructeur
         }
@@ -190,20 +190,20 @@ public abstract class Plante{
     public class Tournesol : Plante
     {
         public Tournesol() : 
-        base(nom: "Blé",
+        base(nom: "Tournesol",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
-        type: "céréale",
-        saisonSemi: 4,
-        terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
-        besoinEau: 5,
+        type: "fleur",
+        saisonSemi: 2,
+        terrainPref: "drainé, pauvre",
+        vitesseCroissance: 3,
+        besoinEau: 7,
         besoinSoleil: 8,
         crainFroid: true,
         crainSecheresse: false,
-        nuisible: "pucerons , Oïdium", 
-        defence: "Traitement , coccinnelle",
+        nuisible: "pucerons , oiseaux", 
+        defence: "filets , coccinnelle",
         espace: 4,
-        rendement: 10,
+        rendement: 1,
         recolte: 3,
         temperaturePref: 18)
         {
