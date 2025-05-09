@@ -3,7 +3,7 @@ public abstract class Terrain : ZoneInteractive
     public Parcelle[][]? Parcelles { set; get; }
     public Terrain(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
-        Cellules = new Plante[][]
+        Cellules = new Plante[][];
     }
 
     public void Ajouter(Plante semis, int[] position)
@@ -60,4 +60,6 @@ public abstract class Terrain : ZoneInteractive
 
         }
     }
+
+}
 
