@@ -2,6 +2,7 @@ public abstract class Plante{
 
     string[] Etats {set;get;}
     public string Nom {get;private set;}
+    public string Emoji {set;get;}
     public string Type {set;get;}
     public int SaisonSemi {set;get;}
     public string TerrainPref {set;get;}
@@ -17,11 +18,12 @@ public abstract class Plante{
     public int Recolte {set;get;}
     public int TemperaturePref {set;get;}
 
-    public Plante(string nom , string[] etats , string type , int saisonSemi , string terrainPref , 
+    public Plante(string nom , string emoji , string[] etats , string type , int saisonSemi , string terrainPref , 
     int vitesseCroissance , int besoinEau , int besoinSoleil , bool crainFroid , bool crainSecheresse , 
     string nuisible , string defence , int espace , int rendement , int recolte , int temperaturePref)
     {
         Nom = nom;
+        Emoji = emoji;
         Etats = etats;
         Type=type;
         SaisonSemi=saisonSemi;
@@ -45,6 +47,7 @@ public abstract class Plante{
     {
         public Pommier() : 
         base(nom: "Pommier",
+        emoji : "🍎",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "arbre fruitier",
         saisonSemi: 2,
@@ -55,9 +58,9 @@ public abstract class Plante{
         crainFroid: false,
         crainSecheresse: true,
         nuisible: "chenilles et oiseaux", 
-        defence: "fermier en colère",
+        defence: "fermier en colère, filets, tailler",
         espace: 8,
-        rendement: 100,
+        rendement: 80,
         recolte: 3,
         temperaturePref: 18)
         {
@@ -72,11 +75,12 @@ public abstract class Plante{
     {
         public Ble() : 
         base(nom: "Blé",
+        emoji : "🌾",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "céréale",
         saisonSemi: 4,
         terrainPref: "riche et humifère",
-        vitesseCroissance: 16,
+        vitesseCroissance: 9,
         besoinEau: 7,
         besoinSoleil: 8,
         crainFroid: true,
@@ -96,6 +100,7 @@ public abstract class Plante{
     {
         public Carotte() : 
         base(nom: "Carotte",
+        emoji : "🥕",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "racine",
         saisonSemi: 2,
@@ -119,11 +124,12 @@ public abstract class Plante{
     {
         public Pecher() : 
         base(nom: "Pêcher",
+        emoji : "🍑",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "arbre fruitier",
         saisonSemi: 1,
         terrainPref: "caillouteu, à l'abbri du vent",
-        vitesseCroissance: 6,
+        vitesseCroissance: 9,
         besoinEau: 5,
         besoinSoleil: 8,
         crainFroid: false,
@@ -143,11 +149,12 @@ public abstract class Plante{
     {
         public VignesArtaban() : 
         base(nom: "Vignes Artaban",
+        emoji : "🍇",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "vignes",
         saisonSemi: 2,
         terrainPref: "calcaire, drainé",
-        vitesseCroissance: 8,
+        vitesseCroissance: 5,
         besoinEau: 5,
         besoinSoleil: 8,
         crainFroid: true,
@@ -155,8 +162,8 @@ public abstract class Plante{
         nuisible: "mildiou , Oïdium, gelée", 
         defence: "Traitement , taille",
         espace: 4,
-        rendement: 30,
-        recolte: 4,
+        rendement: 20,
+        recolte: 
         temperaturePref: 25)
         {
             //corps du constructeur
@@ -167,11 +174,12 @@ public abstract class Plante{
     {
         public Olivier() : 
         base(nom: "Olivier",
+        emoji : "🫒",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "arbre fruitier",
         saisonSemi: 2,
         terrainPref: "drainé",
-        vitesseCroissance: 5,
+        vitesseCroissance: 7,
         besoinEau: 3,
         besoinSoleil: 9,
         crainFroid: false,
@@ -191,6 +199,7 @@ public abstract class Plante{
     {
         public Tournesol() : 
         base(nom: "Tournesol",
+        emoji : "🌻",
         etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
         type: "fleur",
         saisonSemi: 2,
@@ -205,7 +214,7 @@ public abstract class Plante{
         espace: 4,
         rendement: 1,
         recolte: 3,
-        temperaturePref: 18)
+        temperaturePref: 22)
         {
             //corps du constructeur
         }
