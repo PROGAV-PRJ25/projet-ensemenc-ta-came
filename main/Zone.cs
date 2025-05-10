@@ -36,17 +36,21 @@ public abstract class Zone
       // s'arrête dès que le texte a atteint le bas de la zone, 
 
         int pointeurLigne = positionLigne;
+        int limiteColonne;
         int indiceColonne = positionColonne;
         int hauteurTexte = 0;
 
         string[] lignesTexte = texte.Split("\n");
         string[][] MotsEtLignes = new string[lignesTexte.Length][];
+
         for (int indiceMot = 0; indiceMot < lignesTexte.Length; indiceMot++)
         {
             MotsEtLignes[indiceMot] = lignesTexte[indiceMot].Split(" ");
         }
+
         string texteEnAttente;
         Console.SetCursorPosition(positionColonne, positionLigne);
+
         for (int indiceLigne = 0; indiceLigne < MotsEtLignes.Length; indiceLigne++)
         {
             string[] ligne = MotsEtLignes[indiceLigne];
@@ -57,7 +61,12 @@ public abstract class Zone
             {// pour chaque mot
                 if (pointeurLigne < Hauteur + Position[1])
                 { // si on ne dépasse pas de la zone verticalement
-                    if (indiceColonne + ligne[indiceMot].Length + 1 <= Largeur + Position[0])
+                    limiteColonne = indiceColonne + ligne[indiceMot].Length + 1;
+                    if (indiceMot == ligne.Length - 1) // si c'est le dernier mot de la ligne, pas besoin d'anticiper le prochain espace
+                    {
+                        limiteColonne--;
+                    }
+                    if (limiteColonne <= Largeur + Position[0])
                     {//si le mot suivant ne dépasse pas de la zone horizontalement (+1 pour indiceLigne'espace, +1 pour la ligne du cadre)
                         texteEnAttente += ligne[indiceMot] + " ";
                         indiceColonne += ligne[indiceMot].Length + 1;
@@ -81,6 +90,14 @@ public abstract class Zone
         }
         return hauteurTexte;
     }
+    public void EcrireTexte(string texte, int positionColonne, int positionLigne,
+    ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
+    {
+        Console.BackgroundColor = couleurFond;
+        Console.ForegroundColor = couleurTexte;
+        EcrireTexte(texte, positionColonne, positionLigne);
+        Console.ResetColor();
+    }
     public void EcrireLigneVide(int largeur)
     {
         string ligneVide = "";
@@ -89,14 +106,6 @@ public abstract class Zone
             ligneVide += " ";
         }
         Console.Write(ligneVide);
-    }
-    public void EcrireTexte(string texte, int positionColonne, int positionLigne,
-    ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black)
-    {
-        Console.BackgroundColor = couleurFond;
-        Console.ForegroundColor = couleurTexte;
-        EcrireTexte(texte, positionColonne, positionLigne);
-        Console.ResetColor();
     }
     public void RevenirALaLigne(int indiceColonne)
     {

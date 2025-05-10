@@ -38,8 +38,29 @@ public abstract class Plante{
         Recolte=recolte;
         TemperaturePref=temperaturePref;
     }
-    
 }
+    public class PlanteVide : Plante {
+        public PlanteVide() : base(
+                nom: "Vide",
+                etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"] ,
+                type: "",
+                saisonSemi: 0,
+                terrainPref: "",
+                vitesseCroissance: 0,
+                besoinEau: 0,
+                besoinSoleil: 0,
+                crainFroid: false,
+                crainSecheresse: false,
+                nuisible: "", 
+                defence: "",
+                espace: 0,
+                rendement: 0,
+                recolte: 0,
+                temperaturePref: 18)
+                {
+                    //corps du constructeur
+                }
+    }
 
     public class Pommier : Plante
     {
