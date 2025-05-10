@@ -3,15 +3,19 @@ public abstract class Terrain : ZoneInteractive
     public Parcelle[][]? Parcelles { set; get; }
     public Terrain(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
+<<<<<<< HEAD
         Cellules = new Plante[][];
+=======
+        Parcelles = new Parcelle[10][];
+>>>>>>> thimeo
     }
 
     public void Ajouter(Plante semis, int[] position)
     {
-        if (Cellules[position[0], position[1]].Libre)
+        if (Parcelles[position[0]][position[1]].Libre)
         {
-            Cellules[position[0]][position[1]] = semis;
-            ActualiserEspaceLibre();
+            Parcelles[position[0]][position[1]].Contenu = semis;
+            AcutaliserEspaceLibre();
         }
 
     }
@@ -19,7 +23,7 @@ public abstract class Terrain : ZoneInteractive
     {
         //retirer une plante
     }
-    public bool AcutaliserEspaceLibre()
+    public void AcutaliserEspaceLibre()
     {
 
         for (int x = 0; x < Parcelles.GetLength(0); x++)
@@ -29,16 +33,16 @@ public abstract class Terrain : ZoneInteractive
     public void DiffuserEffets(int x, int y)
     {
         Parcelle parcelle = Parcelles[x][y];
-        int portee = cellule.Contenu.Espace;
+        int portee = parcelle.Contenu.Espace;
         if (portee > 1)
         {
-            for (int colonne = x - portee; rayon < x + 1 + portee)
+            for (int colonne = x - portee; colonne < x + 1 + portee; colonne++)
             {
-                for (int ligne = y - portee; rayon < y + 1 + portee)
+                for (int ligne = y - portee; ligne < y + 1 + portee; ligne++)
                 {
                     if (EstDansTerrain(colonne, ligne) && colonne != x && ligne != y)
                     {
-                        parcelle.Libre = False;
+                        parcelle.Libre = false;
                     }
                 }
             }
@@ -57,9 +61,9 @@ public abstract class Terrain : ZoneInteractive
         public bool Libre { set; get; }
         public Parcelle(int[] position) : base()
         {
-
+            Libre = true ;
+            Contenu = new PlanteVide();
         }
+
     }
-
 }
-

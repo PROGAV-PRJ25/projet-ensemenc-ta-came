@@ -96,20 +96,17 @@ public class ZoneEcranJeu : Interface
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
         BarreNavigation = new EnsembleZoneTexte();
-        BarreNavigation.Ajouter("Inventaire", new ZoneTexte(2, hauteurNavBar, 15, 1, "Inventaire (I)"));
-        BarreNavigation.Ajouter("Journal", new ZoneTexte(19, hauteurNavBar, 12, 1, "Journal (J)"));
-        BarreNavigation.Ajouter("Magasin", new ZoneTexte(33, hauteurNavBar, 12, 1, "Magasin (M)"));
-        BarreNavigation.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 21, 1, "Semaine Suivante (S)"));
+        BarreNavigation.Ajouter("Inventaire", new ZoneTexte(2, hauteurNavBar, 14, 1, "Inventaire (I)"));
+        BarreNavigation.Ajouter("Journal", new ZoneTexte(19, hauteurNavBar, 11, 1, "Journal (J)"));
+        BarreNavigation.Ajouter("Magasin", new ZoneTexte(33, hauteurNavBar, 11, 1, "Magasin (M)"));
+        BarreNavigation.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
 
         //Création des différents menus de l'affichage
-        Inventaire = new ZoneMenu("Inventaire");
+        
+        Inventaire = new ZoneMenu("Inventaire",1,hauteurNavBar+2,);
         Journal = new ZoneMenu("Journal");
         Magasin = new ZoneMenu("Magasin");
         Suivant = new ZoneMenu("Suivant");
-
-        
-
-
     }
     public ZoneEcranJeu() : this(0, 0, Console.WindowWidth, Console.WindowHeight - 1) { }
 
