@@ -156,8 +156,8 @@ public class ZoneMenu : ZoneInteractive
 {
     //element d'affichage permettant de naviguer dans une arborescence et de valider un choix 
     public string Nom { set; get; }
-    public MenuItem NoeudActif { set; get; }
-    public MenuItem Racine { set; get; }
+    public ElementMenu NoeudActif { set; get; }
+    public ElementMenu Racine { set; get; }
     public int AncreAffichageItems { set; get; }
 
     public ZoneMenu(string nom, int positionColonne = 0, int positionLigne = 0, int largeur = 5, int hauteur = 5) : base(positionColonne, positionLigne, largeur, hauteur)
@@ -165,7 +165,7 @@ public class ZoneMenu : ZoneInteractive
 
         Curseur = 0;
         Nom = nom;
-        Racine = new MenuItem(this);
+        Racine = new ElementMenu(this);
         NoeudActif = Racine;
 
     }
