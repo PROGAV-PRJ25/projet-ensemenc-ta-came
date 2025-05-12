@@ -102,3 +102,14 @@ public class ElementMenuJournal : ElementMenu
         //Presenter information
     }
 }
+public class ElementMenuSuivant : ElementMenu {
+    SessionJeu Session {set;get;}
+    public ElementMenuSuivant(ZoneMenu menuReference, string description, SessionJeu session): base(menuReference,description)
+    {
+        Session = session;
+    }
+    public override void Actionner()
+    {
+        Session.PasserSemaineSuivante();
+    }
+}

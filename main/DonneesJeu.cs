@@ -20,20 +20,6 @@ public class Potager
 {
 
 }
-public class Sauvegarde
-{
-    private Date DateActuelle { set; get; }
-    private string Lieu { set; get; }
-    private int Argent { set; get; }
-    private Potager PotagerActuel { set; get; }
-    public Sauvegarde(Date date, string lieu, int argent, Potager potagerActuel)
-    {
-        DateActuelle = date;
-        Lieu = lieu;
-        PotagerActuel = potagerActuel;
-
-    }
-}
 public abstract class Outil 
 {
     public string Nom {set;get;}

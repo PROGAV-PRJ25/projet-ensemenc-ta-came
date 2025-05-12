@@ -139,6 +139,7 @@ public class ZoneTexte : Zone
     }
     public override void Afficher()
     {
+        Effacer();
         EcrireTexte(Contenu, Position[0], Position[1]);
     }
 

@@ -87,7 +87,7 @@ public class ZoneEcranJeu : Interface
     public ZoneMenu MAGASIN { set; get; }
     public ZoneMenu INVENTAIRE { set; get; }
     public ZoneMenu JOURNAL { set; get; }
-    public ZoneMenu? SUIVANT { set; get; }
+    public ZoneMenu SUIVANT { set; get; }
     public ZoneTexte DETAILS { set; get; }
     public ZoneTexte DIALOGUE { set; get; }
     public ZoneTexte DATE { set; get; }
@@ -107,7 +107,7 @@ public class ZoneEcranJeu : Interface
         ConstruireLignesDirectrices();
 
         //Création des éléments composant le volet supérieur
-        DATE = new ZoneTexte(1, 1, 18, 1, "2025 - Semaine 01");
+        DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
         MODE = new ZoneTexte(Largeur - 13, 1, 13, 1, "Mode Normal");
         // Créaction de la zone potager

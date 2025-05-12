@@ -45,7 +45,7 @@ public class SessionJeu
     ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(Semis);
 
     ECRAN_JEU.MAGASIN.Racine.Description = "Magasin - Acheter ou vendre, c'est vous qui choisissez ! ";
-    ElementMenu Acheter = new ElementMenu(ECRAN_JEU.MAGASIN, "Acheter", "Choisissez parmis les catégories d'articels à acheter !");
+    ElementMenu Acheter = new ElementMenu(ECRAN_JEU.MAGASIN, "Acheter", "Choisissez parmis les catégories d'articles à acheter !");
     ElementMenu Vendre = new ElementMenu(ECRAN_JEU.MAGASIN, "Vendre", "Choisissez une de vos récoltes à vendre !");
     ECRAN_JEU.MAGASIN.Racine.AjouterItem(Acheter);
     ECRAN_JEU.MAGASIN.Racine.AjouterItem(Vendre);
@@ -53,8 +53,13 @@ public class SessionJeu
     ECRAN_JEU.JOURNAL.Racine.Description = "Renseignez vous sur le fonctionnement du jeu !";
     ElementMenu Plantes = new ElementMenu(ECRAN_JEU.JOURNAL, "Plantes", "Trouvez tout ce dont vous avez besoin de savoir à propos des plantes !");
     ElementMenu Meteo = new ElementMenu(ECRAN_JEU.JOURNAL, "Meteo", "Devenez incollables sur la météo !");
-    ECRAN_JEU.MAGASIN.Racine.AjouterItem(Plantes);
-    ECRAN_JEU.MAGASIN.Racine.AjouterItem(Meteo);
+    ECRAN_JEU.JOURNAL.Racine.AjouterItem(Plantes);
+    ECRAN_JEU.JOURNAL.Racine.AjouterItem(Meteo);
+
+    ECRAN_JEU.SUIVANT.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
+    ElementMenu Oui = new ElementMenuSuivant(ECRAN_JEU.SUIVANT, "Oui je le veux",this);
+    ECRAN_JEU.SUIVANT.Racine.AjouterItem(Oui);
+
   }
   public void Demarrer()
   {
@@ -62,12 +67,15 @@ public class SessionJeu
     ECRAN_ACCUEIL.Afficher();
     ECRAN_ACCUEIL.ACCUEIL.Afficher();
     Naviguer();
+    
   }
   public void DemarrerNouvellePartie(string pays)
   {
     ECRAN_JEU.Afficher();
     ZoneActive = ECRAN_JEU.POTAGER;
+    JoueurActuel = new Joueur(pays);
   }
+
   // Affichage ================================================================
   public void RafraichirAffichageJeu()
   {
@@ -175,10 +183,25 @@ public class SessionJeu
   public void PasserSemaineSuivante()
   {
     JoueurActuel.Semaine += 1;
-    // ActualiserDate();
+    ActualiserDate();
     // ActualiserMeteo();
     // ActualiserEtatPlantes();
   }
+  public void ActualiserDate(){
+    ECRAN_JEU.DATE.Contenu = $"{2003+JoueurActuel.Semaine/52} - Semaine {JoueurActuel.Semaine%52} ";
+    if(JoueurActuel.Semaine%52<13)
+      ECRAN_JEU.DATE.Contenu+= "(printemps)";
+    else if(JoueurActuel.Semaine%52<26)
+      ECRAN_JEU.DATE.Contenu+= "(été)";
+    else if(JoueurActuel.Semaine%52<39)
+      ECRAN_JEU.DATE.Contenu+= "(automne)";
+    else
+      ECRAN_JEU.DATE.Contenu+= "(hiver)";
+    ECRAN_JEU.DATE.Afficher();
+  }
+  // public void ActualiserArgent(){
+  //   ECRAN_JEU.ARGENT.Contenu = 
+  // }
   // Actions Webcam =========================================================== 
 
 

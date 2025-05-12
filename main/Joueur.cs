@@ -10,7 +10,7 @@ public class Joueur
     public Joueur(string lieu)
     {
         Argent = 2000;
-        Semaine = 0;
+        Semaine = 1;
         Lieu = lieu;
         Semis = [];
         Outils = [];
