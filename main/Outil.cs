@@ -3,9 +3,11 @@ public abstract class Outil
     public string NOM {set;get;}
     public string EMOJI {set;get;}
     public abstract void Actionner(Parcelle parcelle);
-    protected Outil(string nom)
+    protected Outil(string nom, string emoji)
     {
-        Nom = nom;
+        NOM = nom;
+        EMOJI = emoji;
+
     }
 }
 public class Arrosoir : Outil {
@@ -15,7 +17,8 @@ public class Arrosoir : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //si dessous 20 unité d'eau , augmente l'hydratation de +1
+        //si >=20 , attention plante surhydraté et espédevie -2
     }
 }
 
@@ -26,7 +29,8 @@ public class Panier : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //si fruit , le récolte et rendement-1
+        //si pas fruit, ne sert à rien
     }
 }
 
@@ -37,7 +41,10 @@ public class Secateur : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //si prend trop de place , tailler et cases -2
+        //si chenille , tailler et chenille -1
+        //sinon, abime la plante et espédevie -2
+
     }
 }
 
@@ -48,7 +55,9 @@ public class CD : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //si oiseau, cd et oiseau -1
+        //si chenille, cd et chenille -1
+        //sinon , sert de déco mais inutile
     }
 }
 
@@ -59,7 +68,8 @@ public class Fumier : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //engrais naturel donc booste la croissance des plantes de +2
+        //si trop, ça pue et espédevie -1
     }
 }
 
@@ -70,7 +80,7 @@ public class Traitement : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //
     }
 }
 
@@ -81,6 +91,6 @@ public class Coccinnelle : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        parcelle.Contenu.QuantiteEau-= parcelle.Contenu.QuantiteEau<20?0:-1;
+        //
     }
 }
