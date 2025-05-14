@@ -2,21 +2,21 @@ public abstract class Plante
 {
     // Caractéristiques
     string[] Etats { set; get; }
-    public string Nom { get; private set; }
-    public string Emoji { set; get; }
-    public string Type { set; get; }
-    public int SaisonSemi { set; get; }
-    public string TerrainPref { set; get; }
-    public int VitesseCroissance { set; get; }
+    public string NOM { get; private set; }
+    public string EMOJI { set; get; }
+    public string TYPE { set; get; }
+    public int SAISONSEMI { set; get; }
+    public string TERRAINPREF { set; get; }
+    public int VITESSECROISSANCE { set; get; }
     public int BesoinEau { set; get; }
-    public bool CrainFroid { set; get; }
-    public bool CrainSecheresse { set; get; }
+    public bool CRAINFROID { set; get; }
+    public bool CRAINSECHERESSE { set; get; }
     public string Nuisible { set; get; }
     public string Defense { set; get; }
-    public int Espace { set; get; }
+    public int ESPACE { set; get; }
     public int Rendement { set; get; }
-    public int Recolte { set; get; }
-    public int TemperaturePref { set; get; }
+    public int SAINSONRECOLTE { set; get; }
+    public int TEMPERATUREPREF { set; get; }
 
     // EtatActuel
     public int Sante { set; get; } // sur 100 détermine la santé de la plante, si < 50 elle meurt
@@ -28,7 +28,7 @@ public abstract class Plante
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
     int vitesseCroissance, int besoinEau, int besoinSoleil, bool crainFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int rendement, int recolte, int temperaturePref)
+    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref)
     {
         Nom = nom;
         Emoji = emoji;
@@ -45,7 +45,7 @@ public abstract class Plante
         Defense = defence;
         Espace = espace;
         Rendement = rendement;
-        Recolte = recolte;
+        saisonRecolte = saisonRecolte;
         TemperaturePref = temperaturePref;
 
         Age = 0;
@@ -81,7 +81,7 @@ public class PlanteVide : Plante
     defence: "fermier en colère, filets, tailler",
     espace: 8,
     rendement: 80,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 18)
     {
         //corps du constructeur
@@ -108,7 +108,7 @@ public class Pommier : Plante
     defence: "fermier en colère, filets, tailler",
     espace: 8,
     rendement: 80,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 18)
     {
         //corps du constructeur
@@ -136,7 +136,7 @@ public class Ble : Plante
     defence: "Traitement , coccinnelle",
     espace: 4,
     rendement: 20,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 16)
     {
         //corps du constructeur
@@ -161,7 +161,7 @@ public class Carotte : Plante
     defence: "filets, fermier en colère",
     espace: 4,
     rendement: 6,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 18)
     {
         //corps du constructeur
@@ -185,7 +185,7 @@ public class Pecher : Plante
     defence: "Traitement , coccinnelle",
     espace: 8,
     rendement: 30,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 18)
     {
         //corps du constructeur
@@ -210,7 +210,7 @@ public class VignesArtaban : Plante
     defence: "Traitement , taille",
     espace: 4,
     rendement: 20,
-    recolte: 0,
+    saisonRecolte: 0,
     temperaturePref: 25)
     {
         //corps du constructeur
@@ -235,7 +235,7 @@ public class Olivier : Plante
     defence: "Taille, tratement",
     espace: 8,
     rendement: 50,
-    recolte: 4,
+    saisonRecolte: 4,
     temperaturePref: 30)
     {
         //corps du constructeur
@@ -260,7 +260,7 @@ public class Tournesol : Plante
     defence: "filets , coccinnelle",
     espace: 4,
     rendement: 1,
-    recolte: 3,
+    saisonRecolte: 3,
     temperaturePref: 22)
     {
         //corps du constructeur
