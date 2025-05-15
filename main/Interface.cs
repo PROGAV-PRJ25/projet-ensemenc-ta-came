@@ -98,7 +98,7 @@ public class ZoneEcranJeu : Interface
     public ZoneTexte? WEBCAM { set; get; }
     public Champs POTAGER { set; get; }
     public int IndiceZoneActive { set; get; }
-    public EnsembleZoneTexte BARRE_NAVIGATION { set; get; }
+    public EnsembleZoneTexte  BARRE_NAVIGATION { set; get; }
 
     public ZoneEcranJeu(int positionColonne, int positionLigne, int largeur, int hauteur)
     : base(positionColonne, positionLigne, largeur, hauteur)

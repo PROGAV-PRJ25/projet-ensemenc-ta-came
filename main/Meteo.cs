@@ -12,7 +12,7 @@ public abstract class Meteo
 }
 public class Pluie : Meteo {
     public Pluie(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Pluie"
+        NOM = "Pluie";
         EMOJI = "🌧️";
     }
     public override void Action(Parcelle parcelle) 

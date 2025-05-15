@@ -9,7 +9,7 @@ public abstract class Plante
     public int VITESSECROISSANCE { set; get; }
     public bool CRAINFROID { set; get; }
     public bool CRAINSECHERESSE { set; get; }
-    public int BESOINEAU { set; get; } 
+    public int BESOIN_EAU { set; get; } 
     public int SAISONRECOLTE { set; get; }
     public int TEMPERATUREPREF { set; get; }
 
@@ -31,7 +31,7 @@ public abstract class Plante
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-    int vitesseCroissance, int espedevie , int besoineau, int besoinSoleil, int quantiteeau bool crainFroid, bool crainSecheresse,
+    int vitesseCroissance, int espeDeVie , int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
     string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref)
     {
         NOM = nom;
@@ -41,9 +41,9 @@ public abstract class Plante
         SAISONSEMI = saisonSemi;
         TERRAINPREF = terrainPref;
         VITESSECROISSANCE = vitesseCroissance;
-        EspeDeVie = espedevie
-        BESOINEAU = besoineau;
-        QuantiteEau = quantiteeau;
+        EspeDeVie = espeDeVie;
+        BESOIN_EAU = besoinEau;
+        QuantiteEau = quantiteEau;
         BesoinSoleil = besoinSoleil;
         CRAINFROID = crainFroid;
         CRAINSECHERESSE = crainSecheresse;
@@ -64,7 +64,7 @@ public abstract class Plante
     public void Mourir()
     {
         Etat = "mort";
-        Emoji = "💀";
+        EMOJI = "💀";
     }
 
 
@@ -76,20 +76,21 @@ public class PlanteVide : Plante
     emoji: " ",
     etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
     type: "",
-    saisonSemi: ,
+    saisonSemi: 0,
     terrainPref: "",
-    vitesseCroissance: ,
-    BESOINEAU: ,
-    QuantiteEau: ,
-    besoinSoleil: ,
-    crainFroid: ,
-    crainSecheresse: ,
+    vitesseCroissance: 0,
+    espeDeVie:0,
+    besoinEau: 0,
+    besoinSoleil: 0,
+    quantiteEau: 0,
+    crainFroid: false,
+    crainSecheresse: false,
     nuisible: "",
     defence: "",
-    espace: ,
-    rendement: ,
-    saisonRecolte: ,
-    temperaturePref: )
+    espace: 0,
+    rendement: 0,
+    saisonRecolte: 0,
+    temperaturePref: 0)
     {
         //corps du constructeur
     }
@@ -107,8 +108,10 @@ public class Pommier : Plante
     saisonSemi: 2,
     terrainPref: "argileux, drainé",
     vitesseCroissance: 10,
-    BESOINEAU: 50,
+    espeDeVie:0,
+    besoinEau: 50,
     besoinSoleil: 30,
+    quantiteEau:0,
     crainFroid: false,
     crainSecheresse: true,
     nuisible: "chenilles ou oiseaux",
@@ -135,8 +138,10 @@ public class Ble : Plante
     saisonSemi: 4,
     terrainPref: "riche et humifère",
     vitesseCroissance: 9,
-    BESOINEAU: 70,
+    espeDeVie:0,
+    besoinEau: 70,
     besoinSoleil: 80,
+    quantiteEau:0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , Maladie",
@@ -160,8 +165,10 @@ public class Carotte : Plante
     saisonSemi: 2,
     terrainPref: "meuble , sablonneu",
     vitesseCroissance: 3,
-    BESOINEAU: 40,
+    espeDeVie:0,
+    besoinEau: 40,
     besoinSoleil: 90,
+    quantiteEau:0,
     crainFroid: false,
     crainSecheresse: false,
     nuisible: "lapins",
@@ -184,8 +191,10 @@ public class Pecher : Plante
     saisonSemi: 1,
     terrainPref: "caillouteu, à l'abbri du vent",
     vitesseCroissance: 9,
-    BESOINEAU: 50,
+    espeDeVie:0,
+    besoinEau: 50,
     besoinSoleil: 80,
+    quantiteEau:0,
     crainFroid: false,
     crainSecheresse: true,
     nuisible: "pucerons , champignons, maladies, gelées",
@@ -209,8 +218,10 @@ public class VignesArtaban : Plante
     saisonSemi: 2,
     terrainPref: "calcaire, drainé",
     vitesseCroissance: 5,
-    BESOINEAU: 50,
+    espeDeVie:0,
+    besoinEau: 50,
     besoinSoleil: 80,
+    quantiteEau:0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "Maladies, gelée",
@@ -234,8 +245,10 @@ public class Olivier : Plante
     saisonSemi: 2,
     terrainPref: "drainé",
     vitesseCroissance: 7,
-    BESOINEAU: 30,
+    espeDeVie:0,
+    besoinEau: 30,
     besoinSoleil: 80,
+    quantiteEau:0,
     crainFroid: false,
     crainSecheresse: false,
     nuisible: "chenilles, gelées",
@@ -259,8 +272,10 @@ public class Tournesol : Plante
     saisonSemi: 2,
     terrainPref: "drainé, pauvre",
     vitesseCroissance: 3,
-    BESOINEAU: 70,
+    espeDeVie:0,
+    besoinEau: 70,
     besoinSoleil: 70,
+    quantiteEau:0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , oiseaux",

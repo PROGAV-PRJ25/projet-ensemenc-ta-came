@@ -12,7 +12,7 @@ public abstract class Outil
 }
 public class Arrosoir : Outil {
     public Arrosoir(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Arosoir"
+        NOM = "Arosoir";
         EMOJI = "💦";
     }
     public override void Actionner(Parcelle parcelle) 
@@ -99,8 +99,9 @@ public class Coccinnelle : Outil {
     }
 }
 
-public class FermierEnColère : Outil {
-    public Coccinnelle(string nom, string emoji) : base(nom, emoji) {
+public class FermierEnColere : Outil {
+    public FermierEnColere(string nom, string emoji) : base(nom, emoji)
+    {
         NOM = "Fermier en colère";
         EMOJI = "👨🏻‍🌾";
     }

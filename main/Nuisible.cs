@@ -12,7 +12,7 @@ public abstract class Nuisible
 }
 public class Maladie : Nuisible {
     public Maladie (string nom, string emoji) : base(nom, emoji) {
-        NOM = "Maladie"
+        NOM = "Maladie";
         EMOJI = "🦠";
     }
     public override void Action(Parcelle parcelle) 

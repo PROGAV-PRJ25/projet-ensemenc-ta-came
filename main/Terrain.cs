@@ -55,7 +55,7 @@ public class Champs : ZoneInteractive
             Console.SetCursorPosition(Position[0], Position[1] + ligne);
 
             for (int colonne = 0; colonne < Largeur; colonne++)
-                Console.Write(Parcelles[ligne, colonne].Contenu.Emoji);
+                Console.Write(Parcelles[ligne, colonne].Contenu.EMOJI);
         }
         Console.ResetColor();
         AfficherCurseur();
@@ -64,14 +64,14 @@ public class Champs : ZoneInteractive
     {
         Console.BackgroundColor = ConsoleColor.White;
         Console.SetCursorPosition(Position[0]+ (Curseur % Largeur), Position[1] +(Curseur / Largeur));
-        Console.Write(Parcelles[Curseur % Largeur, Curseur / Largeur].Contenu.Emoji);
+        Console.Write(Parcelles[Curseur % Largeur, Curseur / Largeur].Contenu.EMOJI);
         Console.ResetColor();
     }
     public void AfficherParcelle(int colonne, int ligne)
     {
         Console.BackgroundColor = Parcelles[colonne, ligne].CouleurFond;
         Console.SetCursorPosition(Position[0] + colonne, Position[1] + ligne);
-        Console.Write(Parcelles[colonne, ligne].Contenu.Emoji);
+        Console.Write(Parcelles[colonne, ligne].Contenu.EMOJI);
         Console.ResetColor();
     }
     public void Ajouter(Plante semis, int[] position)
