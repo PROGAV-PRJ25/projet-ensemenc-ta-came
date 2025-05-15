@@ -44,3 +44,23 @@ Le volet intermédiaire comporte une visualisation des différentes informations
 Contient tous les éléments de menu permettant au joueur d'effectuer des actions 
 
 ## Navigation
+
+La navigation du jeu se fait à l'aide des touches du clavier.
+Pour vous déplacer, utilisez les touches directionnelles.
+Pour accéder aux différents menus :
+- Inventaire > touche "I"
+- Magasin > touche "M"
+- Journal > touche "J"
+- Champs > touche "C"
+
+## Jeu
+### Terrains
+
+Il existe 3 types de terrains selon la localisation où vous vous trouvez.
+Le terrain à Carcassonne est argileux;
+
+### Plantes
+Les plantes sont la partie principale du jeu
+
+### Arbres
+Peuvent être taillés, 
