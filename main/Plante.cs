@@ -4,16 +4,6 @@ public abstract class Plante
     public string NOM { get; private set; }
     public string EMOJI { set; get; }
     public string TYPE { set; get; }
-<<<<<<< HEAD
-    public int SAISONSEMI { set; get; }
-    public string TERRAINPREF { set; get; }
-    public int VITESSECROISSANCE { set; get; }
-    public bool CRAINFROID { set; get; }
-    public bool CRAINSECHERESSE { set; get; }
-    public int BESOIN_EAU { set; get; }
-    public int SAISONRECOLTE { set; get; }
-    public int TEMPERATUREPREF { set; get; }
-=======
     public int SAISON_SEMI { set; get; }
     public string TERRAIN_PREF { set; get; }
     public int VITESSE_CROISSANCE { set; get; }
@@ -23,7 +13,6 @@ public abstract class Plante
     public int SAISON_RECOLTE { set; get; }
     public int TEMPERATURE_PREF { set; get; }
     public string ESPE_DE_VIE { set; get; }
->>>>>>> 20269a135b01aab57fe62df4654c970e4219567c
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
@@ -53,7 +42,7 @@ public abstract class Plante
         SAISON_SEMI = saisonSemi;
         TERRAIN_PREF = terrainPref;
         VITESSE_CROISSANCE = vitesseCroissance;
-        EspeDeVie = espeDeVie;
+        ESPE_DE_VIE = espeDeVie;
         BESOIN_EAU = besoinEau;
         QuantiteEau = quantiteEau;
         BesoinSoleil = besoinSoleil;
@@ -90,10 +79,6 @@ public class PlanteVide : Plante
     saisonSemi: 0,
     terrainPref: "",
     vitesseCroissance: 0,
-<<<<<<< HEAD
-    espeDeVie: 0,
-=======
->>>>>>> 20269a135b01aab57fe62df4654c970e4219567c
     besoinEau: 0,
     besoinSoleil: 0,
     quantiteEau: 0,
@@ -104,7 +89,7 @@ public class PlanteVide : Plante
     espace: 0,
     rendement: 0,
     saisonRecolte: 0,
-    temperaturePref: 0
+    temperaturePref: 0,
     espeDeVie : "")
     {
         //corps du constructeur
@@ -134,7 +119,7 @@ public class Pommier : Plante
     espace: 8,
     rendement: 80,
     saisonRecolte: 3,
-    temperaturePref: 18
+    temperaturePref: 18,
     espeDeVie : "vivace" )
     {
         //corps du constructeur
@@ -164,7 +149,7 @@ public class Ble : Plante
     espace: 4,
     rendement: 20,
     saisonRecolte: 3,
-    temperaturePref: 16
+    temperaturePref: 16,
     espeDeVie : "annuel")
     {
         //corps du constructeur
@@ -191,7 +176,7 @@ public class Carotte : Plante
     espace: 4,
     rendement: 6,
     saisonRecolte: 3,
-    temperaturePref: 18
+    temperaturePref: 18,
     espeDeVie : "annuel")
     {
         //corps du constructeur
@@ -217,7 +202,7 @@ public class Pecher : Plante
     espace: 8,
     rendement: 30,
     saisonRecolte: 3,
-    temperaturePref: 18
+    temperaturePref: 18,
     espeDeVie : "vivace")
     {
         //corps du constructeur
@@ -244,7 +229,7 @@ public class VignesArtaban : Plante
     espace: 4,
     rendement: 20,
     saisonRecolte: 0,
-    temperaturePref: 25
+    temperaturePref: 25,
     espeDeVie : "vivace")
     {
         //corps du constructeur
@@ -271,7 +256,7 @@ public class Olivier : Plante
     espace: 8,
     rendement: 50,
     saisonRecolte: 4,
-    temperaturePref: 30
+    temperaturePref: 30,
     espeDeVie : "vivace")
     {
         //corps du constructeur
@@ -298,7 +283,7 @@ public class Tournesol : Plante
     espace: 4,
     rendement: 1,
     saisonRecolte: 3,
-    temperaturePref: 22
+    temperaturePref: 22,
     espeDeVie : "annuel")
     {
         //corps du constructeur
