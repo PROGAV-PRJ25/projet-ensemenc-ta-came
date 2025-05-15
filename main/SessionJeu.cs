@@ -128,6 +128,7 @@ public class SessionJeu
       }
       else if (ZoneActive != ECRAN_ACCUEIL.ACCUEIL)
       {
+
         if (Touche.Key == ConsoleKey.C)
         {
           //Comment jouer?
@@ -170,6 +171,37 @@ public class SessionJeu
       }
     }
     return choixFait;
+  }
+  public int DemanderPositionPotager()
+  {
+    ConsoleKeyInfo touche;
+    ZoneActive = ECRAN_JEU.POTAGER;
+    bool choixFait = false;
+    while (!choixFait)
+    {
+      touche = Console.ReadKey(intercept: true);
+      if (Touche.Key == ConsoleKey.LeftArrow)
+      {
+        ZoneActive.DeplacerCurseur("gauche");
+      }
+      else if (touche.Key == ConsoleKey.RightArrow)
+      {
+        ZoneActive.DeplacerCurseur("droite");
+      }
+      else if (touche.Key == ConsoleKey.UpArrow)
+      {
+        ZoneActive.DeplacerCurseur("haut");
+      }
+      else if (touche.Key == ConsoleKey.DownArrow)
+      {
+        ZoneActive.DeplacerCurseur("bas");
+      }
+      else if (touche.Key == ConsoleKey.Enter)
+      {
+        choixFait = true;
+      }
+    }
+    return ECRAN_JEU.POTAGER.Curseur;
   }
 
   // Actions Inventaire =======================================================

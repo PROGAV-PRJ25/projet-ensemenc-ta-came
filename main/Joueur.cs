@@ -15,5 +15,4 @@ public class Joueur
         Semis = [];
         Outils = [];
     }
-
 }

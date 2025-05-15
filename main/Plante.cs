@@ -9,7 +9,7 @@ public abstract class Plante
     public int VITESSECROISSANCE { set; get; }
     public bool CRAINFROID { set; get; }
     public bool CRAINSECHERESSE { set; get; }
-    public int BESOIN_EAU { set; get; } 
+    public int BESOIN_EAU { set; get; }
     public int SAISONRECOLTE { set; get; }
     public int TEMPERATUREPREF { set; get; }
 
@@ -18,7 +18,7 @@ public abstract class Plante
     public int Sante { set; get; } // sur 100 détermine la santé de la plante, si < 50 elle meurt
     public int Age { set; get; } // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
     public string Etat { set; get; } // indique l'état de la plante, défini à chaque nouvelle semaine
-    public int EspeDeVie { set; get; } //change avec les outils et nuisibles
+    public int EspeDeVie { set; get; } // change avec les outils et nuisibles
     public int QuantiteEau { set; get; } //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
     public int BesoinSoleil { set; get; } //change en fonction de la météo
     public string Nuisible { set; get; } //change en fonction de la classe nuisible 
@@ -66,8 +66,6 @@ public abstract class Plante
         Etat = "mort";
         EMOJI = "💀";
     }
-
-
 }
 public class PlanteVide : Plante
 {
@@ -79,7 +77,7 @@ public class PlanteVide : Plante
     saisonSemi: 0,
     terrainPref: "",
     vitesseCroissance: 0,
-    espeDeVie:0,
+    espeDeVie: 0,
     besoinEau: 0,
     besoinSoleil: 0,
     quantiteEau: 0,
@@ -97,6 +95,7 @@ public class PlanteVide : Plante
 
 
 }
+
 
 public class Pommier : Plante
 {

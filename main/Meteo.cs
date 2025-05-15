@@ -7,7 +7,6 @@ public abstract class Meteo
     {
         NOM = nom;
         EMOJI = emoji;
-
     }
 }
 public class Pluie : Meteo {
@@ -46,7 +45,6 @@ public class VentAutan : Meteo {
         //vent sec et chaud : réduit la quantité d'eau de -15%
         //si réduit trop quantitéeau en dessous de besoineau, santé-25
         //accelere la vitessecroissance de +2 (en mois) donc récolte plus tot
-
     }
 }
 
