@@ -9,7 +9,7 @@ public abstract class Plante
     public int VITESSECROISSANCE { set; get; }
     public bool CRAINFROID { set; get; }
     public bool CRAINSECHERESSE { set; get; }
-
+    public int BESOINEAU { set; get; } 
     public int SAISONRECOLTE { set; get; }
     public int TEMPERATUREPREF { set; get; }
 
@@ -19,7 +19,7 @@ public abstract class Plante
     public int Age { set; get; } // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
     public string Etat { set; get; } // indique l'état de la plante, défini à chaque nouvelle semaine
     public int EspeDeVie { set; get; } //change avec les outils et nuisibles
-    public int BesoinEau { set; get; } //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
+    public int QuantiteEau { set; get; } //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
     public int BesoinSoleil { set; get; } //change en fonction de la météo
     public string Nuisible { set; get; } //change en fonction de la classe nuisible 
     public string Defense { set; get; } //change en fonction d'outils
@@ -31,7 +31,7 @@ public abstract class Plante
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-    int vitesseCroissance, int espedevie , int besoinEau, int besoinSoleil, bool crainFroid, bool crainSecheresse,
+    int vitesseCroissance, int espedevie , int besoineau, int besoinSoleil, int quantiteeau bool crainFroid, bool crainSecheresse,
     string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref)
     {
         NOM = nom;
@@ -42,7 +42,8 @@ public abstract class Plante
         TERRAINPREF = terrainPref;
         VITESSECROISSANCE = vitesseCroissance;
         EspeDeVie = espedevie
-        BesoinEau = besoinEau;
+        BESOINEAU = besoineau;
+        QuantiteEau = quantiteeau;
         BesoinSoleil = besoinSoleil;
         CRAINFROID = crainFroid;
         CRAINSECHERESSE = crainSecheresse;
@@ -78,7 +79,8 @@ public class PlanteVide : Plante
     saisonSemi: ,
     terrainPref: "",
     vitesseCroissance: ,
-    besoinEau: ,
+    BESOINEAU: ,
+    QuantiteEau: ,
     besoinSoleil: ,
     crainFroid: ,
     crainSecheresse: ,
@@ -105,12 +107,12 @@ public class Pommier : Plante
     saisonSemi: 2,
     terrainPref: "argileux, drainé",
     vitesseCroissance: 10,
-    besoinEau: 50,
+    BESOINEAU: 50,
     besoinSoleil: 30,
     crainFroid: false,
     crainSecheresse: true,
-    nuisible: "chenilles et oiseaux",
-    defence: "fermier en colère, filets, tailler",
+    nuisible: "chenilles ou oiseaux",
+    defence: "fermier en colère, tailler",
     espace: 8,
     rendement: 80,
     saisonRecolte: 3,
@@ -133,11 +135,11 @@ public class Ble : Plante
     saisonSemi: 4,
     terrainPref: "riche et humifère",
     vitesseCroissance: 9,
-    besoinEau: 70,
+    BESOINEAU: 70,
     besoinSoleil: 80,
     crainFroid: true,
     crainSecheresse: false,
-    nuisible: "pucerons , Oïdium",
+    nuisible: "pucerons , Maladie",
     defence: "Traitement , coccinnelle",
     espace: 4,
     rendement: 20,
@@ -158,12 +160,12 @@ public class Carotte : Plante
     saisonSemi: 2,
     terrainPref: "meuble , sablonneu",
     vitesseCroissance: 3,
-    besoinEau: 40,
+    BESOINEAU: 40,
     besoinSoleil: 90,
     crainFroid: false,
     crainSecheresse: false,
-    nuisible: "lapins, mouches",
-    defence: "filets, fermier en colère",
+    nuisible: "lapins",
+    defence: "fermier en colère",
     espace: 4,
     rendement: 6,
     saisonRecolte: 3,
@@ -182,11 +184,11 @@ public class Pecher : Plante
     saisonSemi: 1,
     terrainPref: "caillouteu, à l'abbri du vent",
     vitesseCroissance: 9,
-    besoinEau: 50,
+    BESOINEAU: 50,
     besoinSoleil: 80,
     crainFroid: false,
     crainSecheresse: true,
-    nuisible: "pucerons , champignons, oïdium, gelées",
+    nuisible: "pucerons , champignons, maladies, gelées",
     defence: "Traitement , coccinnelle",
     espace: 8,
     rendement: 30,
@@ -207,11 +209,11 @@ public class VignesArtaban : Plante
     saisonSemi: 2,
     terrainPref: "calcaire, drainé",
     vitesseCroissance: 5,
-    besoinEau: 50,
+    BESOINEAU: 50,
     besoinSoleil: 80,
     crainFroid: true,
     crainSecheresse: false,
-    nuisible: "mildiou , Oïdium, gelée",
+    nuisible: "Maladies, gelée",
     defence: "Traitement , taille",
     espace: 4,
     rendement: 20,
@@ -232,12 +234,12 @@ public class Olivier : Plante
     saisonSemi: 2,
     terrainPref: "drainé",
     vitesseCroissance: 7,
-    besoinEau: 30,
+    BESOINEAU: 30,
     besoinSoleil: 80,
     crainFroid: false,
     crainSecheresse: false,
-    nuisible: "cochenilles, gelées",
-    defence: "Taille, tratement",
+    nuisible: "chenilles, gelées",
+    defence: "Taille, traitement",
     espace: 8,
     rendement: 50,
     saisonRecolte: 4,
@@ -257,12 +259,12 @@ public class Tournesol : Plante
     saisonSemi: 2,
     terrainPref: "drainé, pauvre",
     vitesseCroissance: 3,
-    besoinEau: 70,
+    BESOINEAU: 70,
     besoinSoleil: 70,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , oiseaux",
-    defence: "filets , coccinnelle",
+    defence: "fermier en colère , coccinnelle",
     espace: 4,
     rendement: 1,
     saisonRecolte: 3,

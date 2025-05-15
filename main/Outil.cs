@@ -70,6 +70,7 @@ public class Fumier : Outil {
     {
         //engrais naturel donc booste la croissance des plantes de +2
         //si trop, ça pue et santé -15
+        //si gel, protège du gel
     }
 }
 
@@ -108,5 +109,19 @@ public class FermierEnColère : Outil {
         //si oiseaux, => oiseau-1
         //si lapin, => lapin-1
         //sinon , sert de prévention et santé =+10
+    }
+}
+
+public class Serre : Outil {
+    public Serre(string nom, string emoji) : base(nom, emoji) {
+        NOM = "Serre";
+        EMOJI = "⛺️";
+    }
+    public override void Actionner(Parcelle parcelle) 
+    {
+        //si gel,protège du gel
+        //si oiseau, oiseau-1
+        //si pluis, quantitéeau ne bouge pas
+        //augmente la temperature de +5 degré
     }
 }
