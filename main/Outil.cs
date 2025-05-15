@@ -18,7 +18,7 @@ public class Arrosoir : Outil {
     public override void Actionner(Parcelle parcelle) 
     {
         //si dessous 20 unité d'eau , augmente l'hydratation de +1
-        //si >=20 , attention plante surhydraté et espédevie -2
+        //si >=20 , attention plante surhydraté et santé -2
     }
 }
 
@@ -43,7 +43,7 @@ public class Secateur : Outil {
     {
         //si prend trop de place , tailler et cases -2
         //si chenille , tailler et chenille -1
-        //sinon, abime la plante et espédevie -2
+        //sinon, abime la plante et santé -2
 
     }
 }
@@ -69,7 +69,7 @@ public class Fumier : Outil {
     public override void Actionner(Parcelle parcelle) 
     {
         //engrais naturel donc booste la croissance des plantes de +2
-        //si trop, ça pue et espédevie -1
+        //si trop, ça pue et santé -1
     }
 }
 
@@ -80,7 +80,9 @@ public class Traitement : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        //
+        //si maladies , traitement => maladie-1
+        //si champignon , traitement => champi-1
+        //sinon , trop de chimie => santé -2
     }
 }
 
@@ -91,6 +93,20 @@ public class Coccinnelle : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        //
+        //si pucerons, coccinelle => pucerons -1
+        //sinon , fait joli
+    }
+}
+
+public class FermierEnColère : Outil {
+    public Coccinnelle(string nom, string emoji) : base(nom, emoji) {
+        NOM = "Fermier en colère";
+        EMOJI = "👨🏻‍🌾";
+    }
+    public override void Actionner(Parcelle parcelle) 
+    {
+        //si oiseaux, => oiseau-1
+        //si lapin, => lapin-1
+        //sinon , sert de prévention et santé =+1
     }
 }
