@@ -17,8 +17,8 @@ public class Arrosoir : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        //si dessous 20 unité d'eau , augmente l'hydratation de +1
-        //si >=20 , attention plante surhydraté et santé -2
+        //si dessous besoineau , augmente l'hydratation de +15%
+        //si au dessus besoineau , attention plante surhydraté et santé -20
     }
 }
 
@@ -29,7 +29,7 @@ public class Panier : Outil {
     }
     public override void Actionner(Parcelle parcelle) 
     {
-        //si fruit , le récolte et rendement-1
+        //si fruit , le récolte et rendement -1
         //si pas fruit, ne sert à rien
     }
 }
@@ -43,7 +43,7 @@ public class Secateur : Outil {
     {
         //si prend trop de place , tailler et cases -2
         //si chenille , tailler et chenille -1
-        //sinon, abime la plante et santé -2
+        //sinon, abime la plante et santé -15
 
     }
 }
@@ -69,7 +69,7 @@ public class Fumier : Outil {
     public override void Actionner(Parcelle parcelle) 
     {
         //engrais naturel donc booste la croissance des plantes de +2
-        //si trop, ça pue et santé -1
+        //si trop, ça pue et santé -15
     }
 }
 
@@ -82,7 +82,7 @@ public class Traitement : Outil {
     {
         //si maladies , traitement => maladie-1
         //si champignon , traitement => champi-1
-        //sinon , trop de chimie => santé -2
+        //sinon , trop de chimie => santé -20
     }
 }
 
@@ -107,6 +107,6 @@ public class FermierEnColère : Outil {
     {
         //si oiseaux, => oiseau-1
         //si lapin, => lapin-1
-        //sinon , sert de prévention et santé =+1
+        //sinon , sert de prévention et santé =+10
     }
 }
