@@ -4,14 +4,15 @@ public abstract class Plante
     public string NOM { get; private set; }
     public string EMOJI { set; get; }
     public string TYPE { set; get; }
-    public int SAISONSEMI { set; get; }
-    public string TERRAINPREF { set; get; }
-    public int VITESSECROISSANCE { set; get; }
-    public bool CRAINFROID { set; get; }
-    public bool CRAINSECHERESSE { set; get; }
+    public int SAISON_SEMI { set; get; }
+    public string TERRAIN_PREF { set; get; }
+    public int VITESSE_CROISSANCE { set; get; }
+    public bool CRAIN_FROID { set; get; }
+    public bool CRAIN_SECHERESSE { set; get; }
     public int BESOIN_EAU { set; get; } 
-    public int SAISONRECOLTE { set; get; }
-    public int TEMPERATUREPREF { set; get; }
+    public int SAISON_RECOLTE { set; get; }
+    public int TEMPERATURE_PREF { set; get; }
+    public string ESPE_DE_VIE { set; get; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
@@ -31,28 +32,29 @@ public abstract class Plante
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-    int vitesseCroissance, int espeDeVie , int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref)
+    int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
+    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie)
     {
         NOM = nom;
         EMOJI = emoji;
         Etats = etats;
         TYPE = type;
-        SAISONSEMI = saisonSemi;
-        TERRAINPREF = terrainPref;
-        VITESSECROISSANCE = vitesseCroissance;
+        SAISON_SEMI = saisonSemi;
+        TERRAIN_PREF = terrainPref;
+        VITESSE_CROISSANCE = vitesseCroissance;
         EspeDeVie = espeDeVie;
         BESOIN_EAU = besoinEau;
         QuantiteEau = quantiteEau;
         BesoinSoleil = besoinSoleil;
-        CRAINFROID = crainFroid;
-        CRAINSECHERESSE = crainSecheresse;
+        CRAIN_FROID = crainFroid;
+        CRAIN_SECHERESSE = crainSecheresse;
         Nuisible = nuisible;
         Defense = defence;
         Espace = espace;
         Rendement = rendement;
-        SAISONRECOLTE = saisonRecolte;
-        TEMPERATUREPREF = temperaturePref;
+        SAISON_RECOLTE = saisonRecolte;
+        TEMPERATURE_PREF = temperaturePref;
+        ESPE_DE_VIE = espeDeVie;
 
         Age = 0;
         Etat = etats[0];
@@ -79,7 +81,6 @@ public class PlanteVide : Plante
     saisonSemi: 0,
     terrainPref: "",
     vitesseCroissance: 0,
-    espeDeVie:0,
     besoinEau: 0,
     besoinSoleil: 0,
     quantiteEau: 0,
@@ -90,7 +91,8 @@ public class PlanteVide : Plante
     espace: 0,
     rendement: 0,
     saisonRecolte: 0,
-    temperaturePref: 0)
+    temperaturePref: 0
+    espeDeVie : "")
     {
         //corps du constructeur
     }
@@ -108,7 +110,6 @@ public class Pommier : Plante
     saisonSemi: 2,
     terrainPref: "argileux, drainé",
     vitesseCroissance: 10,
-    espeDeVie:0,
     besoinEau: 50,
     besoinSoleil: 30,
     quantiteEau:0,
@@ -119,7 +120,8 @@ public class Pommier : Plante
     espace: 8,
     rendement: 80,
     saisonRecolte: 3,
-    temperaturePref: 18)
+    temperaturePref: 18
+    espeDeVie : "vivace" )
     {
         //corps du constructeur
     }
@@ -138,7 +140,6 @@ public class Ble : Plante
     saisonSemi: 4,
     terrainPref: "riche et humifère",
     vitesseCroissance: 9,
-    espeDeVie:0,
     besoinEau: 70,
     besoinSoleil: 80,
     quantiteEau:0,
@@ -149,7 +150,8 @@ public class Ble : Plante
     espace: 4,
     rendement: 20,
     saisonRecolte: 3,
-    temperaturePref: 16)
+    temperaturePref: 16
+    espeDeVie : "annuel")
     {
         //corps du constructeur
     }
@@ -165,7 +167,6 @@ public class Carotte : Plante
     saisonSemi: 2,
     terrainPref: "meuble , sablonneu",
     vitesseCroissance: 3,
-    espeDeVie:0,
     besoinEau: 40,
     besoinSoleil: 90,
     quantiteEau:0,
@@ -176,7 +177,8 @@ public class Carotte : Plante
     espace: 4,
     rendement: 6,
     saisonRecolte: 3,
-    temperaturePref: 18)
+    temperaturePref: 18
+    espeDeVie : "annuel")
     {
         //corps du constructeur
     }
@@ -191,7 +193,6 @@ public class Pecher : Plante
     saisonSemi: 1,
     terrainPref: "caillouteu, à l'abbri du vent",
     vitesseCroissance: 9,
-    espeDeVie:0,
     besoinEau: 50,
     besoinSoleil: 80,
     quantiteEau:0,
@@ -202,7 +203,8 @@ public class Pecher : Plante
     espace: 8,
     rendement: 30,
     saisonRecolte: 3,
-    temperaturePref: 18)
+    temperaturePref: 18
+    espeDeVie : "vivace")
     {
         //corps du constructeur
     }
@@ -218,7 +220,6 @@ public class VignesArtaban : Plante
     saisonSemi: 2,
     terrainPref: "calcaire, drainé",
     vitesseCroissance: 5,
-    espeDeVie:0,
     besoinEau: 50,
     besoinSoleil: 80,
     quantiteEau:0,
@@ -229,7 +230,8 @@ public class VignesArtaban : Plante
     espace: 4,
     rendement: 20,
     saisonRecolte: 0,
-    temperaturePref: 25)
+    temperaturePref: 25
+    espeDeVie : "vivace")
     {
         //corps du constructeur
     }
@@ -245,7 +247,6 @@ public class Olivier : Plante
     saisonSemi: 2,
     terrainPref: "drainé",
     vitesseCroissance: 7,
-    espeDeVie:0,
     besoinEau: 30,
     besoinSoleil: 80,
     quantiteEau:0,
@@ -256,7 +257,8 @@ public class Olivier : Plante
     espace: 8,
     rendement: 50,
     saisonRecolte: 4,
-    temperaturePref: 30)
+    temperaturePref: 30
+    espeDeVie : "vivace")
     {
         //corps du constructeur
     }
@@ -272,7 +274,6 @@ public class Tournesol : Plante
     saisonSemi: 2,
     terrainPref: "drainé, pauvre",
     vitesseCroissance: 3,
-    espeDeVie:0,
     besoinEau: 70,
     besoinSoleil: 70,
     quantiteEau:0,
@@ -283,7 +284,8 @@ public class Tournesol : Plante
     espace: 4,
     rendement: 1,
     saisonRecolte: 3,
-    temperaturePref: 22)
+    temperaturePref: 22
+    espeDeVie : "annuel")
     {
         //corps du constructeur
     }
