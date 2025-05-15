@@ -98,7 +98,7 @@ public class ZoneEcranJeu : Interface
     public ZoneTexte? WEBCAM { set; get; }
     public Champs POTAGER { set; get; }
     public int IndiceZoneActive { set; get; }
-    public EnsembleZoneTexte  BARRE_NAVIGATION { set; get; }
+    public EnsembleZoneTexte BARRE_NAVIGATION { set; get; }
 
     public ZoneEcranJeu(int positionColonne, int positionLigne, int largeur, int hauteur)
     : base(positionColonne, positionLigne, largeur, hauteur)
@@ -109,7 +109,7 @@ public class ZoneEcranJeu : Interface
         //Création des éléments composant le volet supérieur
         DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
-        MODE = new ZoneTexte(Largeur - 13, 1, 13, 1, "Mode Normal");
+        MODE = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
         // Créaction de la zone potager
         POTAGER = new Champs(1, 4, 10, 10);
 
@@ -122,12 +122,12 @@ public class ZoneEcranJeu : Interface
         BARRE_NAVIGATION.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
 
         //Création des différents menus de l'affichage
-        INVENTAIRE = new ZoneMenu("Inventaire", 1, hauteurNavBar + 2, (Largeur * 3 / 4) - 2, Hauteur - 3 - (hauteurNavBar + 2));
-        JOURNAL = new ZoneMenu("Journal", 1, hauteurNavBar + 2, (Largeur * 3 / 4) - 2, Hauteur - 3 - (hauteurNavBar + 2));
-        MAGASIN = new ZoneMenu("Magasin", 1, hauteurNavBar + 2, (Largeur * 3 / 4) - 2, Hauteur - 3 - (hauteurNavBar + 2));
-        SUIVANT = new ZoneMenu("Suivant", 1, hauteurNavBar + 2, (Largeur * 3 / 4) - 2, Hauteur - 3 - (hauteurNavBar + 2));
+        INVENTAIRE = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        JOURNAL = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        MAGASIN = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        SUIVANT = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
-        DIALOGUE = new ZoneTexte(1, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
+        DIALOGUE = new ZoneTexte(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
         DETAILS = new ZoneTexte(Largeur * 3 / 4, 4, (Largeur * 1 / 4) - 1, Hauteur - 5);
 
@@ -184,6 +184,7 @@ public class ZoneEcranJeu : Interface
         Console.ResetColor();
 
     }
+    
 
 }
 public class InterfaceAccueil : Interface
@@ -191,9 +192,10 @@ public class InterfaceAccueil : Interface
     public ZoneMenu ACCUEIL { set; get; }
     public InterfaceAccueil(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
-        ACCUEIL = new ZoneMenu("Accueil", Position[0] + 1, Position[1] + 1, Largeur - 2, Hauteur - 2);
+        ACCUEIL = new ZoneMenu("Accueil", Position[0] + 1, Position[1] + 1, Largeur - 3, Hauteur - 3);
         ConstruireCadre();
     }
+    public InterfaceAccueil() : this(0, 0, Console.WindowWidth, Console.WindowHeight) { }
     public override void Afficher()
     {
         AfficherLignesDirectrices();

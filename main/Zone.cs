@@ -137,11 +137,18 @@ public class ZoneTexte : Zone
         CouleurTexte = couleurTexte;
         CouleurFond = couleurFond;
     }
+
     public override void Afficher()
     {
         Effacer();
         EcrireTexte(Contenu, Position[0], Position[1]);
     }
+}
+public class ZoneDialogue : ZoneTexte
+{
+    public ZoneDialogue(int colonne, int ligne, int largeur, int hauteur, string titre, ConsoleColor couleurTexte = ConsoleColor.Blue, ConsoleColor couleurFond = ConsoleColor.Black)
+        : base(colonne, ligne, largeur, hauteur, titre, couleurTexte, couleurFond)
+    { }
 
 }
 public abstract class ZoneInteractive : Zone
