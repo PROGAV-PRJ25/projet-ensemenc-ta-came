@@ -77,9 +77,10 @@ public class SessionJeu
         ECRAN_JEU.LIEU.Contenu = JoueurActuel.Lieu;
         ECRAN_JEU.DATE.Contenu = "2003 - Semaine 1 (printemps)";
         ECRAN_JEU.CHAMPS.InitialiserParcelles(JoueurActuel.Potager);
-
-        ZoneActive = ECRAN_JEU.CHAMPS;
+        ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.CHAMPS;
+        ZoneActive = ECRAN_JEU.ChampsEtDetails;
         ECRAN_JEU.Afficher();
+
     }
 
     // Affichage ================================================================
@@ -138,7 +139,7 @@ public class SessionJeu
                 if (Touche.Key == ConsoleKey.C)
                 {
                     //Comment jouer?
-                    ECRAN_JEU.BasculerSurFenetre(4); // 0 = fenêtre d'aide aux commandes de base
+                    ECRAN_JEU.BasculerSurFenetre(5); // 0 = fenêtre d'aide aux commandes de base
                     ZoneActive.Afficher();
                 }
                 else if (Touche.Key == ConsoleKey.I)
@@ -169,6 +170,12 @@ public class SessionJeu
                 {
                     // Champs.ChangerVue()
                 }
+                else if (Touche.Key == ConsoleKey.P)
+                {
+                    ZoneActive = ECRAN_JEU.ChampsEtDetails;
+                    ZoneActive.Afficher();
+                }
+                
 
             }
             else
