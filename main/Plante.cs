@@ -63,7 +63,11 @@ public abstract class Plante
     }
     public override string ToString()
     {
-        string reponse =
+        string reponse;
+        if (TYPE == "plante vide")
+            reponse = "Emplacement vide !";
+        else
+            reponse =
             $"{EMOJI} {NOM} ({TYPE})\n" +
             $"Etat : {Etat}\n" +
             $"Quantité d'eau : {QuantiteEau}\n" +
@@ -314,6 +318,10 @@ public class Olivier : Plante
     public override Plante Dupliquer()
     {
         return new Olivier();
+    }
+    public override string ToString()
+    {
+        return "(vide)";
     }
 
 }

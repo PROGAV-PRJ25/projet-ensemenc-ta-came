@@ -132,7 +132,7 @@ public class ZoneEcranJeu : Interface
         // Création de la zone dédiée au dialogue
         DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        DETAILS = new ZoneTexte(Largeur * 3 / 4, 4, (Largeur * 1 / 4) - 1, Hauteur - 5);
+        DETAILS = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 5);
 
         ChampsEtDetails = new GroupeChampsDetails(CHAMPS, DETAILS);
         //JournalEtArticles = new GroupeJournalEtArticles;
@@ -177,6 +177,7 @@ public class ZoneEcranJeu : Interface
         CHAMPS.Afficher();
         DIALOGUE.Afficher();
         INVENTAIRE.Afficher();
+        DETAILS.Afficher();
     }
 
 
@@ -188,9 +189,8 @@ public class ZoneEcranJeu : Interface
         Console.ForegroundColor = ConsoleColor.DarkRed;
         BARRE_NAVIGATION.Valeurs[IndiceZoneActive].Afficher();
         Console.ResetColor();
-
     }
-    
+
 
 }
 public class InterfaceAccueil : Interface
@@ -208,40 +208,35 @@ public class InterfaceAccueil : Interface
     }
 
 }
-public abstract class GestionnaireZonesEnLien
+
+public class GroupeChampsDetails : ZoneInteractive
 {
-    public int Curseur { set; get; }
-    public ZoneInteractive ZoneNavigable { set; get; }
-    public ZoneTexte ZoneAffichage { set; get; }
-    //permet d'actualiser une zone d'affichage lorsqu'une zone interactive change de sélection
-    public GestionnaireZonesEnLien(ZoneInteractive zoneNavigable, ZoneTexte zoneAffichage)
-    {
-        ZoneNavigable = zoneNavigable;
-        ZoneAffichage = zoneAffichage;
-    }
-    public void DeplacerCurseur(string deplacement)
-    {
-        int curseurInitialChamps = ZoneNavigable.Curseur;
-        ZoneNavigable.DeplacerCurseur(deplacement);
-        if (ZoneNavigable.Curseur != curseurInitialChamps)
-        {
-            ZoneAffichage.Contenu = RecupererTexte();
-            ZoneAffichage.Afficher();
-        }
-    }
-    public abstract string RecupererTexte();
-    
-}
-public class GroupeChampsDetails : GestionnaireZonesEnLien
-{
-    ZoneChamps Champs { set; get; }
-    public GroupeChampsDetails(ZoneChamps champs, ZoneTexte details) : base(champs, details)
+    public ZoneChamps Champs { set; get; }
+    public ZoneTexte Details { set; get; }
+
+    public GroupeChampsDetails(ZoneChamps champs, ZoneTexte details) : base(champs.Position[0], champs.Position[1], champs.Largeur, champs.Hauteur)
     {
         Champs = champs;
+        Details = details;
+        Champs = champs;
+
     }
-    public override string RecupererTexte()
+    public override void ValiderSelection() { }
+    public override void RetournerEnArriere() { }
+    public override void Afficher()
     {
-        return Champs.Parcelles[Curseur % Champs.Largeur, Curseur / Champs.Largeur].Contenu.ToString();
+        Champs.Afficher();
+        Details.Afficher();
+    }
+    public override void DeplacerCurseur(string deplacement)
+    {
+        int curseurInitial = Champs.Curseur;
+        Champs.DeplacerCurseur(deplacement);
+        if (Champs.Curseur != curseurInitial)
+        { // attention on n'utilise que le curseur du champs et non celui de la classe du groupe
+            Details.Contenu = Champs.Parcelles[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
+            Details.Afficher();
+        }
     }
 }
 
