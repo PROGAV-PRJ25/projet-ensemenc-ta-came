@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 public abstract class Interface : Zone
 {
     public CelluleAffichage[,] Grille { set; get; }
@@ -99,6 +101,7 @@ public class ZoneEcranJeu : Interface
     public ZoneChamps CHAMPS { set; get; }
     public int IndiceZoneActive { set; get; }
     public EnsembleZoneTexte BARRE_NAVIGATION { set; get; }
+    public GroupeChampsDetails ChampsEtDetails { set; get; }
 
     public ZoneEcranJeu(int positionColonne, int positionLigne, int largeur, int hauteur)
     : base(positionColonne, positionLigne, largeur, hauteur)
@@ -130,6 +133,9 @@ public class ZoneEcranJeu : Interface
         DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
         DETAILS = new ZoneTexte(Largeur * 3 / 4, 4, (Largeur * 1 / 4) - 1, Hauteur - 5);
+
+        ChampsEtDetails = new GroupeChampsDetails(CHAMPS, DETAILS);
+        //JournalEtArticles = new GroupeJournalEtArticles;
 
     }
     public ZoneEcranJeu() : this(0, 0, Console.WindowWidth, Console.WindowHeight - 1) { }
@@ -201,6 +207,42 @@ public class InterfaceAccueil : Interface
         AfficherLignesDirectrices();
     }
 
+}
+public abstract class GestionnaireZonesEnLien
+{
+    public int Curseur { set; get; }
+    public ZoneInteractive ZoneNavigable { set; get; }
+    public ZoneTexte ZoneAffichage { set; get; }
+    //permet d'actualiser une zone d'affichage lorsqu'une zone interactive change de sélection
+    public GestionnaireZonesEnLien(ZoneInteractive zoneNavigable, ZoneTexte zoneAffichage)
+    {
+        ZoneNavigable = zoneNavigable;
+        ZoneAffichage = zoneAffichage;
+    }
+    public void DeplacerCurseur(string deplacement)
+    {
+        int curseurInitialChamps = ZoneNavigable.Curseur;
+        ZoneNavigable.DeplacerCurseur(deplacement);
+        if (ZoneNavigable.Curseur != curseurInitialChamps)
+        {
+            ZoneAffichage.Contenu = RecupererTexte();
+            ZoneAffichage.Afficher();
+        }
+    }
+    public abstract string RecupererTexte();
+    
+}
+public class GroupeChampsDetails : GestionnaireZonesEnLien
+{
+    ZoneChamps Champs { set; get; }
+    public GroupeChampsDetails(ZoneChamps champs, ZoneTexte details) : base(champs, details)
+    {
+        Champs = champs;
+    }
+    public override string RecupererTexte()
+    {
+        return Champs.Parcelles[Curseur % Champs.Largeur, Curseur / Champs.Largeur].Contenu.ToString();
+    }
 }
 
 public class EnsembleZoneTexte

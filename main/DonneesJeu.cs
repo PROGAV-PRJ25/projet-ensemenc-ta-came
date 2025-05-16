@@ -16,3 +16,4 @@ public class Date
         return $"{Annee} - Semaine {Semaine}";
     }
 }
+public class InformationsJeu{}
