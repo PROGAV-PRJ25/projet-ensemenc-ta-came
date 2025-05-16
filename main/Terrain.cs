@@ -133,11 +133,20 @@ public class Parcelle : CelluleAffichage
 {
     public new Plante Contenu { set; get; } // on utilise new car le contenu devient une plante cette fois
     public bool Libre { set; get; }
+    public List<string> NuisiblesActuels { get; set; }
+    public string Defense => Contenu.Defense;
+    
     public Parcelle(Plante plante) : base()
     {
         Libre = true;
         Contenu = plante;
         CouleurFond = ConsoleColor.DarkGreen;
+        NuisiblesActuels = new List<string>();
+    }
+
+    public bool NuisibleSemainePro(string nom)
+    {
+        return NuisiblesActuels.Contains(nom);
     }
 }
 

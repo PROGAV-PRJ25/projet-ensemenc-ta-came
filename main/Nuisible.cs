@@ -10,6 +10,9 @@ public abstract class Nuisible
 
     }
 }
+
+
+
 public class Maladie : Nuisible {
     public Maladie (string nom, string emoji) : base(nom, emoji) {
         NOM = "Maladie";
@@ -17,8 +20,11 @@ public class Maladie : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //si maladie, santé -10
-        //si maladie non traité au mois suivant, santé -40
+        parcelle.Contenu.Sante -= 10;
+        if(parcelle.NuisibleSemainePro(NOM)) //si la semaine d'après, le nuisible est toujours là, (NuisibleSemainePro dans la classe parcelle)
+        {
+            parcelle.Contenu.Sante -= 40;
+        }
     }
 }
 
@@ -29,8 +35,11 @@ public class Champignon : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //si champi , santé -20
-        //si non traité au mois suivant, santé -20
+        parcelle.Contenu.Sante -= 20;
+        if(parcelle.NuisibleSemainePro(NOM))
+        {
+            parcelle.Contenu.Sante -= 20;
+        }
     }
 }
 
@@ -41,8 +50,11 @@ public class Chenille : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //chenille santé=-15
-        //si non traité au mois suivant, santé -40
+        parcelle.Contenu.Sante -= 15;
+        if(parcelle.NuisibleSemainePro(NOM))
+        {
+            parcelle.Contenu.Sante -= 40;
+        }
 
     }
 }
@@ -54,8 +66,11 @@ public class Pucerons : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //santé =-10
-        //si non traité au mois suivant santé=-20
+        parcelle.Contenu.Sante -= 10;
+        if(parcelle.NuisibleSemainePro(NOM))
+        {
+            parcelle.Contenu.Sante -= 20;
+        }
     }
 }
 
@@ -66,8 +81,11 @@ public class Lapin : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //santé =-10
-        //si non traité au mois suivant santé=-30
+        parcelle.Contenu.Sante -= 10;
+        if(parcelle.NuisibleSemainePro(NOM))
+        {
+            parcelle.Contenu.Sante -= 30;
+        }
     }
 }
 
@@ -78,8 +96,11 @@ public class Oiseau : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        //santé -20
-        //si non traité au mois suivant santé=-35
+        parcelle.Contenu.Sante -= 20;
+        if(parcelle.NuisibleSemainePro(NOM))
+        {
+            parcelle.Contenu.Sante -= 35;
+        }
     }
 }
 

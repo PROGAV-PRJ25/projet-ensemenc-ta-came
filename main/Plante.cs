@@ -6,7 +6,6 @@ public abstract class Plante
     public string TYPE { set; get; }
     public int SAISON_SEMI { set; get; }
     public string TERRAIN_PREF { set; get; }
-    public int VITESSE_CROISSANCE { set; get; }
     public bool CRAIN_FROID { set; get; }
     public bool CRAIN_SECHERESSE { set; get; }
     public int BESOIN_EAU { set; get; }
@@ -17,6 +16,7 @@ public abstract class Plante
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
+    public int VitesseCroissance { set; get; }
     public int Sante { set; get; } // sur 100 détermine la santé de la plante, si < 50 elle meurt
     public int Age { set; get; } // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
     public string Etat { set; get; } // indique l'état de la plante, défini à chaque nouvelle semaine
@@ -33,7 +33,7 @@ public abstract class Plante
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-    int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
+     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
     string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixSemis)
     {
         NOM = nom;
@@ -42,7 +42,7 @@ public abstract class Plante
         TYPE = type;
         SAISON_SEMI = saisonSemi;
         TERRAIN_PREF = terrainPref;
-        VITESSE_CROISSANCE = vitesseCroissance;
+        VitesseCroissance = vitesseCroissance;
         ESPE_DE_VIE = espeDeVie;
         BESOIN_EAU = besoinEau;
         QuantiteEau = quantiteEau;
