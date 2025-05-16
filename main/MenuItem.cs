@@ -50,17 +50,17 @@ public class ElementMenu
 public class ElementMenuNouvellePartie : ElementMenu
 {
     public SessionJeu Session { set; get; }
-    string Pays { set; get; }
+    string Ville { set; get; }
 
     public ElementMenuNouvellePartie(ZoneMenu menuReference, string titre, SessionJeu session) : base(menuReference, titre)
     {
         Session = session;
-        Pays = titre.ToLower();
+        Ville = titre;
     }
 
     public override void Actionner()
     {
-        Session.DemarrerNouvellePartie(Pays);
+        Session.DemarrerNouvellePartie(Ville);
     }
 }
 public class ElementMenuNoeud : ElementMenu
@@ -102,14 +102,28 @@ public class ElementMenuJournal : ElementMenu
         //Presenter information
     }
 }
-public class ElementMenuSuivant : ElementMenu {
-    SessionJeu Session {set;get;}
-    public ElementMenuSuivant(ZoneMenu menuReference, string description, SessionJeu session): base(menuReference,description)
+public class ElementMenuFonctionnel : ElementMenu
+{
+    public SessionJeu Session { set; get; }
+    public ElementMenuFonctionnel(ZoneMenu menuReference, string description, SessionJeu session) : base(menuReference, description)
     {
         Session = session;
     }
+}
+public class ElementMenuSuivant : ElementMenuFonctionnel
+{
+    public ElementMenuSuivant(ZoneMenu menuReference, string description, SessionJeu session) : base(menuReference, description, session) { }
     public override void Actionner()
     {
         Session.PasserSemaineSuivante();
+    }
+}
+
+public class ElementMenuAjoutSemis : ElementMenuFonctionnel
+{
+    public ElementMenuAjoutSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session) { }
+    public override void Actionner()
+    {
+        Session.PlanterSemis();
     }
 }

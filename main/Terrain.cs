@@ -1,20 +1,30 @@
-using System.Runtime.InteropServices;
+public abstract class Terrain
+{
+    public int TauxHumidite { set; get; }
+    
+}
 
-public class Champs : ZoneInteractive
+public class ZoneChamps : ZoneInteractive
 {
 
     public Parcelle[,] Parcelles { set; get; }
-    public Champs(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
+    public ZoneChamps(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
-        Parcelles = new Parcelle[largeur, hauteur];
-        InitialiserParcelles();
+        Parcelles = new Parcelle[largeur,hauteur];
+        PlanteVide[,] tableauPlantesVides = new PlanteVide[largeur, hauteur];
+        InitialiserParcelles(tableauPlantesVides);
         Curseur = 22;
     }
-    private void InitialiserParcelles()
+    public ZoneChamps(int colonne, int ligne, int largeur, int hauteur, Plante[,] plants) : this(colonne, ligne, largeur, hauteur)
+    {
+        Parcelles = new Parcelle[plants.GetLength(0), plants.GetLength(1)];
+        InitialiserParcelles(plants);
+    }
+    public void InitialiserParcelles(Plante[,] plants)
     {
         for (int ligne = 0; ligne < Hauteur; ligne++)
             for (int colonne = 0; colonne < Largeur; colonne++)
-                Parcelles[ligne, colonne] = new Parcelle();
+                Parcelles[colonne, ligne] = new Parcelle(plants[colonne, ligne]);
     }
     public override void RetournerEnArriere() { }
     public override void ValiderSelection() { }
@@ -43,7 +53,7 @@ public class Champs : ZoneInteractive
         {
             AfficherParcelle(Curseur % Largeur, Curseur / Largeur);
             Curseur = nouveauCurseur;
-            AfficherCurseur();
+            Afficher();
         }
     }
     public override void Afficher()
@@ -55,7 +65,7 @@ public class Champs : ZoneInteractive
             Console.SetCursorPosition(Position[0], Position[1] + ligne);
 
             for (int colonne = 0; colonne < Largeur; colonne++)
-                Console.Write(Parcelles[ligne, colonne].Contenu.EMOJI);
+                Console.Write(Parcelles[colonne, ligne].Contenu.EMOJI);
         }
         Console.ResetColor();
         AfficherCurseur();
@@ -63,14 +73,14 @@ public class Champs : ZoneInteractive
     public void AfficherCurseur()
     {
         Console.BackgroundColor = ConsoleColor.White;
-        Console.SetCursorPosition(Position[0]+ (Curseur % Largeur), Position[1] +(Curseur / Largeur));
+        Console.SetCursorPosition(Position[0] + (Curseur % Largeur)*2, Position[1] + (Curseur / Largeur));
         Console.Write(Parcelles[Curseur % Largeur, Curseur / Largeur].Contenu.EMOJI);
         Console.ResetColor();
     }
     public void AfficherParcelle(int colonne, int ligne)
     {
         Console.BackgroundColor = Parcelles[colonne, ligne].CouleurFond;
-        Console.SetCursorPosition(Position[0] + colonne, Position[1] + ligne);
+        Console.SetCursorPosition(Position[0] + colonne*2, Position[1] + ligne);
         Console.Write(Parcelles[colonne, ligne].Contenu.EMOJI);
         Console.ResetColor();
     }
@@ -123,10 +133,10 @@ public class Parcelle : CelluleAffichage
 {
     public new Plante Contenu { set; get; } // on utilise new car le contenu devient une plante cette fois
     public bool Libre { set; get; }
-    public Parcelle() : base()
+    public Parcelle(Plante plante) : base()
     {
         Libre = true;
-        Contenu = new PlanteVide();
+        Contenu = plante;
         CouleurFond = ConsoleColor.DarkGreen;
     }
 }

@@ -149,6 +149,40 @@ public class ZoneDialogue : ZoneTexte
     public ZoneDialogue(int colonne, int ligne, int largeur, int hauteur, string titre, ConsoleColor couleurTexte = ConsoleColor.Blue, ConsoleColor couleurFond = ConsoleColor.Black)
         : base(colonne, ligne, largeur, hauteur, titre, couleurTexte, couleurFond)
     { }
+    public void AfficherMessageSemaine(int semaine)
+    {
+        Contenu = $"Semaine passée ! ";
+        if (semaine == 1)
+        {
+            Contenu += $"1 semaine s'est écoulée depuis le début de votre aventure !";
+        }
+        else if (semaine == 52)
+        {
+            Contenu += $"1 an s'est écoulé depuis le début de votre aventure !";
+        }
+        else
+        {
+            if (semaine % 52 == 0)
+            {
+                Contenu += $"{semaine / 52} ans se sont écoulés depuis le début de l'aventure !";
+            }
+            else
+            {
+                if (semaine / 52 > 1)
+                {
+                    Contenu += $"{semaine / 52} ans et ";
+                }
+                else if (semaine / 52 > 0)
+                {
+                    Contenu += $"{semaine / 52} an et ";
+                }
+                
+                Contenu += $"{semaine % 52} semaines se sont écoulées depuis le début de votre aventure !";
+            }
+        }
+        Afficher();
+    }
+    
 
 }
 public abstract class ZoneInteractive : Zone

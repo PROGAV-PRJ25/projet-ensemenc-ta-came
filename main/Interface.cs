@@ -89,14 +89,14 @@ public class ZoneEcranJeu : Interface
     public ZoneMenu JOURNAL { set; get; }
     public ZoneMenu SUIVANT { set; get; }
     public ZoneTexte DETAILS { set; get; }
-    public ZoneTexte DIALOGUE { set; get; }
+    public ZoneDialogue DIALOGUE { set; get; }
     public ZoneTexte DATE { set; get; }
     public ZoneTexte LIEU { set; get; }
     public ZoneTexte MODE { set; get; }
     public ZoneTexte? ARGENT { set; get; }
     public ZoneTexte? METEO { set; get; }
     public ZoneTexte? WEBCAM { set; get; }
-    public Champs POTAGER { set; get; }
+    public ZoneChamps CHAMPS { set; get; }
     public int IndiceZoneActive { set; get; }
     public EnsembleZoneTexte BARRE_NAVIGATION { set; get; }
 
@@ -110,8 +110,8 @@ public class ZoneEcranJeu : Interface
         DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
         MODE = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
-        // Créaction de la zone potager
-        POTAGER = new Champs(1, 4, 10, 10);
+        // Créaction de la zone CHAMPS
+        CHAMPS = new ZoneChamps(1, 4, 10, 10);
 
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
@@ -127,7 +127,7 @@ public class ZoneEcranJeu : Interface
         MAGASIN = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         SUIVANT = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
-        DIALOGUE = new ZoneTexte(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
+        DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
         DETAILS = new ZoneTexte(Largeur * 3 / 4, 4, (Largeur * 1 / 4) - 1, Hauteur - 5);
 
@@ -168,7 +168,7 @@ public class ZoneEcranJeu : Interface
         DATE.Afficher();
         LIEU.Afficher();
         MODE.Afficher();
-        POTAGER.Afficher();
+        CHAMPS.Afficher();
         DIALOGUE.Afficher();
         INVENTAIRE.Afficher();
     }

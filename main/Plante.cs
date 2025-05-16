@@ -9,10 +9,11 @@ public abstract class Plante
     public int VITESSE_CROISSANCE { set; get; }
     public bool CRAIN_FROID { set; get; }
     public bool CRAIN_SECHERESSE { set; get; }
-    public int BESOIN_EAU { set; get; } 
+    public int BESOIN_EAU { set; get; }
     public int SAISON_RECOLTE { set; get; }
     public int TEMPERATURE_PREF { set; get; }
     public string ESPE_DE_VIE { set; get; }
+    public int PRIX_SEMIS { set; get; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
@@ -26,14 +27,14 @@ public abstract class Plante
     public string Defense { set; get; } //change en fonction d'outils
     public int Espace { set; get; } //change quand on taille la plante
     public int Rendement { set; get; } //change en fonction de la saison, de la météo et de l'outil panier
-    
+
     //public int QuantiteEau { set; get; }  
     //public int BesoinSoleil { set; get; } 
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie)
+    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixSemis)
     {
         NOM = nom;
         EMOJI = emoji;
@@ -55,9 +56,19 @@ public abstract class Plante
         SAISON_RECOLTE = saisonRecolte;
         TEMPERATURE_PREF = temperaturePref;
         ESPE_DE_VIE = espeDeVie;
+        PRIX_SEMIS = prixSemis;
 
         Age = 0;
         Etat = etats[0];
+    }
+    public override string ToString()
+    {
+        string reponse =
+            $"{EMOJI} {NOM} ({TYPE})\n" +
+            $"Etat : {Etat}\n" +
+            $"Quantité d'eau : {QuantiteEau}\n" +
+            $"Taux d'exposition au soleil : {BesoinSoleil}";
+        return reponse;
     }
     public void Vieillir()
     {
@@ -68,14 +79,15 @@ public abstract class Plante
         Etat = "mort";
         EMOJI = "💀";
     }
+    public abstract Plante Dupliquer();
 }
 public class PlanteVide : Plante
 {
     public PlanteVide() :
     base(nom: "",
-    emoji: " ",
+    emoji: "  ",
     etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
-    type: "",
+    type: "plante vide",
     saisonSemi: 0,
     terrainPref: "",
     vitesseCroissance: 0,
@@ -90,11 +102,15 @@ public class PlanteVide : Plante
     rendement: 0,
     saisonRecolte: 0,
     temperaturePref: 0,
-    espeDeVie : "")
+    espeDeVie: "",
+    prixSemis: 0)
     {
         //corps du constructeur
     }
-
+    public override Plante Dupliquer()
+    {
+        return new PlanteVide();
+    }
 
 }
 
@@ -111,7 +127,7 @@ public class Pommier : Plante
     vitesseCroissance: 10,
     besoinEau: 50,
     besoinSoleil: 30,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: false,
     crainSecheresse: true,
     nuisible: "chenilles ou oiseaux",
@@ -120,9 +136,16 @@ public class Pommier : Plante
     rendement: 80,
     saisonRecolte: 3,
     temperaturePref: 18,
-    espeDeVie : "vivace" )
+    espeDeVie: "vivace",
+    prixSemis: 150
+    )
+
     {
-        //corps du constructeur
+
+    }
+    public override Plante Dupliquer()
+    {
+        return new Pommier();
     }
 
 
@@ -141,7 +164,7 @@ public class Ble : Plante
     vitesseCroissance: 9,
     besoinEau: 70,
     besoinSoleil: 80,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , Maladie",
@@ -150,9 +173,15 @@ public class Ble : Plante
     rendement: 20,
     saisonRecolte: 3,
     temperaturePref: 16,
-    espeDeVie : "annuel")
+    espeDeVie: "annuel",
+    prixSemis: 20
+    )
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new Ble();
     }
 
 }
@@ -168,7 +197,7 @@ public class Carotte : Plante
     vitesseCroissance: 3,
     besoinEau: 40,
     besoinSoleil: 90,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: false,
     crainSecheresse: false,
     nuisible: "lapins",
@@ -177,9 +206,15 @@ public class Carotte : Plante
     rendement: 6,
     saisonRecolte: 3,
     temperaturePref: 18,
-    espeDeVie : "annuel")
+    espeDeVie: "annuel",
+    prixSemis: 15
+    )
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new Carotte();
     }
 }
 public class Pecher : Plante
@@ -194,7 +229,7 @@ public class Pecher : Plante
     vitesseCroissance: 9,
     besoinEau: 50,
     besoinSoleil: 80,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: false,
     crainSecheresse: true,
     nuisible: "pucerons , champignons, maladies, gelées",
@@ -203,9 +238,15 @@ public class Pecher : Plante
     rendement: 30,
     saisonRecolte: 3,
     temperaturePref: 18,
-    espeDeVie : "vivace")
+    espeDeVie: "vivace",
+    prixSemis: 120
+    )
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new Pecher();
     }
 
 }
@@ -221,7 +262,7 @@ public class VignesArtaban : Plante
     vitesseCroissance: 5,
     besoinEau: 50,
     besoinSoleil: 80,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "Maladies, gelée",
@@ -230,9 +271,15 @@ public class VignesArtaban : Plante
     rendement: 20,
     saisonRecolte: 0,
     temperaturePref: 25,
-    espeDeVie : "vivace")
+    espeDeVie: "vivace",
+    prixSemis: 100
+    )
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new VignesArtaban();
     }
 
 }
@@ -248,7 +295,7 @@ public class Olivier : Plante
     vitesseCroissance: 7,
     besoinEau: 30,
     besoinSoleil: 80,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: false,
     crainSecheresse: false,
     nuisible: "chenilles, gelées",
@@ -257,9 +304,16 @@ public class Olivier : Plante
     rendement: 50,
     saisonRecolte: 4,
     temperaturePref: 30,
-    espeDeVie : "vivace")
+    espeDeVie: "vivace",
+    prixSemis: 180
+    )
+
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new Olivier();
     }
 
 }
@@ -275,7 +329,7 @@ public class Tournesol : Plante
     vitesseCroissance: 3,
     besoinEau: 70,
     besoinSoleil: 70,
-    quantiteEau:0,
+    quantiteEau: 0,
     crainFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , oiseaux",
@@ -284,9 +338,15 @@ public class Tournesol : Plante
     rendement: 1,
     saisonRecolte: 3,
     temperaturePref: 22,
-    espeDeVie : "annuel")
+    espeDeVie: "annuel",
+    prixSemis: 25
+    )
     {
         //corps du constructeur
+    }
+    public override Plante Dupliquer()
+    {
+        return new Tournesol();
     }
 
 }

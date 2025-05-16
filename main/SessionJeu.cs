@@ -3,7 +3,7 @@ using System.Security.AccessControl;
 
 public class SessionJeu
 {
-    public Joueur? JoueurActuel { set; get; }
+    public Joueur JoueurActuel { set; get; }
     public InterfaceAccueil ECRAN_ACCUEIL { set; get; }
     public ZoneEcranJeu ECRAN_JEU { set; get; }
     public ConsoleKeyInfo Touche { set; get; }
@@ -16,11 +16,12 @@ public class SessionJeu
         ECRAN_ACCUEIL = new InterfaceAccueil(0, 0, Console.WindowWidth, Console.WindowHeight - 1);
         ConstruireMenus();
         ZoneActive = ECRAN_ACCUEIL.ACCUEIL;
+        JoueurActuel = new Joueur();
     }
     // Initialisation ===========================================================
     public void DemarrerChamps()
     {
-        Champs MonChamps = new Champs(0, 0, 10, 10);
+        ZoneChamps MonChamps = new ZoneChamps(0, 0, 10, 10);
         Console.Clear();
         MonChamps.Afficher();
         ZoneActive = MonChamps;
@@ -30,9 +31,9 @@ public class SessionJeu
     {
         ECRAN_ACCUEIL.ACCUEIL.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
         ElementMenu NouvellePartie = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "France", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Mexique", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Japon", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Carcassonne (France)", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Oaxaca de Juárez (Mexique)", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Kanazawa (Japon)", this));
 
         ElementMenu ApprendreJeu = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Apprendre les commandes de base");
         ECRAN_ACCUEIL.ACCUEIL.Racine.AjouterItem(NouvellePartie);
@@ -71,9 +72,14 @@ public class SessionJeu
     }
     public void DemarrerNouvellePartie(string pays)
     {
-        ECRAN_JEU.Afficher();
-        ZoneActive = ECRAN_JEU.POTAGER;
         JoueurActuel = new Joueur(pays);
+        // on met à jour les zones d'affichage liées au joueur
+        ECRAN_JEU.LIEU.Contenu = JoueurActuel.Lieu;
+        ECRAN_JEU.DATE.Contenu = "2003 - Semaine 1 (printemps)";
+        ECRAN_JEU.CHAMPS.InitialiserParcelles(JoueurActuel.Potager);
+
+        ZoneActive = ECRAN_JEU.CHAMPS;
+        ECRAN_JEU.Afficher();
     }
 
     // Affichage ================================================================
@@ -175,7 +181,7 @@ public class SessionJeu
     public int DemanderPositionPotager()
     {
         ConsoleKeyInfo touche;
-        ZoneActive = ECRAN_JEU.POTAGER;
+        ZoneActive = ECRAN_JEU.CHAMPS;
         bool choixFait = false;
         while (!choixFait)
         {
@@ -201,12 +207,28 @@ public class SessionJeu
                 choixFait = true;
             }
         }
-        return ECRAN_JEU.POTAGER.Curseur;
+        return ECRAN_JEU.CHAMPS.Curseur;
     }
 
     // Actions Inventaire =======================================================
     public void UtiliserOuil() { }
-    public void PlanterSemis() { }
+    public void PlanterSemis()
+    {
+        ECRAN_JEU.DIALOGUE.Contenu = "Choisissez un emplacement où planter votre semis!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
+        ECRAN_JEU.DIALOGUE.Afficher();
+        int indiceParcelle = DemanderPositionPotager();
+        int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
+        int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
+        if (JoueurActuel.Potager[colonne, ligne].TYPE == "plante vide")
+        {
+            ECRAN_JEU.DIALOGUE.Contenu = "OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
+            ECRAN_JEU.DIALOGUE.Afficher();
+        }
+        else
+        {
+            JoueurActuel.Potager[colonne, ligne] = JoueurActuel.Semis[ECRAN_JEU.INVENTAIRE.Curseur].Dupliquer();
+        }
+    }
     // Actions Journal ==========================================================
     public void Consulter() { }
     // Actions Magasin ==========================================================
@@ -216,35 +238,7 @@ public class SessionJeu
     {
         JoueurActuel.Semaine += 1;
         ActualiserDate();
-        ECRAN_JEU.DIALOGUE.Contenu = $"Semaine passée ! ";
-        if (JoueurActuel.Semaine == 1)
-        {
-            ECRAN_JEU.DIALOGUE.Contenu += $"1 semaine s'est écoulée depuis le début de votre aventure !";
-        }
-        else if (JoueurActuel.Semaine == 52)
-        {
-            ECRAN_JEU.DIALOGUE.Contenu += $"1 an s'est écoulée depuis le début de votre aventure !";
-        }
-
-        else
-        {
-            if (JoueurActuel.Semaine % 52 == 0)
-            {
-                ECRAN_JEU.DIALOGUE.Contenu = $"{JoueurActuel.Semaine / 52} ans se sont écoulés depuis le début de l'aventure !";
-            }
-            else
-            {
-                if (JoueurActuel.Semaine / 52 > 1)
-                {
-                    ECRAN_JEU.DIALOGUE.Contenu += $"{JoueurActuel.Semaine / 52} ans et";
-                }
-                else if (JoueurActuel.Semaine % 52 > 0)
-                {
-                    ECRAN_JEU.DIALOGUE.Contenu += $"{JoueurActuel.Semaine / 52} an et ";
-                }
-                ECRAN_JEU.DIALOGUE.Contenu += $"{JoueurActuel.Semaine / 52} semaines se sont écoulées depuis le début de votre aventure !";
-            }
-        }
+        ECRAN_JEU.DIALOGUE.AfficherMessageSemaine(JoueurActuel.Semaine);
 
 
         // { JoueurActuel.Semaine % 52} semaines se sont écoulées depuis votre arrivée !";
