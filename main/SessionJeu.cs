@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 
 public class SessionJeu
@@ -7,7 +8,6 @@ public class SessionJeu
     public InterfaceAccueil ECRAN_ACCUEIL { set; get; }
     public ZoneEcranJeu ECRAN_JEU { set; get; }
     public ConsoleKeyInfo Touche { set; get; }
-    public ZoneInteractive ZoneActive { set; get; }
     public List<ZoneMenu> MenusPrincipaux = [];
     public SessionJeu()
     {
@@ -15,18 +15,11 @@ public class SessionJeu
         ECRAN_JEU = new ZoneEcranJeu();
         ECRAN_ACCUEIL = new InterfaceAccueil(0, 0, Console.WindowWidth, Console.WindowHeight - 1);
         ConstruireMenus();
-        ZoneActive = ECRAN_ACCUEIL.ACCUEIL;
+        ECRAN_JEU.ZoneActive = ECRAN_ACCUEIL.ACCUEIL;
         JoueurActuel = new Joueur();
     }
     // Initialisation ===========================================================
-    public void DemarrerChamps()
-    {
-        ZoneChamps MonChamps = new ZoneChamps(0, 0, 10, 10);
-        Console.Clear();
-        MonChamps.Afficher();
-        ZoneActive = MonChamps;
-        Naviguer();
-    }
+    // Gestion des menus ======================================================
     public void ConstruireMenus()
     {
         ECRAN_ACCUEIL.ACCUEIL.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
@@ -40,16 +33,17 @@ public class SessionJeu
         ECRAN_ACCUEIL.ACCUEIL.Racine.AjouterItem(ApprendreJeu);
 
         ECRAN_JEU.INVENTAIRE.Racine.Description = "Inventaire - Choisissez parmis les catégories de votre inventaire";
-        ElementMenu Outils = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Outils", "Choisissez un de vos outils à utiliser !");
-        ElementMenu Semis = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Semis", "Choisissez un de vos semis à planter !");
-        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(Outils);
-        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(Semis);
+        ElementMenu MenuOutils = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Outils", "Choisissez un de vos outils à utiliser !");
+        ElementMenu MenuSemis = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Semis", "Choisissez un de vos semis à planter !");
+        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(MenuOutils);
+        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(MenuSemis);
 
         ECRAN_JEU.MAGASIN.Racine.Description = "Magasin - Acheter ou vendre, c'est vous qui choisissez ! ";
         ElementMenu Acheter = new ElementMenu(ECRAN_JEU.MAGASIN, "Acheter", "Choisissez parmis les catégories d'articles à acheter !");
         ElementMenu Vendre = new ElementMenu(ECRAN_JEU.MAGASIN, "Vendre", "Choisissez une de vos récoltes à vendre !");
         ECRAN_JEU.MAGASIN.Racine.AjouterItem(Acheter);
         ECRAN_JEU.MAGASIN.Racine.AjouterItem(Vendre);
+
 
         ECRAN_JEU.JOURNAL.Racine.Description = "Renseignez vous sur le fonctionnement du jeu !";
         ElementMenu Plantes = new ElementMenu(ECRAN_JEU.JOURNAL, "Plantes", "Trouvez tout ce dont vous avez besoin de savoir à propos des plantes !");
@@ -60,30 +54,28 @@ public class SessionJeu
         ECRAN_JEU.SUIVANT.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
         ElementMenu Oui = new ElementMenuSuivant(ECRAN_JEU.SUIVANT, "Oui je le veux", this);
         ECRAN_JEU.SUIVANT.Racine.AjouterItem(Oui);
-
     }
-    public void Demarrer()
+    // ------------------------------------------------------------------------
+    public void ActualiserMenuInventaire()
     {
-        Console.Clear();
-        ECRAN_ACCUEIL.Afficher();
-        ECRAN_ACCUEIL.ACCUEIL.Afficher();
-        Naviguer();
-
+        List<ElementMenu> items = new List<ElementMenu> { };
+        if (JoueurActuel.Inventaire.Semis.Count == 0)
+        {
+            ECRAN_JEU.INVENTAIRE.Racine.Items[1].Description = "Vous n'avez plus aucun semis ! Allez au magasin en acheter !";
+        }
+        else
+        {
+            foreach (ItemInventaireSemis item in JoueurActuel.Inventaire.Semis)
+            {
+                items.Add(new ElementMenuAjoutSemis(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
+            }
+            ECRAN_JEU.INVENTAIRE.Racine.Items[1].Description = "Choisissez un de vos semis à planter !";
+        }
+        ECRAN_JEU.INVENTAIRE.Racine.Items[1].Items = items;
+        ECRAN_JEU.INVENTAIRE.Curseur = 0;
+        ECRAN_JEU.INVENTAIRE.Afficher();
     }
-    public void DemarrerNouvellePartie(string pays)
-    {
-        JoueurActuel = new Joueur(pays);
-        // on met à jour les zones d'affichage liées au joueur
-        ECRAN_JEU.LIEU.Contenu = JoueurActuel.Lieu;
-        ECRAN_JEU.DATE.Contenu = "2003 - Semaine 1 (printemps)";
-        ECRAN_JEU.CHAMPS.InitialiserParcelles(JoueurActuel.Potager);
-        ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.CHAMPS;
-        ZoneActive = ECRAN_JEU.ChampsEtDetails;
-        ECRAN_JEU.Afficher();
-
-    }
-
-    // Affichage ================================================================
+    // Affichage ==============================================================
     public void RafraichirAffichageJeu()
     {
         Console.Clear();
@@ -94,13 +86,12 @@ public class SessionJeu
         //Dialogue.Afficher();
         //Details.Afficher();
     }
+    // -------------------------------------------------------------------------
     public void ReinitialiserAffichage()
     {
         Console.ResetColor();
         Console.Clear();
     }
-
-
     // Navigation ===============================================================
     public bool Naviguer()
     {
@@ -111,72 +102,65 @@ public class SessionJeu
 
             if (Touche.Key == ConsoleKey.LeftArrow)
             {
-                ZoneActive.DeplacerCurseur("gauche");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("gauche");
             }
             else if (Touche.Key == ConsoleKey.RightArrow)
             {
-                ZoneActive.DeplacerCurseur("droite");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("droite");
             }
             else if (Touche.Key == ConsoleKey.UpArrow)
             {
-                ZoneActive.DeplacerCurseur("haut");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("haut");
             }
             else if (Touche.Key == ConsoleKey.DownArrow)
             {
-                ZoneActive.DeplacerCurseur("bas");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("bas");
             }
             else if (Touche.Key == ConsoleKey.Enter)
             {
-                ZoneActive.ValiderSelection();
+                ECRAN_JEU.ZoneActive.ValiderSelection();
             }
             else if (Touche.Key == ConsoleKey.Escape || Touche.Key == ConsoleKey.Backspace)
             {
-                ZoneActive.RetournerEnArriere();
+                ECRAN_JEU.ZoneActive.RetournerEnArriere();
             }
-            else if (ZoneActive != ECRAN_ACCUEIL.ACCUEIL)
+            else if (ECRAN_JEU.ZoneActive != ECRAN_ACCUEIL.ACCUEIL)
             {
 
                 if (Touche.Key == ConsoleKey.C)
                 {
                     //Comment jouer?
-                    ECRAN_JEU.BasculerSurFenetre(5); // 0 = fenêtre d'aide aux commandes de base
-                    ZoneActive.Afficher();
+                    ECRAN_JEU.BasculerSurZone(6); // 0 = fenêtre d'aide aux commandes de base
+
+                }
+                else if (Touche.Key == ConsoleKey.P)
+                {
+                    ECRAN_JEU.BasculerSurZone(0); // 0 = Potager
                 }
                 else if (Touche.Key == ConsoleKey.I)
                 {
-                    ZoneActive = ECRAN_JEU.INVENTAIRE;
-                    ECRAN_JEU.BasculerSurFenetre(0); // 1 = Inventaire
-                    ZoneActive.Afficher();
+                    ECRAN_JEU.BasculerSurZone(1); // 1 = Inventaire
                 }
                 else if (Touche.Key == ConsoleKey.J)
                 {
-                    ZoneActive = ECRAN_JEU.JOURNAL;
-                    ECRAN_JEU.BasculerSurFenetre(1); // 2 = Journal
-                    ZoneActive.Afficher();
+                    ECRAN_JEU.BasculerSurZone(2); // 2 = Journal
                 }
                 else if (Touche.Key == ConsoleKey.M)
                 {
-                    ZoneActive = ECRAN_JEU.MAGASIN;
-                    ECRAN_JEU.BasculerSurFenetre(2); // 3 = Magasin
-                    ZoneActive.Afficher();
+                    ECRAN_JEU.BasculerSurZone(3); // 3 = Magasin
                 }
                 else if (Touche.Key == ConsoleKey.S)
                 {
-                    ZoneActive = ECRAN_JEU.SUIVANT;
-                    ECRAN_JEU.BasculerSurFenetre(3); // 4 Suivant
-                    ZoneActive.Afficher();
+                    ECRAN_JEU.BasculerSurZone(4); // 4 Suivant
                 }
                 else if (Touche.Key == ConsoleKey.W)
                 {
                     // Champs.ChangerVue()
                 }
-                else if (Touche.Key == ConsoleKey.P)
+                else if (Touche.Key == ConsoleKey.X)
                 {
-                    ZoneActive = ECRAN_JEU.ChampsEtDetails;
-                    ZoneActive.Afficher();
+                    choixFait = true;
                 }
-                
-
             }
             else
             {
@@ -188,26 +172,26 @@ public class SessionJeu
     public int DemanderPositionPotager()
     {
         ConsoleKeyInfo touche;
-        ZoneActive = ECRAN_JEU.CHAMPS;
+        ECRAN_JEU.BasculerSurZone(0);
         bool choixFait = false;
         while (!choixFait)
         {
             touche = Console.ReadKey(intercept: true);
-            if (Touche.Key == ConsoleKey.LeftArrow)
+            if (touche.Key == ConsoleKey.LeftArrow)
             {
-                ZoneActive.DeplacerCurseur("gauche");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("gauche");
             }
             else if (touche.Key == ConsoleKey.RightArrow)
             {
-                ZoneActive.DeplacerCurseur("droite");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("droite");
             }
             else if (touche.Key == ConsoleKey.UpArrow)
             {
-                ZoneActive.DeplacerCurseur("haut");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("haut");
             }
             else if (touche.Key == ConsoleKey.DownArrow)
             {
-                ZoneActive.DeplacerCurseur("bas");
+                ECRAN_JEU.ZoneActive.DeplacerCurseur("bas");
             }
             else if (touche.Key == ConsoleKey.Enter)
             {
@@ -216,30 +200,86 @@ public class SessionJeu
         }
         return ECRAN_JEU.CHAMPS.Curseur;
     }
+    // Lancement d'une partie =================================================
+    public void Demarrer()
+    {
+        Console.Clear();
+        ECRAN_ACCUEIL.Afficher();
+        ECRAN_ACCUEIL.ACCUEIL.Afficher();
+        Naviguer();
 
+    }
+    // ------------------------------------------------------------------------
+    public void DemarrerNouvellePartie(string pays)
+    {
+        JoueurActuel = new Joueur(pays);
+        // on met à jour les zones d'affichage liées au joueur
+        ECRAN_JEU.LIEU.Contenu = JoueurActuel.Lieu;
+        ECRAN_JEU.DATE.Contenu = "2003 - Semaine 1 (printemps)";
+        ECRAN_JEU.CHAMPS.Synchroniser(JoueurActuel.Potager);
+        ECRAN_JEU.BasculerSurZone(0);
+        ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.CHAMPS;
+        ECRAN_JEU.ZoneActive = ECRAN_JEU.ChampsEtDetails;
+        
+        ECRAN_JEU.Afficher();
+        ActualiserMenuInventaire();
+    }
+    // ACTIONS DURANT LA PARTIE
     // Actions Inventaire =======================================================
-    public void UtiliserOuil() { }
-    public void PlanterSemis()
+    public void PlanterSemis(Plante plante)
     {
         ECRAN_JEU.DIALOGUE.Contenu = "Choisissez un emplacement où planter votre semis!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
         ECRAN_JEU.DIALOGUE.Afficher();
         int indiceParcelle = DemanderPositionPotager();
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
-        if (JoueurActuel.Potager[colonne, ligne].TYPE == "plante vide")
+        if (JoueurActuel.Potager[colonne, ligne].Libre)
         {
-            ECRAN_JEU.DIALOGUE.Contenu = "OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
-            ECRAN_JEU.DIALOGUE.Afficher();
+            JoueurActuel.Potager[colonne, ligne].Planter(plante);//on ajoute la plante au potager
+            JoueurActuel.Inventaire.Retirer(plante); //on actualise l'inventaire
+            ECRAN_JEU.CHAMPS.Synchroniser(JoueurActuel.Potager[colonne, ligne].Contenu, colonne, ligne);  //on actualise le menu 
+            //on actualise l'affichage
+            ECRAN_JEU.DIALOGUE.Contenu = $"{plante.NOM} Ajouté ! en stock : {JoueurActuel.Inventaire.RecupererQuantite(plante)}. Retour à l'inventaire";
+            ECRAN_JEU.ChampsEtDetails.Afficher();
         }
         else
         {
-            JoueurActuel.Potager[colonne, ligne] = JoueurActuel.Semis[ECRAN_JEU.INVENTAIRE.Curseur].Dupliquer();
+            ECRAN_JEU.DIALOGUE.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Contenu.NOM} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
+            
         }
+        ActualiserMenuInventaire();
+        ECRAN_JEU.DIALOGUE.Afficher();
+        ECRAN_JEU.BasculerSurZone(1); // retour à l'inventaire
+    }
+    public void UtiliserOutil(Outil outil)
+    {
+        ECRAN_JEU.DIALOGUE.Contenu = $"Choisissez un emplacement où {outil.Verbe}!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
+        ECRAN_JEU.DIALOGUE.Afficher();
+        int indiceParcelle = DemanderPositionPotager();
+        int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
+        int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
+        outil.Actionner(JoueurActuel.Potager[ligne, colonne]);
     }
     // Actions Journal ==========================================================
-    public void Consulter() { }
+    public void AfficherArticle() { }
     // Actions Magasin ==========================================================
-    public void Acheter() { }
+    public void Acheter(Outil outil, int prix)
+    {
+        if (prix <= JoueurActuel.Argent)
+        {
+            JoueurActuel.Argent -= prix;
+            JoueurActuel.Inventaire.Ajouter(outil);
+        }
+    }
+    public void Acheter(Plante semis, int prix)
+    {
+        if (prix <= JoueurActuel.Argent)
+        {
+            JoueurActuel.Argent -= prix;
+            JoueurActuel.Inventaire.Ajouter(semis);
+        }
+    }
+    public void Vendre() { }
     // Actions Semaine Suivante =================================================
     public void PasserSemaineSuivante()
     {
@@ -255,6 +295,7 @@ public class SessionJeu
         // ActualiserMeteo();
         // ActualiserEtatPlantes();
     }
+    // Actualisation des données
     public void ActualiserDate()
     {
         ECRAN_JEU.DATE.Contenu = $"{2003 + JoueurActuel.Semaine / 52} - Semaine {1 + JoueurActuel.Semaine % 52} ";
@@ -268,51 +309,30 @@ public class SessionJeu
             ECRAN_JEU.DATE.Contenu += "(hiver)";
         ECRAN_JEU.DATE.Afficher();
     }
+    // Otuils =====================================================================
+    public void Arroser()
+    {
+        int indice = DemanderPositionPotager();
+        int colonne = indice % JoueurActuel.Potager.GetLength(0);
+        int ligne = indice / JoueurActuel.Potager.GetLength(0);
+        // JoueurActuel.Potager[colonne,ligne].Contenu.Arroser(indice);
+        // //si dessous besoineau , augmente l'hydratation de +15%
+        // //si au dessus besoineau , attention plante surhydraté et santé -20
+        // if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
+        // {
+        //     parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BESOIN_EAU * 0.15);
+        // }
+        // else
+        // {
+        //     parcelle.Contenu.Sante -= 20;
+        // }
+    }
     // public void ActualiserArgent(){
     //   ECRAN_JEU.ARGENT.Contenu = 
     // }
     // Actions Webcam =========================================================== 
+    // PasserVueSuivante   
 
-
-
-    // }
-    // void DeplacerSelection(ElementMenu? nouveauMenuActif)
-    // {
-
-    //   if (nouveauMenuActif != null)
-    //   {
-    //     if (MenuActif != null)
-    //     {
-    //       MenuActif.Actif = false;
-    //     }
-    //     nouveauMenuActif.Actif = true;
-    //     MenuActif = nouveauMenuActif;
-    //   }
-    // }
-    // void DeplacerSelection(string direction)
-    // {
-    //   if (MenuActif != null)
-    //   {
-    //     if (direction == "gauche" && MenuActif.VoisinGauche != null)
-    //     {
-    //       DeplacerSelection(MenuActif.VoisinGauche);
-    //     }
-    //     else if (direction == "droite" && MenuActif.VoisinDroite != null)
-    //     {
-    //       DeplacerSelection(MenuActif.VoisinDroite);
-    //     }
-    //     else if (direction == "haut" && MenuActif.VoisinHaut != null)
-    //     {
-    //       DeplacerSelection(MenuActif.VoisinHaut);
-    //     }
-    //     else if (direction == "bas" && MenuActif.VoisinBas != null)
-    //     {
-    //       DeplacerSelection(MenuActif.VoisinBas);
-    //     }
-    //   }
-
-
-    // }
 
     //   public string RecupererASCII(string nomFichierTxt)
     //   {

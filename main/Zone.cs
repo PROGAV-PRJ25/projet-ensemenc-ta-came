@@ -141,7 +141,10 @@ public class ZoneTexte : Zone
     public override void Afficher()
     {
         Effacer();
+        Console.ForegroundColor = CouleurTexte;
+        Console.BackgroundColor = CouleurFond;
         EcrireTexte(Contenu, Position[0], Position[1]);
+        Console.ResetColor();
     }
 }
 public class ZoneDialogue : ZoneTexte
@@ -176,13 +179,13 @@ public class ZoneDialogue : ZoneTexte
                 {
                     Contenu += $"{semaine / 52} an et ";
                 }
-                
+
                 Contenu += $"{semaine % 52} semaines se sont écoulées depuis le début de votre aventure !";
             }
         }
         Afficher();
     }
-    
+
 
 }
 public abstract class ZoneInteractive : Zone
@@ -231,15 +234,13 @@ public class ZoneMenu : ZoneInteractive
         int nombrePages = (nombreItems - 1) / itemsParPage; // le nombre commence à 0
         //on met -1 à items pour évider de créer des pages vides
         //par exemple si on a nombreItems=3, itemsPagPage=3, on n'a besoin que d'une page pour afficher les 3, et non deux, donc on met -1
-
         int pageActive = Curseur / itemsParPage; // commence aussi à 0
         Console.SetCursorPosition(Position[0], AncreAffichageItems);
-        for (int i = itemsParPage * pageActive; i < (itemsParPage * (pageActive + 1)); i++) // on parcous les n-premiers de la page
+        for (int i = itemsParPage * pageActive; i < (itemsParPage * (pageActive + 1)); i++) // on parcours les n-premiers de la page
         {
             if (i >= nombreItems)
             {
                 EcrireLigneVide(Largeur);
-
             }
             else
             {
@@ -269,11 +270,10 @@ public class ZoneMenu : ZoneInteractive
         AncreAffichageItems = Console.GetCursorPosition().Top;
         ActualiserAffichageListeItems();
     }
-
     public override void ValiderSelection()
     {
-        NoeudActif.Items[Curseur].Actionner();
-
+        if(NoeudActif.Items.Count()!=0)
+            NoeudActif.Items[Curseur].Actionner();
     }
     public override void RetournerEnArriere()
     {
@@ -281,32 +281,7 @@ public class ZoneMenu : ZoneInteractive
         Effacer();
         Afficher();
     }
-
 }
-// public class InformationsGenerales : Zone
-// {
-//     public int[] PositionDate;
-//     public int[] PositionLieu;
-//     public int[] PositionMeteo;
-//     public int[] PositionMode;
-//     public int[] PositionArgent;
-//     public Date DateActuelle { set; get; }
-//     string Lieu { set; get; }
-
-
-//     public InformationsGenerales(int positionColonne, int positionLigne, int largeur, int hauteur) : base(positionColonne, positionLigne, largeur, hauteur)
-//     {
-//     }
-//     public override void Afficher()
-//     {
-
-//         Console.SetCursorPosition(PositionDate[0], PositionDate[1]);
-//         EcrireLigneVide(DateActuelle.ToString().Length);
-//         Console.Write(DateActuelle);
-
-//     }
-// }
-
 public class ZoneDessin : Zone
 {
     public string[] Dessin;

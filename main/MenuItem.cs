@@ -68,38 +68,12 @@ public class ElementMenuNoeud : ElementMenu
     public ElementMenuNoeud(ZoneMenu menuReference, string titre = "(vide)", string description = "(vide)") : base(menuReference, titre, description) { }
     public override void Actionner()
     {
-        MenuReference.NoeudActif = this;
-        MenuReference.Afficher();
-    }
-}
-
-public class ElementMenuMagasin : ElementMenu
-{
-    ElementMenuMagasin(ZoneMenu menuReference, string description) : base(menuReference, description)
-    {
-    }
-    public override void Actionner()
-    {
-        //Article.Acheter()
-    }
-}
-public class ElementMenuInventaire : ElementMenu
-{
-    Outil Item { set; get; }
-    ElementMenuInventaire(ZoneMenu menuReference, string titre, Outil outil) : base(menuReference, titre)
-    {
-        Item = outil;
-    }
-    public override void Actionner()
-    {
-
-    }
-}
-public class ElementMenuJournal : ElementMenu
-{
-    ElementMenuJournal(ZoneMenu menuReference, string description) : base(menuReference, description)
-    {
-        //Presenter information
+        if (Items.Count() != 0)
+        {
+            MenuReference.NoeudActif = this;
+            MenuReference.Curseur = 0;
+            MenuReference.Afficher();
+        }
     }
 }
 public class ElementMenuFonctionnel : ElementMenu
@@ -108,6 +82,69 @@ public class ElementMenuFonctionnel : ElementMenu
     public ElementMenuFonctionnel(ZoneMenu menuReference, string description, SessionJeu session) : base(menuReference, description)
     {
         Session = session;
+    }
+}
+public abstract class ElementMenuMagasin : ElementMenuFonctionnel
+{
+    public int Prix { set; get; }
+    public ElementMenuMagasin(ZoneMenu menuReference, string titre, SessionJeu session, int prix) : base(menuReference, titre, session)
+    {
+        Prix = prix;
+    }
+}
+public class ElementMenuMagasinOutil : ElementMenuMagasin
+{
+    public Outil Contenu { set; get; }
+    public ElementMenuMagasinOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil, int prix) : base(menuReference, titre, session, prix)
+    {
+        Contenu = outil;
+    }
+    public override void Actionner()
+    {
+        Session.Acheter(Contenu, Prix);
+    }
+}
+public class ElementMenuMagasinSemis : ElementMenuMagasin
+{
+    public Plante Contenu { set; get; }
+    public ElementMenuMagasinSemis(ZoneMenu menuReference, string titre, SessionJeu session, Plante plante, int prix) : base(menuReference, titre, session, prix)
+    {
+        Contenu = plante;
+    }
+    public override void Actionner()
+    {
+        Session.Acheter(Contenu, Prix);
+    }
+}
+
+public class ElementMenuAchatSemis : ElementMenuMagasin
+{
+    Plante Semis { set; get; }
+    public ElementMenuAchatSemis(ZoneMenu menuReference, string titre, SessionJeu session, int prix, Plante semis) : base(menuReference, titre, session, prix)
+    {
+        Prix = prix;
+        Semis = semis;
+    }
+
+
+}
+public class ElementMenuInventaireOutil : ElementMenuFonctionnel
+{
+    Outil Outil { set; get; }
+    ElementMenuInventaireOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil) : base(menuReference, titre, session)
+    {
+        Outil = outil;
+    }
+    public override void Actionner()
+    {
+        Session.UtiliserOutil(Outil);
+    }
+}
+public class ElementMenuJournal : ElementMenu
+{
+    ElementMenuJournal(ZoneMenu menuReference, string titre) : base(menuReference, titre)
+    {
+        //Presenter information
     }
 }
 public class ElementMenuSuivant : ElementMenuFonctionnel
@@ -121,9 +158,13 @@ public class ElementMenuSuivant : ElementMenuFonctionnel
 
 public class ElementMenuAjoutSemis : ElementMenuFonctionnel
 {
-    public ElementMenuAjoutSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session) { }
+    Plante Semis { set; get; }
+    public ElementMenuAjoutSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session)
+    {
+        Semis = semis;
+    }
     public override void Actionner()
     {
-        Session.PlanterSemis();
+        Session.PlanterSemis(Semis);
     }
 }

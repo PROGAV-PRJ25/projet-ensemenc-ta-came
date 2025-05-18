@@ -1,8 +1,17 @@
-public abstract class Plante
+public abstract class ObjetJeu
 {
-    // Caractéristiques : ne bouge pas
     public string NOM { get; private set; }
     public string EMOJI { set; get; }
+    public ObjetJeu(string nom, string emoji)
+    {
+        NOM = nom;
+        EMOJI = emoji;
+    }
+}
+public abstract class Plante : ObjetJeu
+{
+    // Caractéristiques : ne bouge pas
+
     public string TYPE { set; get; }
     public int SAISON_SEMI { set; get; }
     public string TERRAIN_PREF { set; get; }
@@ -35,8 +44,8 @@ public abstract class Plante
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
      int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
     string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixSemis)
+    : base(nom, emoji)
     {
-        NOM = nom;
         EMOJI = emoji;
         Etats = etats;
         TYPE = type;
@@ -88,7 +97,7 @@ public abstract class Plante
 public class PlanteVide : Plante
 {
     public PlanteVide() :
-    base(nom: "",
+    base(nom: "plante vide",
     emoji: "  ",
     etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
     type: "plante vide",

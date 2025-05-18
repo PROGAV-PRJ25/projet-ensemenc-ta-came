@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 public abstract class Interface : Zone
 {
-    public CelluleAffichage[,] Grille { set; get; }
+    public virtual CelluleAffichage[,] Grille { set; get; }
     public Interface(int positionColonne, int positionLigne, int largeur, int hauteur) : base(positionColonne, positionLigne, largeur, hauteur)
     {
         Grille = new CelluleAffichage[Largeur, Hauteur];
@@ -85,6 +85,7 @@ public abstract class Interface : Zone
 }
 public class ZoneEcranJeu : Interface
 {
+    public ZoneInteractive ZoneActive { set; get; }
     public List<Zone> ZonesInternes = new List<Zone> { };
     public ZoneMenu MAGASIN { set; get; }
     public ZoneMenu INVENTAIRE { set; get; }
@@ -100,7 +101,7 @@ public class ZoneEcranJeu : Interface
     public ZoneTexte? WEBCAM { set; get; }
     public ZoneChamps CHAMPS { set; get; }
     public int IndiceZoneActive { set; get; }
-    public EnsembleZoneTexte BARRE_NAVIGATION { set; get; }
+    public EnsembleZoneTexte TitresMenus { set; get; }
     public GroupeChampsDetails ChampsEtDetails { set; get; }
 
     public ZoneEcranJeu(int positionColonne, int positionLigne, int largeur, int hauteur)
@@ -113,16 +114,19 @@ public class ZoneEcranJeu : Interface
         DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
         MODE = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
+        ARGENT = new ZoneTexte(Largeur - 10, 2, 12, 1, "2000 💰");
         // Créaction de la zone CHAMPS
-        CHAMPS = new ZoneChamps(1, 4, 10, 10);
+        CHAMPS = new ZoneChamps(1, 6, 10, 10);
+
 
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
-        BARRE_NAVIGATION = new EnsembleZoneTexte();
-        BARRE_NAVIGATION.Ajouter("Inventaire", new ZoneTexte(2, hauteurNavBar, 14, 1, "Inventaire (I)"));
-        BARRE_NAVIGATION.Ajouter("Journal", new ZoneTexte(19, hauteurNavBar, 11, 1, "Journal (J)"));
-        BARRE_NAVIGATION.Ajouter("Magasin", new ZoneTexte(33, hauteurNavBar, 11, 1, "Magasin (M)"));
-        BARRE_NAVIGATION.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
+        TitresMenus = new EnsembleZoneTexte();
+        TitresMenus.Ajouter("Potager", new ZoneTexte(2, 4, 11, 1, "Potager (P)"));
+        TitresMenus.Ajouter("Inventaire", new ZoneTexte(2, hauteurNavBar, 14, 1, "Inventaire (I)"));
+        TitresMenus.Ajouter("Journal", new ZoneTexte(19, hauteurNavBar, 11, 1, "Journal (J)"));
+        TitresMenus.Ajouter("Magasin", new ZoneTexte(33, hauteurNavBar, 11, 1, "Magasin (M)"));
+        TitresMenus.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
 
         //Création des différents menus de l'affichage
         INVENTAIRE = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
@@ -130,12 +134,14 @@ public class ZoneEcranJeu : Interface
         MAGASIN = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         SUIVANT = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
-        DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur * 2 / 3, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
+        DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        DETAILS = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 5);
+        DETAILS = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 7);
 
         ChampsEtDetails = new GroupeChampsDetails(CHAMPS, DETAILS);
         //JournalEtArticles = new GroupeJournalEtArticles;
+        ZoneActive = ChampsEtDetails;
+        BasculerSurZone(0);
 
     }
     public ZoneEcranJeu() : this(0, 0, Console.WindowWidth, Console.WindowHeight - 1) { }
@@ -147,7 +153,11 @@ public class ZoneEcranJeu : Interface
         ConstruireCadre();
 
         InsererLigne(3, '├', '┤');
-        InsererColonne(Largeur * 3 / 4, 3, Hauteur - 1, '┬', '┴');
+        InsererLigne(Hauteur - 3, '├', '┤');
+        InsererColonne(Largeur * 3 / 4, 3, Hauteur - 3, '┬', '┴');
+
+        InsererColonne(14, 3, 5, '┬', '┘');
+        InsererLigne(5, 0, 14, '├', '┘');
 
         int ligneNavBar = Hauteur - 1 - (Hauteur / 3);
         InsererLigne(ligneNavBar, 0, Largeur * 3 / 4, '├', '┤');
@@ -157,17 +167,13 @@ public class ZoneEcranJeu : Interface
         InsererColonne(31, ligneNavBar, ligneNavBar + 2, '┬', '┴');
         InsererColonne(45, ligneNavBar, ligneNavBar + 2, '┬', '┴');
         InsererColonne(68, ligneNavBar, ligneNavBar + 2, '┬', '┴');
-
-        InsererLigne(Hauteur - 3, 0, Largeur * 3 / 4, '├', '┤');
-
-
     }
     // Affichage =======================================================================
     public override void Afficher()
     {
         Console.Clear();
         AfficherLignesDirectrices();
-        foreach (ZoneTexte element in BARRE_NAVIGATION.Valeurs)
+        foreach (ZoneTexte element in TitresMenus.Valeurs)
         {
             element.Afficher();
         }
@@ -178,17 +184,38 @@ public class ZoneEcranJeu : Interface
         DIALOGUE.Afficher();
         INVENTAIRE.Afficher();
         DETAILS.Afficher();
+        TitresMenus.Afficher();
     }
-
-
-    public void BasculerSurFenetre(int indice)
+    public void BasculerSurZone(int indice)
     {
-        Console.ResetColor();
-        BARRE_NAVIGATION.Valeurs[IndiceZoneActive].Afficher();
+        // on actualise l'affichage dans les titres de menu
+        TitresMenus.Valeurs[IndiceZoneActive].CouleurTexte = ConsoleColor.White;
         IndiceZoneActive = indice;
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        BARRE_NAVIGATION.Valeurs[IndiceZoneActive].Afficher();
-        Console.ResetColor();
+        TitresMenus.Valeurs[IndiceZoneActive].CouleurTexte = ConsoleColor.DarkRed;
+        // puis on change la fenêtre active;
+        if (indice == 0)
+        {
+            ZoneActive = ChampsEtDetails;
+        }
+        else if (indice == 1)
+        {
+            ZoneActive = INVENTAIRE;
+        }
+        else if (indice == 2)
+        {
+            ZoneActive = JOURNAL;
+        }
+        else if (indice == 3)
+        {
+            ZoneActive = MAGASIN;
+        }
+        else if (indice == 4)
+        {
+            ZoneActive = SUIVANT;
+        }
+        TitresMenus.Afficher();
+        ZoneActive.Afficher();
+        
     }
 
 
@@ -225,6 +252,7 @@ public class GroupeChampsDetails : ZoneInteractive
     public override void RetournerEnArriere() { }
     public override void Afficher()
     {
+        Synchroniser();
         Champs.Afficher();
         Details.Afficher();
     }
@@ -232,11 +260,16 @@ public class GroupeChampsDetails : ZoneInteractive
     {
         int curseurInitial = Champs.Curseur;
         Champs.DeplacerCurseur(deplacement);
+
         if (Champs.Curseur != curseurInitial)
         { // attention on n'utilise que le curseur du champs et non celui de la classe du groupe
-            Details.Contenu = Champs.Parcelles[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
+            Synchroniser();
             Details.Afficher();
         }
+    }
+    public void Synchroniser()
+    {
+        Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
     }
 }
 
@@ -249,6 +282,13 @@ public class EnsembleZoneTexte
     {
         Cles = [];
         Valeurs = [];
+    }
+    public void Afficher()
+    {
+        foreach (ZoneTexte texte in Valeurs)
+        {
+            texte.Afficher();
+        }
     }
     public ZoneTexte Trouver(string titre)
     {

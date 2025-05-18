@@ -1,21 +1,16 @@
-public abstract class Outil 
+public abstract class Outil : ObjetJeu
 {
-    public string NOM {set;get;}
-    public string EMOJI {set;get;}
+    public string Verbe { set; get; }
     public abstract void Actionner(Parcelle parcelle);
-    protected Outil(string nom, string emoji)
+    protected Outil(string nom, string emoji, string verbe) : base(nom, emoji)
     {
-        NOM = nom;
-        EMOJI = emoji;
-
+        Verbe = verbe;
     }
 }
-public class Arrosoir : Outil {
-    public Arrosoir(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Arosoir";
-        EMOJI = "💦";
-    }
-    public override void Actionner(Parcelle parcelle) 
+public class Arrosoir : Outil
+{
+    public Arrosoir() : base("Arosoir", "💦", "arroser") { }
+    public override void Actionner(Parcelle parcelle)
     {
         //si dessous besoineau , augmente l'hydratation de +15%
         //si au dessus besoineau , attention plante surhydraté et santé -20
@@ -30,12 +25,10 @@ public class Arrosoir : Outil {
     }
 }
 
-public class Panier : Outil {
-    public Panier(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Panier";
-        EMOJI = "🧺";
-    }
-    public override void Actionner(Parcelle parcelle) 
+public class Panier : Outil
+{
+    public Panier() : base("Panier", "🧺", "ramasser vos récoltes") { }
+    public override void Actionner(Parcelle parcelle)
     {
         //si fruit , le récolte et rendement -1
         //si pas fruit, ne sert à rien
@@ -47,12 +40,12 @@ public class Panier : Outil {
     }
 }
 
-public class Secateur : Outil {
-    public Secateur(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Secateur";
-        EMOJI = "✂️";
+public class Secateur : Outil
+{
+    public Secateur(string nom, string emoji) : base("Secateur", "✂️","tailler")
+    {
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si prend trop de place , tailler et cases -2
         //si chenille , tailler et chenille -1
@@ -73,12 +66,13 @@ public class Secateur : Outil {
     }
 }
 
-public class CD : Outil {
-    public CD(string nom, string emoji) : base(nom, emoji) {
-        NOM = "CD";
-        EMOJI = "💿";
+public class CD : Outil
+{
+    public CD() : base("CD", "💿","installer votre CD")
+    {
+
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si oiseau, cd et oiseau -1
         //si chenille, cd et chenille -1
@@ -95,12 +89,12 @@ public class CD : Outil {
     }
 }
 
-public class Fumier : Outil {
-    public Fumier(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Fumier";
-        EMOJI = "💩";
+public class Fumier : Outil
+{
+    public Fumier() : base("Fumier", "💩","mettre du fumier")
+    {
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //engrais naturel donc booste la croissance des plantes de +2
         //si trop, ça pue et santé -15
@@ -119,12 +113,12 @@ public class Fumier : Outil {
     }
 }
 
-public class Traitement : Outil {
-    public Traitement(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Traitement";
-        EMOJI = "🧪";
+public class Traitement : Outil
+{
+    public Traitement() : base("Traitement", "🧪","traiter")
+    {
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si maladies , traitement => maladie-1
         //si champignon , traitement => champi-1
@@ -144,12 +138,12 @@ public class Traitement : Outil {
     }
 }
 
-public class Coccinnelle : Outil {
-    public Coccinnelle(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Coccinnelle";
-        EMOJI = "🐞";
+public class Coccinnelle : Outil
+{
+    public Coccinnelle(string nom, string emoji) : base("Coccinnelle", "🐞","déposer vos coccinelles")
+    {
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si pucerons, coccinelle => pucerons -1
         //sinon , fait joli
@@ -161,14 +155,13 @@ public class Coccinnelle : Outil {
     }
 }
 
-public class FermierEnColere : Outil {
-    public FermierEnColere(string nom, string emoji) : base(nom, emoji)
+public class FermierEnColere : Outil
+{
+    public FermierEnColere(string nom, string emoji) : base("Fermier en colère", "👨🏻‍🌾","faire peur")
     {
-        NOM = "Fermier en colère";
-        EMOJI = "👨🏻‍🌾";
-       
+
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si oiseaux, => oiseau-1
         //si lapin, => lapin-1
@@ -188,12 +181,12 @@ public class FermierEnColere : Outil {
     }
 }
 
-public class Serre : Outil {
-    public Serre(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Serre";
-        EMOJI = "⛺️";
+public class Serre : Outil
+{
+    public Serre(string nom, string emoji) : base("Serre", "⛺️","protéger vos récoltes")
+    {
     }
-    public override void Actionner(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         //si gel,protège du gel
         //si oiseau, oiseau-1
@@ -203,7 +196,6 @@ public class Serre : Outil {
         {
             // Protège : rien à faire
         }
-
         if (parcelle.NuisiblesActuels.Contains("Oiseau"))
         {
             parcelle.NuisiblesActuels.Remove("Oiseau");
@@ -211,7 +203,6 @@ public class Serre : Outil {
 
         // Empêche la pluie d'agir
         // --> À gérer dans la météo, via une vérification de présence de serre
-
         // Augmente la température
         //meteo.Temperature += 5;
     }

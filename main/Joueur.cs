@@ -7,20 +7,21 @@ public class Joueur
     public int Argent { set; get; }
     public int Semaine { set; get; }
     public string Lieu { set; get; }
-    public List<Plante> Semis { set; get; }
-    public List<Outil> Outils { set; get; }
-    public Plante[,] Potager { set; get; }
+    public Repertoire Inventaire { set; get; }
+    public Parcelle[,] Potager { set; get; }
 
 
-    public Joueur(string lieu="")
+    public Joueur(string lieu = "")
     {
         Argent = 2000;
         Semaine = 0;
         Lieu = lieu;
-        Semis = [];
-        Outils = [];
-        Potager = new Plante[10, 10];
+        Inventaire = new Repertoire();
+        Potager = new Parcelle[10, 10];
         CreerPotager();
+        Inventaire.Ajouter(new Tournesol());
+        Inventaire.Ajouter(new Pecher());
+
     }
     private void CreerPotager()
     {
@@ -28,9 +29,9 @@ public class Joueur
         {
             for (int ligne = 0; ligne < Potager.GetLength(1); ligne++)
             {
-                Potager[colonne, ligne] = new PlanteVide();
+                Potager[colonne, ligne] = new Parcelle();
             }
         }
-        Potager[2, 1] = new Tournesol();
+        Potager[2, 1].Planter(new Tournesol());
     }
 }
