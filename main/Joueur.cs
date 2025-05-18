@@ -32,6 +32,6 @@ public class Joueur
                 Potager[colonne, ligne] = new Parcelle();
             }
         }
-        Potager[2, 1].Planter(new Tournesol());
+        Potager[2, 1].Planter(new Citronnier());
     }
 }

@@ -30,6 +30,7 @@ public class ElementMenu
     public virtual void Actionner()
     {
         MenuReference.NoeudActif = this;
+        MenuReference.Curseur = 0;
         MenuReference.Afficher();
     }
     public virtual void RevenirAuParent()
@@ -63,19 +64,7 @@ public class ElementMenuNouvellePartie : ElementMenu
         Session.DemarrerNouvellePartie(Ville);
     }
 }
-public class ElementMenuNoeud : ElementMenu
-{
-    public ElementMenuNoeud(ZoneMenu menuReference, string titre = "(vide)", string description = "(vide)") : base(menuReference, titre, description) { }
-    public override void Actionner()
-    {
-        if (Items.Count() != 0)
-        {
-            MenuReference.NoeudActif = this;
-            MenuReference.Curseur = 0;
-            MenuReference.Afficher();
-        }
-    }
-}
+
 public class ElementMenuFonctionnel : ElementMenu
 {
     public SessionJeu Session { set; get; }
@@ -86,52 +75,49 @@ public class ElementMenuFonctionnel : ElementMenu
 }
 public abstract class ElementMenuMagasin : ElementMenuFonctionnel
 {
-    public int Prix { set; get; }
-    public ElementMenuMagasin(ZoneMenu menuReference, string titre, SessionJeu session, int prix) : base(menuReference, titre, session)
-    {
-        Prix = prix;
-    }
+    public ElementMenuMagasin(ZoneMenu menuReference, string titre, SessionJeu session, ObjetJeu contenu) : base(menuReference, titre, session)
+    { }
 }
 public class ElementMenuMagasinOutil : ElementMenuMagasin
 {
     public Outil Contenu { set; get; }
-    public ElementMenuMagasinOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil, int prix) : base(menuReference, titre, session, prix)
+    public ElementMenuMagasinOutil(ZoneMenu menuReference, SessionJeu session, Outil outil) : base(menuReference, $"{outil.EMOJI} {outil.NOM} - {outil.PRIX_ACHAT} ", session, outil)
     {
         Contenu = outil;
     }
     public override void Actionner()
     {
-        Session.Acheter(Contenu, Prix);
+        Session.Acheter(Contenu);
     }
 }
 public class ElementMenuMagasinSemis : ElementMenuMagasin
 {
     public Plante Contenu { set; get; }
-    public ElementMenuMagasinSemis(ZoneMenu menuReference, string titre, SessionJeu session, Plante plante, int prix) : base(menuReference, titre, session, prix)
+    public ElementMenuMagasinSemis(ZoneMenu menuReference, SessionJeu session, Plante plante) : base(menuReference, $"{plante.EMOJI} {plante.NOM} - {plante.PRIX_ACHAT} ", session, plante)
     {
         Contenu = plante;
     }
     public override void Actionner()
     {
-        Session.Acheter(Contenu, Prix);
+        Session.Acheter(Contenu);
     }
 }
-
-public class ElementMenuAchatSemis : ElementMenuMagasin
+public class ElementMenuInventaireSemis : ElementMenuFonctionnel
 {
     Plante Semis { set; get; }
-    public ElementMenuAchatSemis(ZoneMenu menuReference, string titre, SessionJeu session, int prix, Plante semis) : base(menuReference, titre, session, prix)
+    public ElementMenuInventaireSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session)
     {
-        Prix = prix;
         Semis = semis;
     }
-
-
+    public override void Actionner()
+    {
+        Session.PlanterSemis(Semis);
+    }
 }
 public class ElementMenuInventaireOutil : ElementMenuFonctionnel
 {
-    Outil Outil { set; get; }
-    ElementMenuInventaireOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil) : base(menuReference, titre, session)
+    public Outil Outil { set; get; }
+    public ElementMenuInventaireOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil) : base(menuReference, titre, session)
     {
         Outil = outil;
     }
@@ -153,18 +139,5 @@ public class ElementMenuSuivant : ElementMenuFonctionnel
     public override void Actionner()
     {
         Session.PasserSemaineSuivante();
-    }
-}
-
-public class ElementMenuAjoutSemis : ElementMenuFonctionnel
-{
-    Plante Semis { set; get; }
-    public ElementMenuAjoutSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session)
-    {
-        Semis = semis;
-    }
-    public override void Actionner()
-    {
-        Session.PlanterSemis(Semis);
     }
 }

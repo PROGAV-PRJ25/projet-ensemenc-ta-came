@@ -1,15 +1,29 @@
 public abstract class Outil : ObjetJeu
 {
+    public static List<Outil> ListeOutils = new List<Outil>
+    {
+        new Arrosoir(),
+        new Panier(),
+        new Secateur(),
+        new CD(),
+        new Fumier(),
+        new Traitement(),
+        new Coccinnelle(),
+        new FermierEnColere(),
+        new Serre()
+    };
     public string Verbe { set; get; }
     public abstract void Actionner(Parcelle parcelle);
-    protected Outil(string nom, string emoji, string verbe) : base(nom, emoji)
+
+    protected Outil(string nom, string emoji,int decallageAffichage,string verbe) : base(nom, emoji,decallageAffichage)
     {
         Verbe = verbe;
+
     }
 }
 public class Arrosoir : Outil
 {
-    public Arrosoir() : base("Arosoir", "💦", "arroser") { }
+    public Arrosoir() : base("Arosoir", "💦",0, "arroser") { }
     public override void Actionner(Parcelle parcelle)
     {
         //si dessous besoineau , augmente l'hydratation de +15%
@@ -27,7 +41,7 @@ public class Arrosoir : Outil
 
 public class Panier : Outil
 {
-    public Panier() : base("Panier", "🧺", "ramasser vos récoltes") { }
+    public Panier() : base("Panier", "🧺",0, "ramasser vos récoltes") { }
     public override void Actionner(Parcelle parcelle)
     {
         //si fruit , le récolte et rendement -1
@@ -42,7 +56,7 @@ public class Panier : Outil
 
 public class Secateur : Outil
 {
-    public Secateur(string nom, string emoji) : base("Secateur", "✂️","tailler")
+    public Secateur() : base("Secateur", "🪓", 1,"tailler")
     {
     }
     public override void Actionner(Parcelle parcelle)
@@ -68,7 +82,7 @@ public class Secateur : Outil
 
 public class CD : Outil
 {
-    public CD() : base("CD", "💿","installer votre CD")
+    public CD() : base("CD", "💿", 0,"installer votre CD")
     {
 
     }
@@ -91,7 +105,7 @@ public class CD : Outil
 
 public class Fumier : Outil
 {
-    public Fumier() : base("Fumier", "💩","mettre du fumier")
+    public Fumier() : base("Fumier", "💩", 0,"mettre du fumier")
     {
     }
     public override void Actionner(Parcelle parcelle)
@@ -115,7 +129,7 @@ public class Fumier : Outil
 
 public class Traitement : Outil
 {
-    public Traitement() : base("Traitement", "🧪","traiter")
+    public Traitement() : base("Traitement", "🧪",0,"traiter")
     {
     }
     public override void Actionner(Parcelle parcelle)
@@ -140,7 +154,7 @@ public class Traitement : Outil
 
 public class Coccinnelle : Outil
 {
-    public Coccinnelle(string nom, string emoji) : base("Coccinnelle", "🐞","déposer vos coccinelles")
+    public Coccinnelle() : base("Coccinnelle", "🐞",0, "déposer vos coccinelles")
     {
     }
     public override void Actionner(Parcelle parcelle)
@@ -157,7 +171,7 @@ public class Coccinnelle : Outil
 
 public class FermierEnColere : Outil
 {
-    public FermierEnColere(string nom, string emoji) : base("Fermier en colère", "👨🏻‍🌾","faire peur")
+    public FermierEnColere() : base("Fermier en colère", "👨🏻‍🌾",0, "faire peur")
     {
 
     }
@@ -183,7 +197,7 @@ public class FermierEnColere : Outil
 
 public class Serre : Outil
 {
-    public Serre(string nom, string emoji) : base("Serre", "⛺️","protéger vos récoltes")
+    public Serre() : base("Serre", "⛺️",0, "protéger vos récoltes")
     {
     }
     public override void Actionner(Parcelle parcelle)

@@ -1,17 +1,31 @@
 public abstract class ObjetJeu
 {
-    public string NOM { get; private set; }
+    public string NOM { private set; get; }
     public string EMOJI { set; get; }
-    public ObjetJeu(string nom, string emoji)
+    public int PRIX_ACHAT { private set; get; }
+    public int PRIX_VENTE { private set; get; }
+
+    public ObjetJeu(string nom, string emoji,int decallageAffichage, int prixAchat = 0, int prixVente = 0)
     {
         NOM = nom;
         EMOJI = emoji;
+        PRIX_ACHAT = prixAchat;
+        PRIX_VENTE = prixVente;
     }
 }
 public abstract class Plante : ObjetJeu
 {
     // Caractéristiques : ne bouge pas
-
+    public static List<Plante> ListePlantes = new List<Plante>
+    {
+        new Pommier(),
+        new Ble(),
+        new Carotte(),
+        new Pecher(),
+        new VignesArtaban(),
+        new Citronnier(),
+        new Tournesol()
+    };
     public string TYPE { set; get; }
     public int SAISON_SEMI { set; get; }
     public string TERRAIN_PREF { set; get; }
@@ -21,7 +35,6 @@ public abstract class Plante : ObjetJeu
     public int SAISON_RECOLTE { set; get; }
     public int TEMPERATURE_PREF { set; get; }
     public string ESPE_DE_VIE { set; get; }
-    public int PRIX_SEMIS { set; get; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
@@ -43,8 +56,8 @@ public abstract class Plante : ObjetJeu
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
      int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixSemis)
-    : base(nom, emoji)
+    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
+    : base(nom, emoji, prixAchat, prixVente)
     {
         EMOJI = emoji;
         Etats = etats;
@@ -65,7 +78,6 @@ public abstract class Plante : ObjetJeu
         SAISON_RECOLTE = saisonRecolte;
         TEMPERATURE_PREF = temperaturePref;
         ESPE_DE_VIE = espeDeVie;
-        PRIX_SEMIS = prixSemis;
 
         Age = 0;
         Etat = etats[0];
@@ -116,7 +128,8 @@ public class PlanteVide : Plante
     saisonRecolte: 0,
     temperaturePref: 0,
     espeDeVie: "",
-    prixSemis: 0)
+    prixAchat: 0,
+    prixVente: 0)
     {
         //corps du constructeur
     }
@@ -150,7 +163,8 @@ public class Pommier : Plante
     saisonRecolte: 3,
     temperaturePref: 18,
     espeDeVie: "vivace",
-    prixSemis: 150
+    prixAchat: 150,
+    prixVente: 120
     )
 
     {
@@ -187,7 +201,8 @@ public class Ble : Plante
     saisonRecolte: 3,
     temperaturePref: 16,
     espeDeVie: "annuel",
-    prixSemis: 20
+    prixAchat: 20,
+    prixVente: 20
     )
     {
         //corps du constructeur
@@ -220,8 +235,10 @@ public class Carotte : Plante
     saisonRecolte: 3,
     temperaturePref: 18,
     espeDeVie: "annuel",
-    prixSemis: 15
+    prixAchat: 15,
+    prixVente: 12
     )
+    
     {
         //corps du constructeur
     }
@@ -252,7 +269,8 @@ public class Pecher : Plante
     saisonRecolte: 3,
     temperaturePref: 18,
     espeDeVie: "vivace",
-    prixSemis: 120
+    prixAchat: 120,
+    prixVente: 100
     )
     {
         //corps du constructeur
@@ -285,7 +303,8 @@ public class VignesArtaban : Plante
     saisonRecolte: 0,
     temperaturePref: 25,
     espeDeVie: "vivace",
-    prixSemis: 100
+    prixAchat: 100,
+    prixVente: 80
     )
     {
         //corps du constructeur
@@ -296,11 +315,11 @@ public class VignesArtaban : Plante
     }
 
 }
-public class Olivier : Plante
+public class Citronnier : Plante
 {
-    public Olivier() :
-    base(nom: "Olivier",
-    emoji: "🫒",
+    public Citronnier() :
+    base(nom: "Citronnier",
+    emoji: "🍋",
     etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
     type: "arbre fruitier",
     saisonSemi: 2,
@@ -314,11 +333,12 @@ public class Olivier : Plante
     nuisible: "chenilles, gelées",
     defence: "Taille, traitement",
     espace: 8,
-    rendement: 50,
+    rendement: 5,
     saisonRecolte: 4,
     temperaturePref: 30,
     espeDeVie: "vivace",
-    prixSemis: 180
+    prixAchat: 180,
+    prixVente: 150
     )
 
     {
@@ -326,11 +346,7 @@ public class Olivier : Plante
     }
     public override Plante Dupliquer()
     {
-        return new Olivier();
-    }
-    public override string ToString()
-    {
-        return "(vide)";
+        return new Citronnier();
     }
 
 }
@@ -356,7 +372,8 @@ public class Tournesol : Plante
     saisonRecolte: 3,
     temperaturePref: 22,
     espeDeVie: "annuel",
-    prixSemis: 25
+    prixAchat: 25,
+    prixVente: 20
     )
     {
         //corps du constructeur

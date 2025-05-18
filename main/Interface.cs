@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-
 public abstract class Interface : Zone
 {
     public virtual CelluleAffichage[,] Grille { set; get; }
@@ -96,7 +95,7 @@ public class ZoneEcranJeu : Interface
     public ZoneTexte DATE { set; get; }
     public ZoneTexte LIEU { set; get; }
     public ZoneTexte MODE { set; get; }
-    public ZoneTexte? ARGENT { set; get; }
+    public ZoneTexte ARGENT { set; get; }
     public ZoneTexte? METEO { set; get; }
     public ZoneTexte? WEBCAM { set; get; }
     public ZoneChamps CHAMPS { set; get; }
@@ -114,11 +113,10 @@ public class ZoneEcranJeu : Interface
         DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
         MODE = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
-        ARGENT = new ZoneTexte(Largeur - 10, 2, 12, 1, "2000 💰");
+        ARGENT = new ZoneTexte(1, 2, 23, 1, "2000 💰");
         // Créaction de la zone CHAMPS
         CHAMPS = new ZoneChamps(1, 6, 10, 10);
-
-
+        
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
         TitresMenus = new EnsembleZoneTexte();
@@ -142,7 +140,6 @@ public class ZoneEcranJeu : Interface
         //JournalEtArticles = new GroupeJournalEtArticles;
         ZoneActive = ChampsEtDetails;
         BasculerSurZone(0);
-
     }
     public ZoneEcranJeu() : this(0, 0, Console.WindowWidth, Console.WindowHeight - 1) { }
 
@@ -180,6 +177,7 @@ public class ZoneEcranJeu : Interface
         DATE.Afficher();
         LIEU.Afficher();
         MODE.Afficher();
+        ARGENT.Afficher();
         CHAMPS.Afficher();
         DIALOGUE.Afficher();
         INVENTAIRE.Afficher();
@@ -215,7 +213,6 @@ public class ZoneEcranJeu : Interface
         }
         TitresMenus.Afficher();
         ZoneActive.Afficher();
-        
     }
 
 
@@ -233,7 +230,6 @@ public class InterfaceAccueil : Interface
     {
         AfficherLignesDirectrices();
     }
-
 }
 
 public class GroupeChampsDetails : ZoneInteractive

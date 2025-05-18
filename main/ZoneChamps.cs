@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 public class ZoneChamps : ZoneInteractive
 {
 
@@ -68,7 +70,9 @@ public class ZoneChamps : ZoneInteractive
             Console.SetCursorPosition(Position[0], Position[1] + ligne);
 
             for (int colonne = 0; colonne < Largeur; colonne++)
+            {
                 Console.Write(Grille[colonne, ligne].Contenu.EMOJI);
+            }
         }
         Console.ResetColor();
         AfficherCurseur();
@@ -76,14 +80,14 @@ public class ZoneChamps : ZoneInteractive
     public void AfficherCurseur()
     {
         Console.BackgroundColor = ConsoleColor.White;
-        Console.SetCursorPosition(Position[0] + (Curseur % Largeur)*2, Position[1] + (Curseur / Largeur));
+        Console.SetCursorPosition(Position[0] + (Curseur % Largeur) * 2 , Position[1] + (Curseur / Largeur));
         Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.EMOJI);
         Console.ResetColor();
     }
     public void AfficherCelluleChamps(int colonne, int ligne)
     {
         Console.BackgroundColor = Grille[colonne, ligne].CouleurFond;
-        Console.SetCursorPosition(Position[0] + colonne*2, Position[1] + ligne);
+        Console.SetCursorPosition(Position[0] + colonne*2 , Position[1] + ligne);
         Console.Write(Grille[colonne, ligne].Contenu.EMOJI);
         Console.ResetColor();
     }

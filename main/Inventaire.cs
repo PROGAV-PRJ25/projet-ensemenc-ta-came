@@ -27,7 +27,7 @@ public class Repertoire
     {
 
         int reponse = -1;
-        for (int i = 0; i < Semis.Count(); i++)
+        for (int i = 0; i < Outils.Count(); i++)
         {
             if (Outils[i].Contenu.NOM == outil.NOM)
                 reponse = i;
