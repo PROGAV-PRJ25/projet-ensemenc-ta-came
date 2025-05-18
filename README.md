@@ -64,3 +64,8 @@ Les plantes sont la partie principale du jeu
 
 ### Arbres
 Peuvent être taillés, 
+
+## Choix Réalisés pour la stucture du code
+Nous avons choisi de construire tous nos tableaux à double entrée ou ordres de paramètres en mettant toujours en premier les abcisses puis les ordonnées.
+Ce choix s'est imposé pour que la logique des méthodes déjà implémentées par la classe Console.
+*Console.GetCursorPosition* et *Console.SetCursorPosition* prennent en premier indice la largeur/colonne, et en second la hauteur/ligne. 
