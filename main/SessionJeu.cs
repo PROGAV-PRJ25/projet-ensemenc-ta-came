@@ -34,36 +34,36 @@ public class SessionJeu
         ECRAN_ACCUEIL.ACCUEIL.Racine.AjouterItem(NouvellePartie);
         ECRAN_ACCUEIL.ACCUEIL.Racine.AjouterItem(ApprendreJeu);
 
-        ECRAN_JEU.INVENTAIRE.Racine.Description = "Inventaire - Choisissez parmis les catégories de votre inventaire";
-        ElementMenu MenuOutils = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Outils", "Choisissez un de vos outils à utiliser !");
-        ElementMenu MenuSemis = new ElementMenu(ECRAN_JEU.INVENTAIRE, "Semis", "Choisissez un de vos semis à planter !");
-        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(MenuOutils);
-        ECRAN_JEU.INVENTAIRE.Racine.AjouterItem(MenuSemis);
+        ECRAN_JEU.Inventaire.Racine.Description = "Inventaire - Choisissez parmis les catégories de votre inventaire";
+        ElementMenu MenuOutils = new ElementMenu(ECRAN_JEU.Inventaire, "Outils", "Choisissez un de vos outils à utiliser !");
+        ElementMenu MenuSemis = new ElementMenu(ECRAN_JEU.Inventaire, "Semis", "Choisissez un de vos semis à planter !");
+        ECRAN_JEU.Inventaire.Racine.AjouterItem(MenuOutils);
+        ECRAN_JEU.Inventaire.Racine.AjouterItem(MenuSemis);
 
-        ECRAN_JEU.MAGASIN.Racine.Description = "Magasin - Acheter ou vendre, c'est vous qui choisissez ! ";
-        ElementMenu Acheter = new ElementMenu(ECRAN_JEU.MAGASIN, "Acheter", "Choisissez parmis les catégories d'articles à acheter !");
-        ElementMenu Vendre = new ElementMenu(ECRAN_JEU.MAGASIN, "Vendre", "Choisissez une de vos récoltes à vendre !");
-        ECRAN_JEU.MAGASIN.Racine.AjouterItem(Acheter);
-        ECRAN_JEU.MAGASIN.Racine.AjouterItem(Vendre);
+        ECRAN_JEU.Magasin.Racine.Description = "Magasin - Acheter ou vendre, c'est vous qui choisissez ! ";
+        ElementMenu Acheter = new ElementMenu(ECRAN_JEU.Magasin, "Acheter", "Choisissez parmis les catégories d'articles à acheter !");
+        ElementMenu Vendre = new ElementMenu(ECRAN_JEU.Magasin, "Vendre", "Choisissez une de vos récoltes à vendre !");
+        ECRAN_JEU.Magasin.Racine.AjouterItem(Acheter);
+        ECRAN_JEU.Magasin.Racine.AjouterItem(Vendre);
 
         foreach (Plante plante in Plante.ListePlantes)
         {
-            Acheter.AjouterItem(new ElementMenuMagasinSemis(ECRAN_JEU.MAGASIN, this, plante));
+            Acheter.AjouterItem(new ElementMenuMagasinSemis(ECRAN_JEU.Magasin, this, plante));
         }
         foreach (Outil outil in Outil.ListeOutils)
         {
-            Acheter.AjouterItem(new ElementMenuMagasinOutil(ECRAN_JEU.MAGASIN, this, outil));
+            Acheter.AjouterItem(new ElementMenuMagasinOutil(ECRAN_JEU.Magasin, this, outil));
         }
 
-        ECRAN_JEU.JOURNAL.Racine.Description = "Renseignez vous sur le fonctionnement du jeu !";
-        ElementMenu Plantes = new ElementMenu(ECRAN_JEU.JOURNAL, "Plantes", "Trouvez tout ce dont vous avez besoin de savoir à propos des plantes !");
-        ElementMenu Meteo = new ElementMenu(ECRAN_JEU.JOURNAL, "Meteo", "Devenez incollables sur la météo !");
-        ECRAN_JEU.JOURNAL.Racine.AjouterItem(Plantes);
-        ECRAN_JEU.JOURNAL.Racine.AjouterItem(Meteo);
+        ECRAN_JEU.Journal.Racine.Description = "Renseignez vous sur le fonctionnement du jeu !";
+        ElementMenu Plantes = new ElementMenu(ECRAN_JEU.Journal, "Plantes", "Trouvez tout ce dont vous avez besoin de savoir à propos des plantes !");
+        ElementMenu Meteo = new ElementMenu(ECRAN_JEU.Journal, "Meteo", "Devenez incollables sur la météo !");
+        ECRAN_JEU.Journal.Racine.AjouterItem(Plantes);
+        ECRAN_JEU.Journal.Racine.AjouterItem(Meteo);
 
-        ECRAN_JEU.SUIVANT.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
-        ElementMenu Oui = new ElementMenuSuivant(ECRAN_JEU.SUIVANT, "Oui je le veux", this);
-        ECRAN_JEU.SUIVANT.Racine.AjouterItem(Oui);
+        ECRAN_JEU.Suivant.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
+        ElementMenu Oui = new ElementMenuSuivant(ECRAN_JEU.Suivant, "Oui je le veux", this);
+        ECRAN_JEU.Suivant.Racine.AjouterItem(Oui);
     }
     // ------------------------------------------------------------------------
     public void ActualiserMenuInventaire()
@@ -72,34 +72,34 @@ public class SessionJeu
         List<ElementMenu> itemsSemis = new List<ElementMenu>();
         if (JoueurActuel.Inventaire.Semis.Count == 0)
         {
-            ECRAN_JEU.INVENTAIRE.Racine.Items[1].Description = "Vous n'avez plus aucun semis ! Allez au magasin en acheter !";
+            ECRAN_JEU.Inventaire.Racine.Items[1].Description = "Vous n'avez plus aucun semis ! Allez au magasin en acheter !";
         }
         else
         {
             foreach (ItemInventaireSemis item in JoueurActuel.Inventaire.Semis)
             {
-                itemsSemis.Add(new ElementMenuInventaireSemis(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
+                itemsSemis.Add(new ElementMenuInventaireSemis(ECRAN_JEU.Inventaire, $"{item.Contenu.Emoji} {item.Contenu.Nom} ({item.Quantite} en stock)", this, item.Contenu));
             }
-            ECRAN_JEU.INVENTAIRE.Racine.Items[1].Description = "Choisissez un de vos semis à planter !";
+            ECRAN_JEU.Inventaire.Racine.Items[1].Description = "Choisissez un de vos semis à planter !";
         }
-        ECRAN_JEU.INVENTAIRE.Racine.Items[1].Items = itemsSemis;
+        ECRAN_JEU.Inventaire.Racine.Items[1].Items = itemsSemis;
 
         // Mise à jour des outils
         List<ElementMenu> itemsOutils = new List<ElementMenu>();
         if (JoueurActuel.Inventaire.Outils.Count == 0)
         {
-            ECRAN_JEU.INVENTAIRE.Racine.Items[0].Description = "Vous n'avez plus aucun outil ! Allez au magasin en acheter !";
+            ECRAN_JEU.Inventaire.Racine.Items[0].Description = "Vous n'avez plus aucun outil ! Allez au magasin en acheter !";
         }
         else
         {
             foreach (ItemInventaireOutil item in JoueurActuel.Inventaire.Outils)
             {
-                itemsOutils.Add(new ElementMenuInventaireOutil(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
+                itemsOutils.Add(new ElementMenuInventaireOutil(ECRAN_JEU.Inventaire, $"{item.Contenu.Emoji} {item.Contenu.Nom} ({item.Quantite} en stock)", this, item.Contenu));
             }
-            ECRAN_JEU.INVENTAIRE.Racine.Items[0].Description = "Choisissez un de vos outils à utiliser !";
+            ECRAN_JEU.Inventaire.Racine.Items[0].Description = "Choisissez un de vos outils à utiliser !";
         }
-        ECRAN_JEU.INVENTAIRE.Racine.Items[0].Items = itemsOutils;
-        ECRAN_JEU.INVENTAIRE.Curseur = 0;
+        ECRAN_JEU.Inventaire.Racine.Items[0].Items = itemsOutils;
+        ECRAN_JEU.Inventaire.Curseur = 0;
 
     }
     // Affichage ==============================================================
@@ -231,7 +231,7 @@ public class SessionJeu
                 choixFait = true;
             }
         }
-        return ECRAN_JEU.CHAMPS.Curseur;
+        return ECRAN_JEU.Champs.Curseur;
     }
     // Lancement d'une partie =================================================
     public void Demarrer()
@@ -247,11 +247,11 @@ public class SessionJeu
     {
         JoueurActuel = new Joueur(pays);
         // on met à jour les zones d'affichage liées au joueur
-        ECRAN_JEU.LIEU.Contenu = JoueurActuel.Lieu;
-        ECRAN_JEU.DATE.Contenu = "2003 - Semaine 1 (printemps)";
-        ECRAN_JEU.CHAMPS.Synchroniser(JoueurActuel.Potager);
+        ECRAN_JEU.Lieu.Contenu = JoueurActuel.Lieu;
+        ECRAN_JEU.Date.Contenu = "2003 - Semaine 1 (printemps)";
+        ECRAN_JEU.Champs.Synchroniser(JoueurActuel.Potager);
         ECRAN_JEU.BasculerSurZone(0);
-        ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.CHAMPS;
+        ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.Champs;
         ECRAN_JEU.ZoneActive = ECRAN_JEU.ChampsEtDetails;
 
         ECRAN_JEU.Afficher();
@@ -261,8 +261,8 @@ public class SessionJeu
     // Actions Inventaire =======================================================
     public void PlanterSemis(Plante plante)
     {
-        ECRAN_JEU.DIALOGUE.Contenu = "Choisissez un emplacement où planter votre semis!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
-        ECRAN_JEU.DIALOGUE.Afficher();
+        ECRAN_JEU.Dialogue.Contenu = "Choisissez un emplacement où planter votre semis!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
+        ECRAN_JEU.Dialogue.Afficher();
         int indiceParcelle = DemanderPositionPotager();
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
@@ -270,60 +270,60 @@ public class SessionJeu
         {
             JoueurActuel.Potager[colonne, ligne].Planter(plante);//on ajoute la plante au potager
             JoueurActuel.Inventaire.Retirer(plante); //on actualise l'inventaire
-            ECRAN_JEU.CHAMPS.Synchroniser(JoueurActuel.Potager);  //on actualise le menu 
+            ECRAN_JEU.Champs.Synchroniser(JoueurActuel.Potager);  //on actualise le menu 
             //on actualise l'affichage
-            ECRAN_JEU.DIALOGUE.Contenu = $"{plante.NOM} Ajouté ! en stock : {JoueurActuel.Inventaire.RecupererQuantite(plante)}. Retour à l'inventaire";
+            ECRAN_JEU.Dialogue.Contenu = $"{plante.Nom} Ajouté ! en stock : {JoueurActuel.Inventaire.RecupererQuantite(plante)}. Retour à l'inventaire";
             ECRAN_JEU.ChampsEtDetails.Afficher();
         }
         else
         {
-            ECRAN_JEU.DIALOGUE.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Contenu.NOM} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
+            ECRAN_JEU.Dialogue.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Contenu.Nom} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
 
         }
         ActualiserMenuInventaire();
 
-        ECRAN_JEU.DIALOGUE.Afficher();
+        ECRAN_JEU.Dialogue.Afficher();
         ECRAN_JEU.BasculerSurZone(1); // retour à l'inventaire
     }
     public void UtiliserOutil(Outil outil)
     {
-        ECRAN_JEU.DIALOGUE.Contenu = $"Choisissez un emplacement où {outil.Verbe}!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
-        ECRAN_JEU.DIALOGUE.Afficher();
+        ECRAN_JEU.Dialogue.Contenu = $"Choisissez un emplacement où {outil.Verbe}!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
+        ECRAN_JEU.Dialogue.Afficher();
         int indiceParcelle = DemanderPositionPotager();
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
-        outil.Actionner(JoueurActuel.Potager[ligne, colonne]);
+        outil.Actionner(JoueurActuel.Potager[colonne, ligne]);
     }
     // Actions Journal ==========================================================
     public void AfficherArticle() { }
     // Actions Magasin ==========================================================
     public void Acheter(Outil outil)
     {
-        if (outil.PRIX_ACHAT <= JoueurActuel.Argent)
+        if (outil.PrixAchat <= JoueurActuel.Argent)
         {
-            JoueurActuel.Argent -= outil.PRIX_ACHAT;
+            JoueurActuel.Argent -= outil.PrixAchat;
             JoueurActuel.Inventaire.Ajouter(outil);
-            ECRAN_JEU.DIALOGUE.Contenu = $"{outil.NOM} acheté  ! {JoueurActuel.Inventaire.RecupererQuantite(outil)} en stock ! ";
-            ECRAN_JEU.DIALOGUE.Afficher();
+            ECRAN_JEU.Dialogue.Contenu = $"{outil.Nom} acheté  ! {JoueurActuel.Inventaire.RecupererQuantite(outil)} en stock ! ";
+            ECRAN_JEU.Dialogue.Afficher();
             ActualiserAffichageArgent();
             ActualiserMenuInventaire();
         }
     }
     public void Acheter(Plante semis)
     {
-        if (semis.PRIX_ACHAT <= JoueurActuel.Argent)
+        if (semis.PrixAchat <= JoueurActuel.Argent)
         {
-            JoueurActuel.Argent -= semis.PRIX_ACHAT;
+            JoueurActuel.Argent -= semis.PrixAchat;
             JoueurActuel.Inventaire.Ajouter(semis);
-            ECRAN_JEU.DIALOGUE.Contenu = $"Semis de {semis.NOM} acheté  ! {JoueurActuel.Inventaire.RecupererQuantite(semis)} en stock ! ";
-            ECRAN_JEU.DIALOGUE.Afficher();
+            ECRAN_JEU.Dialogue.Contenu = $"Semis de {semis.Nom} acheté  ! {JoueurActuel.Inventaire.RecupererQuantite(semis)} en stock ! ";
+            ECRAN_JEU.Dialogue.Afficher();
             ActualiserAffichageArgent();
             ActualiserMenuInventaire();
         }
         else
         {
-            ECRAN_JEU.DIALOGUE.Contenu = $"ERREUR : pas assez d'argent ! Vendez un de vos biens !";
-            ECRAN_JEU.DIALOGUE.Afficher();
+            ECRAN_JEU.Dialogue.Contenu = $"ERREUR : pas assez d'argent ! Vendez un de vos biens !";
+            ECRAN_JEU.Dialogue.Afficher();
         }
     }
     public void Vendre() { }
@@ -332,7 +332,7 @@ public class SessionJeu
     {
         JoueurActuel.Semaine += 1;
         ActualiserDate();
-        ECRAN_JEU.DIALOGUE.AfficherMessageSemaine(JoueurActuel.Semaine);
+        ECRAN_JEU.Dialogue.AfficherMessageSemaine(JoueurActuel.Semaine);
         // { JoueurActuel.Semaine % 52} semaines se sont écoulées depuis votre arrivée !";
         // ECRAN_JEU.DIALOGUE.Contenu += 
         // ECRAN_JEU.DIALOGUE.Afficher();
@@ -342,22 +342,22 @@ public class SessionJeu
     // Actualisation des données
     public void ActualiserDate()
     {
-        ECRAN_JEU.DATE.Contenu = $"{2003 + JoueurActuel.Semaine / 52} - Semaine {1 + JoueurActuel.Semaine % 52} ";
+        ECRAN_JEU.Date.Contenu = $"{2003 + JoueurActuel.Semaine / 52} - Semaine {1 + JoueurActuel.Semaine % 52} ";
         if (JoueurActuel.Semaine % 52 < 13)
-            ECRAN_JEU.DATE.Contenu += "(printemps)";
+            ECRAN_JEU.Date.Contenu += "(printemps)";
         else if (JoueurActuel.Semaine % 52 < 26)
-            ECRAN_JEU.DATE.Contenu += "(été)";
+            ECRAN_JEU.Date.Contenu += "(été)";
         else if (JoueurActuel.Semaine % 52 < 39)
-            ECRAN_JEU.DATE.Contenu += "(automne)";
+            ECRAN_JEU.Date.Contenu += "(automne)";
         else
-            ECRAN_JEU.DATE.Contenu += "(hiver)";
-        ECRAN_JEU.DATE.Afficher();
+            ECRAN_JEU.Date.Contenu += "(hiver)";
+        ECRAN_JEU.Date.Afficher();
     }
     public void ActualiserAffichageArgent()
     {
         int argent = JoueurActuel.Argent;
-        ECRAN_JEU.ARGENT.Contenu = $"{argent} 💰";
-        ECRAN_JEU.ARGENT.Afficher();
+        ECRAN_JEU.Argent.Contenu = $"{argent} 💰";
+        ECRAN_JEU.Argent.Afficher();
     }
     // Otuils =====================================================================
     public void Arroser()
@@ -379,7 +379,7 @@ public class SessionJeu
     }
     public void DeclencherModeUrgence(int scenario = 0)
     {
-        ECRAN_JEU.URGENCE.Racine.Description = "URGENCE ! {}";
+        ECRAN_JEU.Urgence.Racine.Description = "URGENCE ! {}";
         Console.ForegroundColor = ConsoleColor.Red;
         ECRAN_JEU.AfficherLignesDirectrices();
         //JoueurAnimation();

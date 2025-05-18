@@ -28,9 +28,9 @@ public class Arrosoir : Outil
     {
         //si dessous besoineau , augmente l'hydratation de +15%
         //si au dessus besoineau , attention plante surhydraté et santé -20
-        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
+        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
         {
-            parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BESOIN_EAU * 0.15);
+            parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BesoinEau * 0.15);
         }
         else
         {

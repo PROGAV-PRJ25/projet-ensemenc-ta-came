@@ -20,11 +20,11 @@ public class Pluie : Meteo {
         //si dépasse besoin eau de 30, santé -20
         //sinon si besoin eau atteint (à +30% pret), santé +10
         parcelle.Contenu.QuantiteEau += 10;
-        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BESOIN_EAU + 30)
+        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BesoinEau + 30)
         {
             parcelle.Contenu.Sante -= 20;
         }
-        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BESOIN_EAU) <= parcelle.Contenu.BESOIN_EAU * 0.3)
+        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BesoinEau) <= parcelle.Contenu.BesoinEau * 0.3)
         {
             parcelle.Contenu.Sante += 10;
         }
@@ -42,12 +42,12 @@ public class Soleil : Meteo {
         //si dépasse besoin soleil de 5 et quantitéeau qui est en dessous de besoin eau,  ce mois ci, santé-25
         //sinon, si besoinsoleil atteint (à +_ 5%), santé +5
         parcelle.Contenu.BesoinSoleil += 15;
-        if (parcelle.Contenu.BesoinSoleil > parcelle.Contenu.BESOIN_EAU + 5 &&
-            parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
+        if (parcelle.Contenu.BesoinSoleil > parcelle.Contenu.BesoinEau + 5 &&
+            parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
         {
             parcelle.Contenu.Sante -= 25;
         }
-        else if (Math.Abs(parcelle.Contenu.BesoinSoleil - parcelle.Contenu.BESOIN_EAU) <= 5)
+        else if (Math.Abs(parcelle.Contenu.BesoinSoleil - parcelle.Contenu.BesoinEau) <= 5)
         {
             parcelle.Contenu.Sante += 5;
         }
@@ -65,7 +65,7 @@ public class VentAutan : Meteo {
         //si réduit trop quantitéeau en dessous de besoineau, santé-25
         //accelere la vitessecroissance de +2 (en mois) donc récolte plus tot
         parcelle.Contenu.QuantiteEau = (int)(parcelle.Contenu.QuantiteEau * 0.85);
-        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
+        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
         {
             parcelle.Contenu.Sante -= 25;
         }
@@ -85,7 +85,7 @@ public class Gel : Meteo {
         bool protegeParFumierOuSerre = parcelle.Defense != null &&
             (parcelle.Defense.Contains("Fumier") || parcelle.Defense.Contains("Serre"));
 
-        if (parcelle.Contenu.CRAIN_FROID && !protegeParFumierOuSerre)
+        if (parcelle.Contenu.CraintFroid && !protegeParFumierOuSerre)
         {
             parcelle.Contenu.Sante -= 20;
             parcelle.Contenu.Etat = "gelé";
@@ -103,13 +103,13 @@ public class Temperature : Meteo {
         //si temperature =temppref , vitessecroissance =+2 en mois
         //si temperature< ou > à temp pref ne fait rien
         //si temperature <15° ou >30° à temppref , santé =-15
-        int temp = parcelle.Contenu.TEMPERATURE_PREF; // simulation d'une température égale à la température préférée
+        int temp = parcelle.Contenu.TemperaturePreferee; // simulation d'une température égale à la température préférée
 
-        if (temp == parcelle.Contenu.TEMPERATURE_PREF)
+        if (temp == parcelle.Contenu.TemperaturePreferee)
         {
             parcelle.Contenu.VitesseCroissance += 2;
         }
-        else if (temp < parcelle.Contenu.TEMPERATURE_PREF - 15 || temp > parcelle.Contenu.TEMPERATURE_PREF + 15)
+        else if (temp < parcelle.Contenu.TemperaturePreferee - 15 || temp > parcelle.Contenu.TemperaturePreferee + 15)
         {
             parcelle.Contenu.Sante -= 15;
         }
@@ -129,11 +129,11 @@ public class Orage : Meteo {
         //spécificité : orage affaiblit les cultures et santé -15 d'office.
         parcelle.Contenu.QuantiteEau += 10;
 
-        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BESOIN_EAU + 30)
+        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BesoinEau + 30)
         {
             parcelle.Contenu.Sante -= 20;
         }
-        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BESOIN_EAU) <= parcelle.Contenu.BESOIN_EAU * 0.3)
+        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BesoinEau) <= parcelle.Contenu.BesoinEau * 0.3)
         {
             parcelle.Contenu.Sante += 10;
         }

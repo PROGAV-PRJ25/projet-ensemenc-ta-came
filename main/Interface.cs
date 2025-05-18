@@ -86,22 +86,22 @@ public class ZoneEcranJeu : Interface
 {
     public ZoneInteractive ZoneActive { set; get; }
     public List<Zone> ZonesInternes = new List<Zone> { };
-    public ZoneMenu MAGASIN { set; get; }
-    public ZoneMenu INVENTAIRE { set; get; }
-    public ZoneMenu JOURNAL { set; get; }
-    public ZoneMenu SUIVANT { set; get; }
-    public ZoneMenu URGENCE { set; get; }
-    public ZoneTexte DETAILS { set; get; }
+    public ZoneMenu Magasin { set; get; }
+    public ZoneMenu Inventaire { set; get; }
+    public ZoneMenu Journal { set; get; }
+    public ZoneMenu Suivant { set; get; }
+    public ZoneMenu Urgence { set; get; }
+    public ZoneTexte Details { set; get; }
     
-    public ZoneDialogue DIALOGUE { set; get; }
+    public ZoneDialogue Dialogue { set; get; }
     
-    public ZoneTexte DATE { set; get; }
-    public ZoneTexte LIEU { set; get; }
-    public ZoneTexte MODE { set; get; }
-    public ZoneTexte ARGENT { set; get; }
-    public ZoneTexte? METEO { set; get; }
-    public ZoneTexte? WEBCAM { set; get; }
-    public ZoneChamps CHAMPS { set; get; }
+    public ZoneTexte Date { set; get; }
+    public ZoneTexte Lieu { set; get; }
+    public ZoneTexte Mode { set; get; }
+    public ZoneTexte Argent { set; get; }
+    public ZoneTexte? Meteo { set; get; }
+    public ZoneTexte? Webcam { set; get; }
+    public ZoneChamps Champs { set; get; }
     public int IndiceZoneActive { set; get; }
     public EnsembleZoneTexte TitresMenus { set; get; }
     public GroupeChampsDetails ChampsEtDetails { set; get; }
@@ -113,12 +113,12 @@ public class ZoneEcranJeu : Interface
         ConstruireLignesDirectrices();
 
         //Création des éléments composant le volet supérieur
-        DATE = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
-        LIEU = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
-        MODE = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
-        ARGENT = new ZoneTexte(1, 2, 23, 1, "2000 💰");
+        Date = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
+        Lieu = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
+        Mode = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
+        Argent = new ZoneTexte(1, 2, 23, 1, "2000 💰");
         // Créaction de la zone CHAMPS
-        CHAMPS = new ZoneChamps(1, 6, 10, 10);
+        Champs = new ZoneChamps(1, 6, 10, 10);
         
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
@@ -130,17 +130,17 @@ public class ZoneEcranJeu : Interface
         TitresMenus.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
 
         //Création des différents menus de l'affichage
-        INVENTAIRE = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        JOURNAL = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        MAGASIN = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        SUIVANT = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        URGENCE = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Inventaire = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Journal = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Magasin = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Suivant = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Urgence = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
-        DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
+        Dialogue = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        DETAILS = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 7);
+        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 7);
 
-        ChampsEtDetails = new GroupeChampsDetails(CHAMPS, DETAILS);
+        ChampsEtDetails = new GroupeChampsDetails(Champs, Details);
         //JournalEtArticles = new GroupeJournalEtArticles;
         ZoneActive = ChampsEtDetails;
         BasculerSurZone(0);
@@ -178,14 +178,14 @@ public class ZoneEcranJeu : Interface
         {
             element.Afficher();
         }
-        DATE.Afficher();
-        LIEU.Afficher();
-        MODE.Afficher();
-        ARGENT.Afficher();
-        CHAMPS.Afficher();
-        DIALOGUE.Afficher();
-        INVENTAIRE.Afficher();
-        DETAILS.Afficher();
+        Date.Afficher();
+        Lieu.Afficher();
+        Mode.Afficher();
+        Argent.Afficher();
+        Champs.Afficher();
+        Dialogue.Afficher();
+        Inventaire.Afficher();
+        Details.Afficher();
         TitresMenus.Afficher();
     }
     public void BasculerSurZone(int indice)
@@ -201,19 +201,19 @@ public class ZoneEcranJeu : Interface
         }
         else if (indice == 1)
         {
-            ZoneActive = INVENTAIRE;
+            ZoneActive = Inventaire;
         }
         else if (indice == 2)
         {
-            ZoneActive = JOURNAL;
+            ZoneActive = Journal;
         }
         else if (indice == 3)
         {
-            ZoneActive = MAGASIN;
+            ZoneActive = Magasin;
         }
         else if (indice == 4)
         {
-            ZoneActive = SUIVANT;
+            ZoneActive = Suivant;
         }
         TitresMenus.Afficher();
         ZoneActive.Afficher();

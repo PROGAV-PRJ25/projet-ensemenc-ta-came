@@ -71,7 +71,7 @@ public class ZoneChamps : ZoneInteractive
 
             for (int colonne = 0; colonne < Largeur; colonne++)
             {
-                Console.Write(Grille[colonne, ligne].Contenu.EMOJI);
+                Console.Write(Grille[colonne, ligne].Contenu.Emoji);
             }
         }
         Console.ResetColor();
@@ -81,14 +81,14 @@ public class ZoneChamps : ZoneInteractive
     {
         Console.BackgroundColor = ConsoleColor.White;
         Console.SetCursorPosition(Position[0] + (Curseur % Largeur) * 2 , Position[1] + (Curseur / Largeur));
-        Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.EMOJI);
+        Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.Emoji);
         Console.ResetColor();
     }
     public void AfficherCelluleChamps(int colonne, int ligne)
     {
         Console.BackgroundColor = Grille[colonne, ligne].CouleurFond;
         Console.SetCursorPosition(Position[0] + colonne*2 , Position[1] + ligne);
-        Console.Write(Grille[colonne, ligne].Contenu.EMOJI);
+        Console.Write(Grille[colonne, ligne].Contenu.Emoji);
         Console.ResetColor();
     }
     public void Ajouter(Plante semis, int[] position)

@@ -1,16 +1,16 @@
 public abstract class ObjetJeu
 {
-    public string NOM { private set; get; }
-    public string EMOJI { set; get; }
-    public int PRIX_ACHAT { private set; get; }
-    public int PRIX_VENTE { private set; get; }
+    public string Nom { private set; get; }
+    public string Emoji { set; get; }
+    public int PrixAchat { private set; get; }
+    public int PrixVente { private set; get; }
 
     public ObjetJeu(string nom, string emoji,int decallageAffichage, int prixAchat = 0, int prixVente = 0)
     {
-        NOM = nom;
-        EMOJI = emoji;
-        PRIX_ACHAT = prixAchat;
-        PRIX_VENTE = prixVente;
+        Nom = nom;
+        Emoji = emoji;
+        PrixAchat = prixAchat;
+        PrixVente = prixVente;
     }
 }
 public abstract class Plante : ObjetJeu
@@ -26,15 +26,15 @@ public abstract class Plante : ObjetJeu
         new Citronnier(),
         new Tournesol()
     };
-    public string TYPE { set; get; }
-    public int SAISON_SEMI { set; get; }
-    public string TERRAIN_PREF { set; get; }
-    public bool CRAIN_FROID { set; get; }
-    public bool CRAIN_SECHERESSE { set; get; }
-    public int BESOIN_EAU { set; get; }
-    public int SAISON_RECOLTE { set; get; }
-    public int TEMPERATURE_PREF { set; get; }
-    public string ESPE_DE_VIE { set; get; }
+    public string Type { set; get; }
+    public int SaisonSemis { set; get; }
+    public string TerrainDePreference { set; get; }
+    public bool CraintFroid { set; get; }
+    public bool CraintSecheresse { set; get; }
+    public int BesoinEau { set; get; }
+    public int SaisonRecolte { set; get; }
+    public int TemperaturePreferee { set; get; }
+    public string EsperanceDeVie { set; get; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
@@ -55,29 +55,29 @@ public abstract class Plante : ObjetJeu
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool crainFroid, bool crainSecheresse,
+     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool craintFroid, bool crainSecheresse,
     string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
     : base(nom, emoji, prixAchat, prixVente)
     {
-        EMOJI = emoji;
+        Emoji = emoji;
         Etats = etats;
-        TYPE = type;
-        SAISON_SEMI = saisonSemi;
-        TERRAIN_PREF = terrainPref;
+        Type = type;
+        SaisonSemis = saisonSemi;
+        TerrainDePreference = terrainPref;
         VitesseCroissance = vitesseCroissance;
-        ESPE_DE_VIE = espeDeVie;
-        BESOIN_EAU = besoinEau;
+        EsperanceDeVie = espeDeVie;
+        BesoinEau = besoinEau;
         QuantiteEau = quantiteEau;
         BesoinSoleil = besoinSoleil;
-        CRAIN_FROID = crainFroid;
-        CRAIN_SECHERESSE = crainSecheresse;
+        CraintFroid = craintFroid;
+        CraintSecheresse = crainSecheresse;
         Nuisible = nuisible;
         Defense = defence;
         Espace = espace;
         Rendement = rendement;
-        SAISON_RECOLTE = saisonRecolte;
-        TEMPERATURE_PREF = temperaturePref;
-        ESPE_DE_VIE = espeDeVie;
+        SaisonRecolte = saisonRecolte;
+        TemperaturePreferee = temperaturePref;
+        EsperanceDeVie = espeDeVie;
 
         Age = 0;
         Etat = etats[0];
@@ -85,11 +85,11 @@ public abstract class Plante : ObjetJeu
     public override string ToString()
     {
         string reponse;
-        if (TYPE == "plante vide")
+        if (Type == "plante vide")
             reponse = "Emplacement vide !";
         else
             reponse =
-            $"{EMOJI} {NOM} ({TYPE})\n" +
+            $"{Emoji} {Nom} ({Type})\n" +
             $"Etat : {Etat}\n" +
             $"Quantité d'eau : {QuantiteEau}\n" +
             $"Taux d'exposition au soleil : {BesoinSoleil}";
@@ -102,7 +102,7 @@ public abstract class Plante : ObjetJeu
     public void Mourir()
     {
         Etat = "mort";
-        EMOJI = "💀";
+        Emoji = "💀";
     }
     public abstract Plante Dupliquer();
 }
@@ -119,7 +119,7 @@ public class PlanteVide : Plante
     besoinEau: 0,
     besoinSoleil: 0,
     quantiteEau: 0,
-    crainFroid: false,
+    craintFroid: false,
     crainSecheresse: false,
     nuisible: "",
     defence: "",
@@ -154,7 +154,7 @@ public class Pommier : Plante
     besoinEau: 50,
     besoinSoleil: 30,
     quantiteEau: 0,
-    crainFroid: false,
+    craintFroid: false,
     crainSecheresse: true,
     nuisible: "chenilles ou oiseaux",
     defence: "fermier en colère, tailler",
@@ -192,7 +192,7 @@ public class Ble : Plante
     besoinEau: 70,
     besoinSoleil: 80,
     quantiteEau: 0,
-    crainFroid: true,
+    craintFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , Maladie",
     defence: "Traitement , coccinnelle",
@@ -226,7 +226,7 @@ public class Carotte : Plante
     besoinEau: 40,
     besoinSoleil: 90,
     quantiteEau: 0,
-    crainFroid: false,
+    craintFroid: false,
     crainSecheresse: false,
     nuisible: "lapins",
     defence: "fermier en colère",
@@ -260,7 +260,7 @@ public class Pecher : Plante
     besoinEau: 50,
     besoinSoleil: 80,
     quantiteEau: 0,
-    crainFroid: false,
+    craintFroid: false,
     crainSecheresse: true,
     nuisible: "pucerons , champignons, maladies, gelées",
     defence: "Traitement , coccinnelle",
@@ -294,7 +294,7 @@ public class VignesArtaban : Plante
     besoinEau: 50,
     besoinSoleil: 80,
     quantiteEau: 0,
-    crainFroid: true,
+    craintFroid: true,
     crainSecheresse: false,
     nuisible: "Maladies, gelée",
     defence: "Traitement , taille",
@@ -328,7 +328,7 @@ public class Citronnier : Plante
     besoinEau: 30,
     besoinSoleil: 80,
     quantiteEau: 0,
-    crainFroid: false,
+    craintFroid: false,
     crainSecheresse: false,
     nuisible: "chenilles, gelées",
     defence: "Taille, traitement",
@@ -363,7 +363,7 @@ public class Tournesol : Plante
     besoinEau: 70,
     besoinSoleil: 70,
     quantiteEau: 0,
-    crainFroid: true,
+    craintFroid: true,
     crainSecheresse: false,
     nuisible: "pucerons , oiseaux",
     defence: "fermier en colère , coccinnelle",

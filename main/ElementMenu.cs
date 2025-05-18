@@ -81,7 +81,7 @@ public abstract class ElementMenuMagasin : ElementMenuFonctionnel
 public class ElementMenuMagasinOutil : ElementMenuMagasin
 {
     public Outil Contenu { set; get; }
-    public ElementMenuMagasinOutil(ZoneMenu menuReference, SessionJeu session, Outil outil) : base(menuReference, $"{outil.EMOJI} {outil.NOM} - {outil.PRIX_ACHAT} ", session, outil)
+    public ElementMenuMagasinOutil(ZoneMenu menuReference, SessionJeu session, Outil outil) : base(menuReference, $"{outil.Emoji} {outil.Nom} - {outil.PrixAchat} ", session, outil)
     {
         Contenu = outil;
     }
@@ -93,7 +93,7 @@ public class ElementMenuMagasinOutil : ElementMenuMagasin
 public class ElementMenuMagasinSemis : ElementMenuMagasin
 {
     public Plante Contenu { set; get; }
-    public ElementMenuMagasinSemis(ZoneMenu menuReference, SessionJeu session, Plante plante) : base(menuReference, $"{plante.EMOJI} {plante.NOM} - {plante.PRIX_ACHAT} ", session, plante)
+    public ElementMenuMagasinSemis(ZoneMenu menuReference, SessionJeu session, Plante plante) : base(menuReference, $"{plante.Emoji} {plante.Nom} - {plante.PrixAchat} ", session, plante)
     {
         Contenu = plante;
     }

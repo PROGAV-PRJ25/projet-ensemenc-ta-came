@@ -18,7 +18,7 @@ public class Repertoire
         int reponse = -1;
         for (int i = 0; i < Semis.Count(); i++)
         {
-            if (Semis[i].Contenu.NOM == plante.NOM)
+            if (Semis[i].Contenu.Nom == plante.Nom)
                 reponse = i;
         }
         return reponse;
@@ -29,7 +29,7 @@ public class Repertoire
         int reponse = -1;
         for (int i = 0; i < Outils.Count(); i++)
         {
-            if (Outils[i].Contenu.NOM == outil.NOM)
+            if (Outils[i].Contenu.Nom == outil.Nom)
                 reponse = i;
         }
         return reponse;
@@ -111,7 +111,7 @@ public class ItemInventaireSemis : ItemInventaire
     public ItemInventaireSemis(Plante plante)
     {
         Contenu = plante;
-        Nom = plante.NOM;
+        Nom = plante.Nom;
         Quantite = 1;
 
     }
@@ -122,7 +122,7 @@ public class ItemInventaireOutil : ItemInventaire
     public ItemInventaireOutil(Outil outil)
     {
         Contenu = outil;
-        Nom = outil.NOM;
+        Nom = outil.Nom;
         Quantite = 1;
 
     }
