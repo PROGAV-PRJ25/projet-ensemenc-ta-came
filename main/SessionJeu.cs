@@ -9,6 +9,7 @@ public class SessionJeu
     public ZoneEcranJeu ECRAN_JEU { set; get; }
     public ConsoleKeyInfo Touche { set; get; }
     public List<ZoneMenu> MenusPrincipaux = [];
+    public List<ZoneMenu> MenusUrgence = [];
     public SessionJeu()
     {
         Touche = new ConsoleKeyInfo();
@@ -17,6 +18,7 @@ public class SessionJeu
         ConstruireMenus();
         ECRAN_JEU.ZoneActive = ECRAN_ACCUEIL.ACCUEIL;
         JoueurActuel = new Joueur();
+
     }
     // Initialisation ===========================================================
     // Gestion des menus ======================================================
@@ -76,7 +78,7 @@ public class SessionJeu
         {
             foreach (ItemInventaireSemis item in JoueurActuel.Inventaire.Semis)
             {
-            itemsSemis.Add(new ElementMenuInventaireSemis(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
+                itemsSemis.Add(new ElementMenuInventaireSemis(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
             }
             ECRAN_JEU.INVENTAIRE.Racine.Items[1].Description = "Choisissez un de vos semis à planter !";
         }
@@ -92,13 +94,13 @@ public class SessionJeu
         {
             foreach (ItemInventaireOutil item in JoueurActuel.Inventaire.Outils)
             {
-            itemsOutils.Add(new ElementMenuInventaireOutil(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
+                itemsOutils.Add(new ElementMenuInventaireOutil(ECRAN_JEU.INVENTAIRE, $"{item.Contenu.EMOJI} {item.Contenu.NOM} ({item.Quantite} en stock)", this, item.Contenu));
             }
             ECRAN_JEU.INVENTAIRE.Racine.Items[0].Description = "Choisissez un de vos outils à utiliser !";
         }
         ECRAN_JEU.INVENTAIRE.Racine.Items[0].Items = itemsOutils;
         ECRAN_JEU.INVENTAIRE.Curseur = 0;
-        
+
     }
     // Affichage ==============================================================
     public void RafraichirAffichageJeu()
@@ -188,6 +190,10 @@ public class SessionJeu
                 {
                     choixFait = true;
                 }
+                else if (Touche.Key == ConsoleKey.U)
+                {
+                    DeclencherModeUrgence();
+                }
             }
             else
             {
@@ -247,7 +253,7 @@ public class SessionJeu
         ECRAN_JEU.BasculerSurZone(0);
         ECRAN_JEU.ChampsEtDetails.Champs = ECRAN_JEU.CHAMPS;
         ECRAN_JEU.ZoneActive = ECRAN_JEU.ChampsEtDetails;
-        
+
         ECRAN_JEU.Afficher();
         ActualiserMenuInventaire();
     }
@@ -272,10 +278,10 @@ public class SessionJeu
         else
         {
             ECRAN_JEU.DIALOGUE.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Contenu.NOM} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
-            
+
         }
         ActualiserMenuInventaire();
-        
+
         ECRAN_JEU.DIALOGUE.Afficher();
         ECRAN_JEU.BasculerSurZone(1); // retour à l'inventaire
     }
@@ -371,11 +377,15 @@ public class SessionJeu
         //     parcelle.Contenu.Sante -= 20;
         // }
     }
-    // public void ActualiserArgent(){
-    //   ECRAN_JEU.ARGENT.Contenu = 
-    // }
-    // Actions Webcam =========================================================== 
-    // PasserVueSuivante   
+    public void DeclencherModeUrgence(int scenario = 0)
+    {
+        ECRAN_JEU.URGENCE.Racine.Description = "URGENCE ! {}";
+        Console.ForegroundColor = ConsoleColor.Red;
+        ECRAN_JEU.AfficherLignesDirectrices();
+        //JoueurAnimation();
+        
+
+    }
 
 
     //   public string RecupererASCII(string nomFichierTxt)

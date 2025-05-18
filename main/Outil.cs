@@ -214,7 +214,7 @@ public class Serre : Outil
         {
             parcelle.NuisiblesActuels.Remove("Oiseau");
         }
-
+        
         // Empêche la pluie d'agir
         // --> À gérer dans la météo, via une vérification de présence de serre
         // Augmente la température

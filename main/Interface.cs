@@ -90,8 +90,11 @@ public class ZoneEcranJeu : Interface
     public ZoneMenu INVENTAIRE { set; get; }
     public ZoneMenu JOURNAL { set; get; }
     public ZoneMenu SUIVANT { set; get; }
+    public ZoneMenu URGENCE { set; get; }
     public ZoneTexte DETAILS { set; get; }
+    
     public ZoneDialogue DIALOGUE { set; get; }
+    
     public ZoneTexte DATE { set; get; }
     public ZoneTexte LIEU { set; get; }
     public ZoneTexte MODE { set; get; }
@@ -131,6 +134,7 @@ public class ZoneEcranJeu : Interface
         JOURNAL = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         MAGASIN = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         SUIVANT = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        URGENCE = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
         DIALOGUE = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails

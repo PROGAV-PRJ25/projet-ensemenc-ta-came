@@ -5,6 +5,7 @@ public class Parcelle
     public Terrain Sol { set; get; }
     public List<string> NuisiblesActuels;
     public List<string> Defense;
+    public Random Rng = new Random() ;
     public Parcelle()
     {
         Libre = true;
@@ -24,7 +25,7 @@ public class Parcelle
     }
     public void Arroser()
     {
-
+        
     }
     public bool NuisibleSemainePro(string nom)
     {
