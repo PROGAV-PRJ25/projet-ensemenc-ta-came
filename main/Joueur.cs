@@ -6,6 +6,7 @@ public class Joueur
 {
     public int Argent { set; get; }
     public int Semaine { set; get; }
+    public int Annee { get; set; }
     public string Lieu { set; get; }
     public Repertoire Inventaire { set; get; }
     public Parcelle[,] Potager { set; get; }
@@ -15,6 +16,7 @@ public class Joueur
     {
         Argent = 2000;
         Semaine = 0;
+        Annee = 2009;
         Lieu = lieu;
         Inventaire = new Repertoire();
         Potager = new Parcelle[10, 10];

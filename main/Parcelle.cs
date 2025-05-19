@@ -6,6 +6,9 @@ public class Parcelle
     public List<string> NuisiblesActuels;
     public List<string> Defense;
     public Random Rng = new Random() ;
+    public Date Date { get; set; }
+
+    
     public Parcelle()
     {
         Libre = true;
@@ -13,6 +16,7 @@ public class Parcelle
         Sol = new TerrainArgileux();
         NuisiblesActuels = [];
         Defense = [];
+        Date = new Date(2009, 1); 
     }
     public void Planter(Plante plante)
     {
