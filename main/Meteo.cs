@@ -1,15 +1,24 @@
-public abstract class Meteo 
+public class Meteo{
+    
+    private static int[][] Temperature {get; set;}
+    public int TemperatureActuelle {get; set;}
+    public Temps TempsActuel {get; set;}
+
+
+}
+
+public abstract class Temps 
 {
     public string NOM {set;get;}
     public string EMOJI {set;get;}
     public abstract void Action(Parcelle parcelle);
-    protected Meteo(string nom, string emoji)
+    protected Temps(string nom, string emoji)
     {
         NOM = nom;
         EMOJI = emoji;
     }
 }
-public class Pluie : Meteo {
+public class Pluie : Temps {
     public Pluie(string nom, string emoji) : base(nom, emoji) {
         NOM = "Pluie";
         EMOJI = "🌧️";
@@ -31,7 +40,7 @@ public class Pluie : Meteo {
     }
 }
 
-public class Soleil : Meteo {
+public class Soleil : Temps {
     public Soleil(string nom, string emoji) : base(nom, emoji) {
         NOM = "Soleil";
         EMOJI = "🌞";
@@ -54,7 +63,7 @@ public class Soleil : Meteo {
     }
 }
 
-public class VentAutan : Meteo {
+public class VentAutan : Temps {
     public VentAutan(string nom, string emoji) : base(nom, emoji) {
         NOM = "Vent d'Autan";
         EMOJI = "🌬️";
@@ -73,7 +82,7 @@ public class VentAutan : Meteo {
     }
 }
 
-public class Gel : Meteo {
+public class Gel : Temps {
     public Gel(string nom, string emoji) : base(nom, emoji) {
         NOM = "Gel";
         EMOJI = "🥶";
@@ -93,7 +102,7 @@ public class Gel : Meteo {
     }
 }
 
-public class Orage : Meteo {
+public class Orage : Temps {
     public Orage(string nom, string emoji) : base(nom, emoji) {
         NOM = "Orage";
         EMOJI = "⛈️";
@@ -121,15 +130,20 @@ public class Orage : Meteo {
     
 }
 
-public class Temperature : Meteo {
-    public Temperature(string nom, string emoji) : base(nom, emoji) {
+public class Temperature {
+    
+    public string NOM {set;get;}
+    public string EMOJI {set;get;}
+    
+    public Temperature(string nom, string emoji) 
+    {
         NOM = "Temperature";
         EMOJI = "🌡️";
     }
 
-    public override void Action(Parcelle parcelle)
+    public void Action(Parcelle parcelle)
     {
-        double[][] Temp = new double[][] 
+        double[][] Temperatures = new double[][] 
         {
             /* 2009 */ new double[] { 3.00, -1.19, 3.67, 5.86, 5.10, 3.90, 3.05, 2.90, 6.43, 4.57, 8.71, 8.48, 7.29, 8.29, 9.33, 10.57, 11.52, 12.57, 16.90, 16.81, 20.38, 19.33, 20.24, 21.57, 22.29, 22.57, 27.29, 22.00, 23.10, 25.48, 23.86, 23.24, 23.29, 25.52, 20.95, 20.24, 18.52, 14.95, 16.05, 14.71, 18.14, 7.76, 12.10, 13.05, 9.33, 9.43, 12.48, 8.90, 6.90, 6.00, -3.14, 3.95 },
             /* 2010 */ new double[] { 0.00, 2.90, 4.86, 1.43, 3.43, -1.81, 3.52, 7.81, 4.57, -2.71, 8.76, 10.95, 9.10, 10.19, 9.43, 14.95, 15.52, 8.86, 12.19, 16.90, 18.76, 19.76, 19.95, 15.19, 21.76, 25.95, 26.33, 25.90, 22.57, 23.14, 21.05, 20.76, 21.90, 21.81, 17.95, 17.14, 15.14, 13.90, 12.71, 15.90, 9.38, 7.95, 8.67, 10.33, 9.76, 6.14, 2.33, 0.81, 5.76, -0.52, 2.90, 4.29 },
@@ -155,7 +169,7 @@ public class Temperature : Meteo {
         int annee = parcelle.Date.Annee;
         int semaine = parcelle.Date.Semaine;
 
-        double temperature = Temp[annee - 2009][semaine - 1];
+        double temperature = Temperatures[annee - 2009][semaine - 1];
 
         int tempref = parcelle.Contenu.TemperaturePreferee;
 
