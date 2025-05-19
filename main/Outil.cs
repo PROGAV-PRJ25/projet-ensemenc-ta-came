@@ -10,7 +10,9 @@ public abstract class Outil : ObjetJeu
         new Traitement(),
         new Coccinnelle(),
         new FermierEnColere(),
-        new Serre()
+        new Serre(),
+        new IrrigationUrgente(),
+        new Paillage()
     };
     public string Verbe { set; get; }
     public abstract void Actionner(Parcelle parcelle);
@@ -219,5 +221,46 @@ public class Serre : Outil
         // --> À gérer dans la météo, via une vérification de présence de serre
         // Augmente la température
         //meteo.Temperature += 5;
+    }
+}
+
+public class IrrigationUrgente : Outil
+{
+    public IrrigationUrgente() : base("Irrigation d'urgence", "🚿",0, "attention")
+    {
+    }
+    public override void Actionner(Parcelle parcelle)
+    {
+        if (parcelle.Contenu.Etat == "sècheresse")
+        {
+            // sauve les plantes mais sante -10
+            parcelle.Contenu.Sante -= 10;
+        }
+        else 
+        {
+            //inonde les plantations 
+            parcelle.Contenu.Sante -= 25;
+        }
+    
+    }
+}
+
+public class Paillage : Outil
+{
+    public Paillage() : base("Paillage", "🚿",0, "attention")
+    {
+    }
+    public override void Actionner(Parcelle parcelle)
+    {
+        if (parcelle.Contenu.Etat == "sècheresse")
+        {
+            // sauve les plantes mais sante -5
+            parcelle.Contenu.Sante -= 5;
+        }
+        else 
+        {
+            //ne fait rien 
+        }
+    
     }
 }
