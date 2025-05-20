@@ -92,14 +92,14 @@ public class ZoneEcranJeu : Interface
     public ZoneMenu Suivant { set; get; }
     public ZoneMenu Urgence { set; get; }
     public ZoneTexte Details { set; get; }
-    
+
     public ZoneDialogue Dialogue { set; get; }
-    
+
     public ZoneTexte Date { set; get; }
     public ZoneTexte Lieu { set; get; }
     public ZoneTexte Mode { set; get; }
     public ZoneTexte Argent { set; get; }
-    public ZoneTexte? Meteo { set; get; }
+    public ZoneTexte Meteo { set; get; }
     public ZoneTexte? Webcam { set; get; }
     public ZoneChamps Champs { set; get; }
     public int IndiceZoneActive { set; get; }
@@ -115,11 +115,12 @@ public class ZoneEcranJeu : Interface
         //Création des éléments composant le volet supérieur
         Date = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
         Lieu = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
-        Mode = new ZoneTexte(Largeur - 14, 1, 12, 1, "Mode Urgence");
-        Argent = new ZoneTexte(1, 2, 23, 1, "2000 💰");
+        Mode = new ZoneTexte(Largeur - 18, 1, 12, 1, "Mode Urgence");
+        Argent = new ZoneTexte(1, 2, 28, 1, "Argent : 2000 💰");
+        Meteo = new ZoneTexte(Largeur - 18, 2, 2, 15, "Meteo : 🌧️ -20°C");
         // Créaction de la zone CHAMPS
         Champs = new ZoneChamps(1, 6, 10, 10);
-        
+
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
         TitresMenus = new EnsembleZoneTexte();
@@ -218,15 +219,23 @@ public class ZoneEcranJeu : Interface
         TitresMenus.Afficher();
         ZoneActive.Afficher();
     }
-
+    public void ActualiserAffichageArgent(int argent)
+    {
+        Argent.Contenu = $"Argent : {argent} 💰";
+        Argent.Afficher();
+    }
+    public void ActualiserAffichageMeteo(int temperature)
+    {
+        Meteo.Contenu = $"Meteo : {temperature}°C";
+    }
 
 }
 public class InterfaceAccueil : Interface
 {
-    public ZoneMenu ACCUEIL { set; get; }
+    public ZoneMenu Accueil { set; get; }
     public InterfaceAccueil(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
-        ACCUEIL = new ZoneMenu("Accueil", Position[0] + 1, Position[1] + 1, Largeur - 3, Hauteur - 3);
+        Accueil = new ZoneMenu("Accueil", Position[0] + 1, Position[1] + 1, Largeur - 3, Hauteur - 3);
         ConstruireCadre();
     }
     public InterfaceAccueil() : this(0, 0, Console.WindowWidth, Console.WindowHeight) { }

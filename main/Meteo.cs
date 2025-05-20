@@ -10,7 +10,8 @@ public abstract class Meteo
     }
 }
 public class Pluie : Meteo {
-    public Pluie(string nom, string emoji) : base(nom, emoji) {
+    public Pluie(string nom, string emoji) : base(nom, emoji)
+    {
         NOM = "Pluie";
         EMOJI = "🌧️";
     }
