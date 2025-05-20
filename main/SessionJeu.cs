@@ -27,8 +27,8 @@ public class SessionJeu
         ECRAN_ACCUEIL.ACCUEIL.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
         ElementMenu NouvellePartie = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Carcassonne (France)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Oaxaca de Juárez (Mexique)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Kanazawa (Japon)", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Soconusco (Mexique)", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Hokkaido (Japon)", this));
 
         ElementMenu ApprendreJeu = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Apprendre les commandes de base");
         ECRAN_ACCUEIL.ACCUEIL.Racine.AjouterItem(NouvellePartie);
