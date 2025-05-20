@@ -173,7 +173,7 @@ public class Coccinnelle : Outil
 
 public class FermierEnColere : Outil
 {
-    public FermierEnColere() : base("Fermier en colère", "👨🏻‍🌾",0, "faire peur")
+    public FermierEnColere() : base("Fermier en colère", "🤬",0, "faire peur")
     {
 
     }
@@ -247,7 +247,7 @@ public class IrrigationUrgente : Outil
 
 public class Paillage : Outil
 {
-    public Paillage() : base("Paillage", "🚿",0, "attention")
+    public Paillage() : base("Paillage", "🍂",0, "attention")
     {
     }
     public override void Actionner(Parcelle parcelle)
