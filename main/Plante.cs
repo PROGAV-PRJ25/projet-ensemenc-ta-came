@@ -28,23 +28,33 @@ public abstract class Plante : ObjetJeu
     };
     public string Type { set; get; }
     public int SaisonSemis { set; get; }
+    public int SaisonRecolte { set; get; }
     public string TerrainDePreference { set; get; }
+    // si elle n'est pas plantée sur son terrain de préférence -> santé -10
     public bool CraintFroid { set; get; }
     public bool CraintSecheresse { set; get; }
     public int BesoinEau { set; get; }
-    public int SaisonRecolte { set; get; }
+    // indique la quantité nécessaire chaque semaine
     public int TemperaturePreferee { set; get; }
+    // temperature preferee, si > ou
     public string EsperanceDeVie { set; get; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
     public int VitesseCroissance { set; get; }
-    public int Sante { set; get; } // sur 100 détermine la santé de la plante, si < 50 elle meurt
-    public int Age { set; get; } // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
-    public string Etat { set; get; } // indique l'état de la plante, défini à chaque nouvelle semaine
-    public int EspeDeVie { set; get; } // change avec les outils et nuisibles
-    public int QuantiteEau { set; get; } //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
+    public int Sante { set; get; }
+    // sur 100 détermine la santé de la plante, si < 50 elle meurt
+    public int Age { set; get; }
+    // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
+    public int EspeDeVie { set; get; }
+    // change avec les outils et nuisibles
+    public string Etat { set; get; }
+    // indique l'état de la plante, défini à chaque nouvelle semaine
+    
+    public int QuantiteEau { set; get; }
+    //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
     public int BesoinSoleil { set; get; } //change en fonction de la météo
+
     public string Nuisible { set; get; } //change en fonction de la classe nuisible 
     public string Defense { set; get; } //change en fonction d'outils
     public int Espace { set; get; } //change quand on taille la plante

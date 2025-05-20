@@ -43,7 +43,8 @@ public class Arrosoir : Outil
 
 public class Panier : Outil
 {
-    public Panier() : base("Panier", "🧺",0, "ramasser vos récoltes") { }
+    
+    public Panier() : base("Panier", "🧺", 0, "ramasser vos récoltes") { }
     public override void Actionner(Parcelle parcelle)
     {
         //si fruit , le récolte et rendement -1
