@@ -41,24 +41,29 @@ public abstract class Plante : ObjetJeu
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
     string[] Etats { set; get; }
+    public int Croissance { set; get; }
     public int VitesseCroissance { set; get; }
-    public int Sante { set; get; }
-    // sur 100 détermine la santé de la plante, si < 50 elle meurt
+    public bool Mature { set; get; }
     public int Age { set; get; }
     // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
     public int EspeDeVie { set; get; }
     // change avec les outils et nuisibles
+    public int Sante { set; get; }
+    // sur 100 détermine la santé de la plante, si < 50 elle meurt
+    
     public string Etat { set; get; }
     // indique l'état de la plante, défini à chaque nouvelle semaine
     
     public int QuantiteEau { set; get; }
     //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
     public int BesoinSoleil { set; get; } //change en fonction de la météo
+    public int QuantiteSoleil { set; get; } 
 
     public string Nuisible { set; get; } //change en fonction de la classe nuisible 
     public string Defense { set; get; } //change en fonction d'outils
     public int Espace { set; get; } //change quand on taille la plante
-    public int Rendement { set; get; } //change en fonction de la saison, de la météo et de l'outil panier
+    public int RendementMax { set; get; } //change en fonction de la saison, de la météo et de l'outil panier
+    public int RendementActuel { set; get; }
 
     //public int QuantiteEau { set; get; }  
     //public int BesoinSoleil { set; get; } 
@@ -66,7 +71,7 @@ public abstract class Plante : ObjetJeu
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
      int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool craintFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
+    string nuisible, string defence, int espace, int rendementMax, int saisonRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
     : base(nom, emoji, prixAchat, prixVente)
     {
         Emoji = emoji;
@@ -84,13 +89,18 @@ public abstract class Plante : ObjetJeu
         Nuisible = nuisible;
         Defense = defence;
         Espace = espace;
-        Rendement = rendement;
+        RendementMax = rendementMax;
         SaisonRecolte = saisonRecolte;
         TemperaturePreferee = temperaturePref;
         EsperanceDeVie = espeDeVie;
 
         Age = 0;
-        Etat = etats[0];
+        Etat = "semis";
+        RendementActuel = 0;
+        Mature = false;
+        Croissance = 0;
+
+
     }
     public override string ToString()
     {
@@ -134,7 +144,7 @@ public class PlanteVide : Plante
     nuisible: "",
     defence: "",
     espace: 0,
-    rendement: 0,
+    rendementMax: 0,
     saisonRecolte: 0,
     temperaturePref: 0,
     espeDeVie: "",
@@ -173,7 +183,7 @@ public class Pommier : Plante
     nuisible: "chenilles ou oiseaux",
     defence: "fermier en colère, tailler",
     espace: 8,
-    rendement: 80,
+    rendementMax: 80,
     saisonRecolte: 2,
     temperaturePref: 18,
     espeDeVie: "vivace",
@@ -211,7 +221,7 @@ public class Ble : Plante
     nuisible: "pucerons , Maladie",
     defence: "Traitement , coccinnelle",
     espace: 4,
-    rendement: 20,
+    rendementMax: 20,
     saisonRecolte: 2,
     temperaturePref: 16,
     espeDeVie: "annuel",
@@ -245,7 +255,7 @@ public class Carotte : Plante
     nuisible: "lapins",
     defence: "fermier en colère",
     espace: 4,
-    rendement: 6,
+    rendementMax: 6,
     saisonRecolte: 2,
     temperaturePref: 18,
     espeDeVie: "annuel",
@@ -279,7 +289,7 @@ public class Pecher : Plante
     nuisible: "pucerons , champignons, maladies, gelées",
     defence: "Traitement , coccinnelle",
     espace: 8,
-    rendement: 30,
+    rendementMax: 30,
     saisonRecolte: 2,
     temperaturePref: 18,
     espeDeVie: "vivace",
@@ -313,7 +323,7 @@ public class VignesArtaban : Plante
     nuisible: "Maladies, gelée",
     defence: "Traitement , taille",
     espace: 4,
-    rendement: 20,
+    rendementMax: 20,
     saisonRecolte: 0,
     temperaturePref: 25,
     espeDeVie: "vivace",
@@ -347,7 +357,7 @@ public class Citronnier : Plante
     nuisible: "chenilles, gelées, pucerons",
     defence: "Taille, traitement, coccinnelle",
     espace: 8,
-    rendement: 5,
+    rendementMax: 5,
     saisonRecolte: 3,
     temperaturePref: 20,
     espeDeVie: "vivace",
@@ -382,7 +392,7 @@ public class Tournesol : Plante
     nuisible: "pucerons , oiseaux",
     defence: "fermier en colère , coccinnelle",
     espace: 4,
-    rendement: 1,
+    rendementMax: 1,
     saisonRecolte: 2,
     temperaturePref: 22,
     espeDeVie: "annuel",
@@ -422,7 +432,7 @@ public class Mais : Plante
     nuisible: "pyrales, pucerons",
     defence: "traitements bio",
     espace: 4,
-    rendement: 3,
+    rendementMax: 3,
     saisonRecolte: 2,
     temperaturePref: 25,
     espeDeVie: "annuelle",
@@ -455,7 +465,7 @@ public class Haricot : Plante
     nuisible: "bruches, pucerons",
     defence: "filets anti-insectes",
     espace: 4,
-    rendement: 15,
+    rendementMax: 15,
     saisonRecolte: 3,
     temperaturePref: 22,
     espeDeVie: "annuelle",
@@ -488,7 +498,7 @@ public class Tomate : Plante
     nuisible: "mildiou, aleurodes",
     defence: "paillage, traitements naturels",
     espace: 4,
-    rendement: 5,
+    rendementMax: 5,
     saisonRecolte: 3,
     temperaturePref: 22,
     espeDeVie: "annuelle",
@@ -521,7 +531,7 @@ public class Avocat : Plante
     nuisible: "cochenilles, acariens",
     defence: "traitements bio, paillage",
     espace: 6,
-    rendement: 150,
+    rendementMax: 150,
     saisonRecolte: 3,
     temperaturePref: 25,
     espeDeVie: "pérenne",
@@ -554,7 +564,7 @@ public class Cafe : Plante
     nuisible: "nématodes, rouille",
     defence: "ombres, traitements naturels",
     espace: 6,
-    rendement: 2,
+    rendementMax: 2,
     saisonRecolte: 3,
     temperaturePref: 21,
     espeDeVie: "pérenne",
@@ -587,7 +597,7 @@ public class Cacaoyer : Plante
     nuisible: "charançons, pourriture",
     defence: "ombres, paillage, traitement naturel",
     espace: 6,
-    rendement: 35,
+    rendementMax: 35,
     saisonRecolte: 3,
     temperaturePref: 26,
     espeDeVie: "pérenne",
@@ -620,7 +630,7 @@ public class Tabac : Plante
     nuisible: "pucerons, chenilles",
     defence: "traitements bio, rotation cultures",
     espace: 3,
-    rendement: 25,
+    rendementMax: 25,
     saisonRecolte: 3,
     temperaturePref: 24,
     espeDeVie: "annuelle",
@@ -653,7 +663,7 @@ public class Piment : Plante
     nuisible: "pucerons, thrips",
     defence: "traitements naturels, paillage",
     espace: 3,
-    rendement: 35,
+    rendementMax: 35,
     saisonRecolte: 2,
     temperaturePref: 30,
     espeDeVie: "annuelle",
@@ -690,7 +700,7 @@ public class Riz : Plante
     nuisible: "pyriculariose, insectes aquatiques",
     defence: "traitement, fermier en colère",
     espace: 4,
-    rendement: 100,
+    rendementMax: 100,
     saisonRecolte: 3,
     temperaturePref: 28,
     espeDeVie: "annuelle",
@@ -723,7 +733,7 @@ public class PatateDouce : Plante
     nuisible: "charançons, nématodes",
     defence: "traitements naturels",
     espace: 4,
-    rendement: 3,
+    rendementMax: 3,
     saisonRecolte: 2,
     temperaturePref: 24,
     espeDeVie: "annuelle",
@@ -756,7 +766,7 @@ public class TheVert : Plante
     nuisible: "acariens, champignons",
     defence: "taille, traitements bio",
     espace: 4,
-    rendement: 100,
+    rendementMax: 100,
     saisonRecolte: 1,
     temperaturePref: 21,
     espeDeVie: "pérenne",
@@ -791,7 +801,7 @@ public class ConcombreJaponais : Plante
     nuisible: "oïdium, pucerons",
     defence: "paillage, traitements naturels",
     espace: 4,
-    rendement: 10,
+    rendementMax: 10,
     saisonRecolte: 2,
     temperaturePref: 24,
     espeDeVie: "annuelle",
@@ -828,7 +838,7 @@ public class Brocoli : Plante
     nuisible: "altises, chenilles",
     defence: "filets, fermier en colère",
     espace: 4,
-    rendement: 2,
+    rendementMax: 2,
     saisonRecolte: 2,
     temperaturePref: 18,
     espeDeVie: "annuelle",

@@ -18,6 +18,13 @@ public class TerrainArgileux : Terrain
         Fertilite = 0;
 
     }
+    public override string ToString()
+    {
+        string reponse = "↓ Etat du sol \n";
+        reponse += $"- Humidité: {TauxHumidite}%\n";
+        reponse += $"- Fertilité: {Fertilite}";
+        return reponse;
+    }
 }
 
 

@@ -15,12 +15,14 @@ public abstract class Outil : ObjetJeu
         new Paillage()
     };
     public string Verbe { set; get; }
+    public bool UsageUrgence { set; get; }
     public abstract void Actionner(Parcelle parcelle);
 
-    protected Outil(string nom, string emoji,int decallageAffichage,string verbe) : base(nom, emoji,decallageAffichage)
+
+    protected Outil(string nom, string emoji, int decallageAffichage, string verbe, bool usageUrgence=false) : base(nom, emoji, decallageAffichage)
     {
         Verbe = verbe;
-
+        UsageUrgence = usageUrgence;
     }
 }
 public class Arrosoir : Outil
@@ -30,13 +32,13 @@ public class Arrosoir : Outil
     {
         //si dessous besoineau , augmente l'hydratation de +15%
         //si au dessus besoineau , attention plante surhydraté et santé -20
-        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
+        if (parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
         {
-            parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BesoinEau * 0.15);
+            parcelle.Plant.QuantiteEau += (int)(parcelle.Plant.BesoinEau * 0.15);
         }
         else
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
     }
 }
@@ -49,9 +51,9 @@ public class Panier : Outil
     {
         //si fruit , le récolte et rendement -1
         //si pas fruit, ne sert à rien
-        if (parcelle.Contenu.Etat == "mature")
+        if (parcelle.Plant.Etat == "mature")
         {
-            parcelle.Contenu.Rendement = Math.Max(0, parcelle.Contenu.Rendement - 1);
+            parcelle.Plant.RendementMax = Math.Max(0, parcelle.Plant.RendementMax - 1);
         }
         // sinon, ne fait rien
     }
@@ -67,9 +69,9 @@ public class Secateur : Outil
         //si prend trop de place , tailler et cases -2
         //si chenille , tailler et chenille -1
         //sinon, abime la plante et santé -15
-        if (parcelle.Contenu.Espace > 6)
+        if (parcelle.Plant.Espace > 6)
         {
-            parcelle.Contenu.Espace -= 2;
+            parcelle.Plant.Espace -= 2;
         }
         else if (parcelle.NuisiblesActuels.Contains("Chenille"))
         {
@@ -77,7 +79,7 @@ public class Secateur : Outil
         }
         else
         {
-            parcelle.Contenu.Sante -= 15;
+            parcelle.Plant.Sante -= 15;
         }
 
     }
@@ -116,14 +118,14 @@ public class Fumier : Outil
         //engrais naturel donc booste la croissance des plantes de +2
         //si trop, ça pue et santé -15
         //si gel, protège du gel
-        parcelle.Contenu.VitesseCroissance += 2;
+        parcelle.Plant.VitesseCroissance += 2;
 
-        if (parcelle.Contenu.VitesseCroissance > 10) // valeur seuil à adapter
+        if (parcelle.Plant.VitesseCroissance > 10) // valeur seuil à adapter
         {
-            parcelle.Contenu.Sante -= 15;
+            parcelle.Plant.Sante -= 15;
         }
 
-        if (parcelle.Contenu.Etat == "gelé")
+        if (parcelle.Plant.Etat == "gelé")
         {
             // Protège du gel : rien à faire ici car c’est une immunité 
         }
@@ -150,7 +152,7 @@ public class Traitement : Outil
         }
         else
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
     }
 }
@@ -193,7 +195,7 @@ public class FermierEnColere : Outil
         }
         else
         {
-            parcelle.Contenu.Sante += 10;
+            parcelle.Plant.Sante += 10;
         }
     }
 }
@@ -209,7 +211,7 @@ public class Serre : Outil
         //si oiseau, oiseau-1
         //si pluis, quantitéeau ne bouge pas
         //augmente la temperature de +5 degré
-        if (parcelle.Contenu.Etat == "gelé")
+        if (parcelle.Plant.Etat == "gelé")
         {
             // Protège : rien à faire
         }
@@ -217,7 +219,6 @@ public class Serre : Outil
         {
             parcelle.NuisiblesActuels.Remove("Oiseau");
         }
-        
         // Empêche la pluie d'agir
         // --> À gérer dans la météo, via une vérification de présence de serre
         // Augmente la température
@@ -232,15 +233,15 @@ public class IrrigationUrgente : Outil
     }
     public override void Actionner(Parcelle parcelle)
     {
-        if (parcelle.Contenu.Etat == "sècheresse")
+        if (parcelle.Plant.Etat == "sècheresse")
         {
             // sauve les plantes mais sante -10
-            parcelle.Contenu.Sante -= 10;
+            parcelle.Plant.Sante -= 10;
         }
         else 
         {
             //inonde les plantations 
-            parcelle.Contenu.Sante -= 25;
+            parcelle.Plant.Sante -= 25;
         }
     
     }
@@ -253,10 +254,10 @@ public class Paillage : Outil
     }
     public override void Actionner(Parcelle parcelle)
     {
-        if (parcelle.Contenu.Etat == "sècheresse")
+        if (parcelle.Plant.Etat == "sècheresse")
         {
             // sauve les plantes mais sante -5
-            parcelle.Contenu.Sante -= 5;
+            parcelle.Plant.Sante -= 5;
         }
         else 
         {

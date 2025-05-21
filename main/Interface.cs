@@ -278,7 +278,7 @@ public class GroupeChampsDetails : ZoneInteractive
     }
     public void Synchroniser()
     {
-        Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
+        Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].ToString();
     }
 }
 
