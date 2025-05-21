@@ -24,19 +24,11 @@ public class SessionJeu
     // Gestion des menus ======================================================
     public void ConstruireMenus()
     {
-<<<<<<< HEAD
-        ECRAN_ACCUEIL.ACCUEIL.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
-        ElementMenu NouvellePartie = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Carcassonne (France)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Soconusco (Mexique)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Hokkaido (Japon)", this));
-=======
         EcranAccueil.Accueil.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
         ElementMenu NouvellePartie = new ElementMenu(EcranAccueil.Accueil, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Carcassonne (France)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Oaxaca de Juárez (Mexique)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Kanazawa (Japon)", this));
->>>>>>> thimeo
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Soconusco (Mexique)", this));
+        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Hokkaido (Japon)", this));
 
         ElementMenu ApprendreJeu = new ElementMenu(EcranAccueil.Accueil, "Apprendre les commandes de base");
         EcranAccueil.Accueil.Racine.AjouterItem(NouvellePartie);
@@ -68,7 +60,7 @@ public class SessionJeu
         ElementMenu Meteo = new ElementMenu(EcranJeu.Journal, "Meteo", "Devenez incollables sur la météo !");
         EcranJeu.Journal.Racine.AjouterItem(Plantes);
         EcranJeu.Journal.Racine.AjouterItem(Meteo);
-
+        
         EcranJeu.Suivant.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
         ElementMenu Oui = new ElementMenuSuivant(EcranJeu.Suivant, "Oui je le veux", this);
         EcranJeu.Suivant.Racine.AjouterItem(Oui);
@@ -285,7 +277,7 @@ public class SessionJeu
         }
         else
         {
-            EcranJeu.Dialogue.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Contenu.Nom} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
+            EcranJeu.Dialogue.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Plant.Nom} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
 
         }
         ActualiserMenuInventaire();
@@ -338,6 +330,7 @@ public class SessionJeu
     // Actions Semaine Suivante =================================================
     public void PasserSemaineSuivante()
     {
+        DeterminerDeclenchementModeUrgence();
         JoueurActuel.Semaine += 1;
         ActualiserDate();
         EcranJeu.Dialogue.AfficherMessageSemaine(JoueurActuel.Semaine);
@@ -361,7 +354,7 @@ public class SessionJeu
             EcranJeu.Date.Contenu += "(hiver)";
         EcranJeu.Date.Afficher();
     }
-    
+
     // Otuils =====================================================================
     public void Arroser()
     {
@@ -386,9 +379,8 @@ public class SessionJeu
         Console.ForegroundColor = ConsoleColor.Red;
         EcranJeu.AfficherLignesDirectrices();
         //JoueurAnimation();
-        
-
     }
+    public void DeterminerDeclenchementModeUrgence() { }
 
 
     //   public string RecupererASCII(string nomFichierTxt)

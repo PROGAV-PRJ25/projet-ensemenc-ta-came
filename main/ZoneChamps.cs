@@ -25,7 +25,7 @@ public class ZoneChamps : ZoneInteractive
     {
         for (int ligne = 0; ligne < Hauteur; ligne++)
             for (int colonne = 0; colonne < Largeur; colonne++)
-                Grille[colonne, ligne] = new CelluleChamps(grille[colonne, ligne].Contenu);
+                Grille[colonne, ligne] = new CelluleChamps(grille[colonne, ligne].Plant);
     }
     public void Synchroniser(Plante plante, int colonne, int ligne)
     {

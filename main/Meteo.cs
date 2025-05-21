@@ -1,150 +1,157 @@
-public class Meteo{
-    
-    private static int[][] Temperature {get; set;}
-    public int TemperatureActuelle {get; set;}
-    public Temps TempsActuel {get; set;}
+public class Meteo
+{
 
-
+    private Temperature Temperature { set; get; }
+    public int TemperatureActuelle { get; set; }
+    public Temps TempsActuel { get; set; }
+    public Meteo(string ville)
+    {
+        Temperature = new Temperature(ville);
+        TempsActuel = new Soleil();
+    }
 }
 
-public abstract class Temps 
+public abstract class Temps
 {
-    public string NOM {set;get;}
-    public string EMOJI {set;get;}
-    public abstract void Action(Parcelle parcelle);
+    public string NOM { set; get; }
+    public string EMOJI { set; get; }
+    public abstract void Affecter(Parcelle parcelle);
+
     protected Temps(string nom, string emoji)
     {
         NOM = nom;
         EMOJI = emoji;
     }
-}
-public class Pluie : Temps {
-    public Pluie(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Pluie";
-        EMOJI = "🌧️";
+    public void Affecter(Parcelle[,] parcelles)
+    {
+        for (int colonne = 0; colonne < parcelles.GetLength(0); colonne++)
+        {
+            for (int ligne = 0; ligne < parcelles.GetLength(1); ligne++)
+            {
+                Affecter(parcelles[colonne, ligne]);
+            }
+        }
     }
-    public override void Action(Parcelle parcelle) 
+}
+public class Pluie : Temps
+{
+    public Pluie(string nom = "Pluie", string emoji = "🌧️") : base(nom, emoji)
+    {
+
+    }
+    public override void Affecter(Parcelle parcelle)
     {
         //dépend du besoin eau de la plante mais rajoute +10 à quantitéeau
         //si dépasse besoin eau de 30, santé -20
         //sinon si besoin eau atteint (à +30% pret), santé +10
-        parcelle.Contenu.QuantiteEau += 10;
-        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BesoinEau + 30)
+        parcelle.Plant.QuantiteEau += 10;
+        if (parcelle.Plant.QuantiteEau > parcelle.Plant.BesoinEau + 30)
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
-        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BesoinEau) <= parcelle.Contenu.BesoinEau * 0.3)
+        else if (Math.Abs(parcelle.Plant.QuantiteEau - parcelle.Plant.BesoinEau) <= parcelle.Plant.BesoinEau * 0.3)
         {
-            parcelle.Contenu.Sante += 10;
+            parcelle.Plant.Sante += 10;
         }
     }
 }
 
-public class Soleil : Temps {
-    public Soleil(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Soleil";
-        EMOJI = "🌞";
+public class Soleil : Temps
+{
+    public Soleil(string nom = "Soleil", string emoji = "🌞") : base(nom, emoji)
+    {
+        ;
     }
-    public override void Action(Parcelle parcelle) 
+    public override void Affecter(Parcelle parcelle)
     {
         //dépend du besoinsoleil de la plante, rajoute +15 à quantité soleil
         //si dépasse besoin soleil de 5 et quantitéeau qui est en dessous de besoin eau,  ce mois ci, santé-25
         //sinon, si besoinsoleil atteint (à +_ 5%), santé +5
-        parcelle.Contenu.BesoinSoleil += 15;
-        if (parcelle.Contenu.BesoinSoleil > parcelle.Contenu.BesoinEau + 5 &&
-            parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
+        parcelle.Plant.BesoinSoleil += 15;
+        if (parcelle.Plant.BesoinSoleil > parcelle.Plant.BesoinEau + 5 &&
+            parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
         {
-            parcelle.Contenu.Sante -= 25;
+            parcelle.Plant.Sante -= 25;
         }
-        else if (Math.Abs(parcelle.Contenu.BesoinSoleil - parcelle.Contenu.BesoinEau) <= 5)
+        else if (Math.Abs(parcelle.Plant.BesoinSoleil - parcelle.Plant.BesoinEau) <= 5)
         {
-            parcelle.Contenu.Sante += 5;
+            parcelle.Plant.Sante += 5;
         }
     }
 }
 
-public class VentAutan : Temps {
-    public VentAutan(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Vent d'Autan";
-        EMOJI = "🌬️";
-    }
-    public override void Action(Parcelle parcelle) 
+public class VentAutan : Temps
+{
+    public VentAutan(string nom = "Vent d'Autan", string emoji = "🌬️") : base(nom, emoji) { }
+    public override void Affecter(Parcelle parcelle)
     {
         //vent sec et chaud : réduit la quantité d'eau de -15%
         //si réduit trop quantitéeau en dessous de besoineau, santé-25
         //accelere la vitessecroissance de +2 (en mois) donc récolte plus tot
-        parcelle.Contenu.QuantiteEau = (int)(parcelle.Contenu.QuantiteEau * 0.85);
-        if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BesoinEau)
+        parcelle.Plant.QuantiteEau = (int)(parcelle.Plant.QuantiteEau * 0.85);
+        if (parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
         {
-            parcelle.Contenu.Sante -= 25;
+            parcelle.Plant.Sante -= 25;
         }
-        parcelle.Contenu.VitesseCroissance += 2;
+        parcelle.Plant.VitesseCroissance += 2;
     }
 }
 
-public class Gel : Temps {
-    public Gel(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Gel";
-        EMOJI = "🥶";
-    }
-    public override void Action(Parcelle parcelle) 
+public class Gel : Temps
+{
+    public Gel(string nom = "Gel", string emoji = "🥶") : base(nom, emoji) { }
+    public override void Affecter(Parcelle parcelle)
     {
         //si gel et crainfroid true, santé =-20
         //si fumier ou tente, protège du gel et ne fait rien
         bool protegeParFumierOuSerre = parcelle.Defense != null &&
             (parcelle.Defense.Contains("Fumier") || parcelle.Defense.Contains("Serre"));
 
-        if (parcelle.Contenu.CraintFroid && !protegeParFumierOuSerre)
+        if (parcelle.Plant.CraintFroid && !protegeParFumierOuSerre)
         {
-            parcelle.Contenu.Sante -= 20;
-            parcelle.Contenu.Etat = "gelé";
+            parcelle.Plant.Sante -= 20;
+            parcelle.Plant.Etat = "gelé";
         }
     }
 }
 
-public class Orage : Temps {
-    public Orage(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Orage";
-        EMOJI = "⛈️";
-    }
-    public override void Action(Parcelle parcelle) 
+public class Orage : Temps
+{
+    public Orage(string nom = "Orage", string emoji = "⛈️") : base(nom, emoji) { }
+    public override void Affecter(Parcelle parcelle)
     {
         //dépend du besoin eau de la plante mais rajoute +10 à quantitéeau
         //si dépasse besoin eau de 30, santé -20
         //sinon si besoin eau atteint (à +30% près), santé +10
         //spécificité : orage affaiblit les cultures et santé -15 d'office.
-        parcelle.Contenu.QuantiteEau += 10;
+        parcelle.Plant.QuantiteEau += 10;
 
-        if (parcelle.Contenu.QuantiteEau > parcelle.Contenu.BesoinEau + 30)
+        if (parcelle.Plant.QuantiteEau > parcelle.Plant.BesoinEau + 30)
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
-        else if (Math.Abs(parcelle.Contenu.QuantiteEau - parcelle.Contenu.BesoinEau) <= parcelle.Contenu.BesoinEau * 0.3)
+        else if (Math.Abs(parcelle.Plant.QuantiteEau - parcelle.Plant.BesoinEau) <= parcelle.Plant.BesoinEau * 0.3)
         {
-            parcelle.Contenu.Sante += 10;
+            parcelle.Plant.Sante += 10;
         }
 
         // effet spécifique à l'orage
-        parcelle.Contenu.Sante -= 15;
+        parcelle.Plant.Sante -= 15;
     }
-    
+
 }
 
-public class Temperature {
-    
-    public string NOM {set;get;}
-    public string EMOJI {set;get;}
-    
-    public Temperature(string nom, string emoji) 
-    {
-        NOM = "Temperature";
-        EMOJI = "🌡️";
-    }
+public class Temperature
+{
+    private double[][] Temperatures { set; get; }
 
-    public void Action(Parcelle parcelle)
+    public Temperature(string ville)
     {
-        double[][] Temperatures = new double[][] 
+        if (ville == "Carcassonne")
         {
+
+            Temperatures = new double[][]
+            {
             /* 2009 */ new double[] { 3.00, -1.19, 3.67, 5.86, 5.10, 3.90, 3.05, 2.90, 6.43, 4.57, 8.71, 8.48, 7.29, 8.29, 9.33, 10.57, 11.52, 12.57, 16.90, 16.81, 20.38, 19.33, 20.24, 21.57, 22.29, 22.57, 27.29, 22.00, 23.10, 25.48, 23.86, 23.24, 23.29, 25.52, 20.95, 20.24, 18.52, 14.95, 16.05, 14.71, 18.14, 7.76, 12.10, 13.05, 9.33, 9.43, 12.48, 8.90, 6.90, 6.00, -3.14, 3.95 },
             /* 2010 */ new double[] { 0.00, 2.90, 4.86, 1.43, 3.43, -1.81, 3.52, 7.81, 4.57, -2.71, 8.76, 10.95, 9.10, 10.19, 9.43, 14.95, 15.52, 8.86, 12.19, 16.90, 18.76, 19.76, 19.95, 15.19, 21.76, 25.95, 26.33, 25.90, 22.57, 23.14, 21.05, 20.76, 21.90, 21.81, 17.95, 17.14, 15.14, 13.90, 12.71, 15.90, 9.38, 7.95, 8.67, 10.33, 9.76, 6.14, 2.33, 0.81, 5.76, -0.52, 2.90, 4.29 },
             /* 2011 */ new double[] { 4.90, 6.29, 1.05, 0.00, 1.71, 5.14, 5.19, 7.05, 4.48, 7.19, 8.62, 7.90, 11.95, 15.24, 12.33, 13.90, 14.48, 16.52, 18.10, 18.52, 19.86, 16.52, 17.05, 20.81, 21.95, 21.67, 22.90, 21.29, 17.57, 19.67, 22.81, 20.24, 23.81, 20.67, 20.29, 19.10, 18.76, 15.00, 16.90, 14.29, 14.00, 9.90, 12.24, 12.81, 11.38, 10.95, 7.57, 7.90, 7.62, 5.57, 5.57, 5.76 },
@@ -162,8 +169,16 @@ public class Temperature {
             /* 2023 */ new double[] { 9.48, 8.19, 2.43, 0.67, 3.24, 3.67, 8.71, 6.43, 1.14, 9.76, 10.48, 11.48, 10.33, 9.14, 10.14, 12.81, 15.57, 16.33, 11.86, 11.57, 17.10, 19.48, 20.67, 20.29, 21.14, 20.00, 21.67, 23.52, 23.43, 20.86, 19.57, 24.00, 27.10, 25.95, 18.81, 24.19, 20.90, 16.95, 20.95, 19.24, 18.71, 14.81, 13.19, 9.76, 8.71, 11.10, 4.95, 4.57, 5.62, 6.67, 5.48, 5.95 },
             /* 2024 */ new double[] { 5.19, -0.19, 4.81, 8.19, 8.38, 7.81, 8.10, 6.76, 5.62, 6.19, 10.24, 12.76, 9.29, 13.38, 13.48, 9.19, 8.57, 11.10, 14.38, 13.71, 13.76, 13.19, 19.19, 16.14, 19.05, 21.81, 16.76, 20.95, 22.14, 22.29, 25.00, 25.33, 20.62, 21.33, 21.57, 18.24, 13.48, 16.10, 15.00, 13.62, 15.52, 14.67, 12.05, 14.86, 13.71, 8.24, 7.14, 9.33, 6.05, 3.48, 5.71, 4.10 },
             /* 2025 */ new double[] { 5.67, 7.05, 0.76, 7.33, 4.81, 3.81, 7.43, 8.33, 7.29, 11.24, 8.48, 10.71, 10.38, 13.90, 15.00, 12.10, 13.86, 16.78, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 },
-        };
+            };
+        }
+        else
+            Temperatures = new double[15][];
+    }
+
+    public void AppliquerTemperature(Parcelle parcelle)
+    {
         
+
         if (parcelle.Date == null) return;
 
         int annee = parcelle.Date.Annee;
@@ -171,15 +186,15 @@ public class Temperature {
 
         double temperature = Temperatures[annee - 2009][semaine - 1];
 
-        int tempref = parcelle.Contenu.TemperaturePreferee;
+        int tempref = parcelle.Plant.TemperaturePreferee;
 
         if (Math.Abs(temperature - tempref) < 0.5)
         {
-            parcelle.Contenu.VitesseCroissance += 2;
+            parcelle.Plant.VitesseCroissance += 2;
         }
         else if (temperature < tempref - 15 || temperature > tempref + 15)
         {
-            parcelle.Contenu.Sante -= 15;
+            parcelle.Plant.Sante -= 15;
         }
     }
 

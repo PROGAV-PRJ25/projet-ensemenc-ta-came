@@ -20,10 +20,10 @@ public class Maladie : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 10;
+        parcelle.Plant.Sante -= 10;
         if(parcelle.NuisibleSemainePro(NOM)) //si la semaine d'après, le nuisible est toujours là, (NuisibleSemainePro dans la classe parcelle)
         {
-            parcelle.Contenu.Sante -= 40;
+            parcelle.Plant.Sante -= 40;
         }
     }
 }
@@ -35,10 +35,10 @@ public class Champignon : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 20;
+        parcelle.Plant.Sante -= 20;
         if(parcelle.NuisibleSemainePro(NOM))
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
     }
 }
@@ -50,10 +50,10 @@ public class Chenille : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 15;
+        parcelle.Plant.Sante -= 15;
         if(parcelle.NuisibleSemainePro(NOM))
         {
-            parcelle.Contenu.Sante -= 40;
+            parcelle.Plant.Sante -= 40;
         }
 
     }
@@ -66,10 +66,10 @@ public class Pucerons : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 10;
+        parcelle.Plant.Sante -= 10;
         if(parcelle.NuisibleSemainePro(NOM))
         {
-            parcelle.Contenu.Sante -= 20;
+            parcelle.Plant.Sante -= 20;
         }
     }
 }
@@ -81,10 +81,10 @@ public class Lapin : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 10;
+        parcelle.Plant.Sante -= 10;
         if(parcelle.NuisibleSemainePro(NOM))
         {
-            parcelle.Contenu.Sante -= 30;
+            parcelle.Plant.Sante -= 30;
         }
     }
 }
@@ -96,10 +96,10 @@ public class Oiseau : Nuisible {
     }
     public override void Action(Parcelle parcelle) 
     {
-        parcelle.Contenu.Sante -= 20;
+        parcelle.Plant.Sante -= 20;
         if(parcelle.NuisibleSemainePro(NOM))
         {
-            parcelle.Contenu.Sante -= 35;
+            parcelle.Plant.Sante -= 35;
         }
     }
 }
