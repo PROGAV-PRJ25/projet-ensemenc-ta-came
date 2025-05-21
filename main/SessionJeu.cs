@@ -24,19 +24,12 @@ public class SessionJeu
     // Gestion des menus ======================================================
     public void ConstruireMenus()
     {
-<<<<<<< HEAD
-        ECRAN_ACCUEIL.ACCUEIL.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
-        ElementMenu NouvellePartie = new ElementMenu(ECRAN_ACCUEIL.ACCUEIL, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Carcassonne (France)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Soconusco (Mexique)", this));
-        NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(ECRAN_ACCUEIL.ACCUEIL, "Hokkaido (Japon)", this));
-=======
+
         EcranAccueil.Accueil.Racine.Description = "Bienvenue dans Ensemence! Faites votre choix parmi la sélection ci-dessous";
         ElementMenu NouvellePartie = new ElementMenu(EcranAccueil.Accueil, "Commencer une nouvelle partie", "Sélectionnez le pays dans lequel vous voulez jouer !");
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Carcassonne (France)", this));
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Oaxaca de Juárez (Mexique)", this));
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Kanazawa (Japon)", this));
->>>>>>> thimeo
 
         ElementMenu ApprendreJeu = new ElementMenu(EcranAccueil.Accueil, "Apprendre les commandes de base");
         EcranAccueil.Accueil.Racine.AjouterItem(NouvellePartie);

@@ -103,7 +103,7 @@ public class Gel : Temps {
 }
 
 public class Nuage : Temps {
-    public Orage(string nom, string emoji) : base(nom, emoji) {
+    public Nuage(string nom, string emoji) : base(nom, emoji) {
         NOM = "Nuage";
         EMOJI = "🌥️";
     }
