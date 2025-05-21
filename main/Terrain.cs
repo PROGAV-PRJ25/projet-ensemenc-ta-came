@@ -7,6 +7,10 @@ public abstract class Terrain
     public int Drainage { set; get; }
     // indique la quantité d'eau perdue durant une semaine
     public int Fertilite { set; get; }
+    public void Arroser(int quantiteEau)
+    {
+        TauxHumidite = TauxHumidite + quantiteEau > 100 ? 100 : TauxHumidite + quantiteEau;
+    }
 }
 public class TerrainArgileux : Terrain
 {

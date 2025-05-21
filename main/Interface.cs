@@ -277,9 +277,19 @@ public class GroupeChampsDetails : ZoneInteractive
         }
     }
     public void Synchroniser()
+{
+    int x = Champs.Curseur % Champs.Largeur;
+    int y = Champs.Curseur / Champs.Largeur;
+    if (x >= 0 && x < Champs.Largeur && y >= 0 && y < Champs.Hauteur)
     {
-        Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].ToString();
+        CelluleChamps parcelle = Champs.Grille[x, y];
+        Details.Contenu = parcelle != null ? parcelle.ToString() : "Parcelle vide !";
     }
+    else
+    {
+        Details.Contenu = "Curseur hors limites !";
+    }
+}
 }
 
 public class EnsembleZoneTexte

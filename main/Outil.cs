@@ -1,3 +1,5 @@
+using System.Security.AccessControl;
+
 public abstract class Outil : ObjetJeu
 {
     public static List<Outil> ListeOutils = new List<Outil>
@@ -32,29 +34,19 @@ public class Arrosoir : Outil
     {
         //si dessous besoineau , augmente l'hydratation de +15%
         //si au dessus besoineau , attention plante surhydraté et santé -20
-        if (parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
-        {
-            parcelle.Plant.QuantiteEau += (int)(parcelle.Plant.BesoinEau * 0.15);
-        }
-        else
-        {
-            parcelle.Plant.Sante -= 20;
-        }
+        parcelle.Sol.Arroser(15);
     }
 }
 
 public class Panier : Outil
 {
-    
     public Panier() : base("Panier", "🧺", 0, "ramasser vos récoltes") { }
-    public override void Actionner(Parcelle parcelle)
+    public override void Actionner(Parcelle parceller)
     {
-        //si fruit , le récolte et rendement -1
+        //permet de récolter des fruits et de les ajouter dans l"inventaire d'un joueur
+        //
         //si pas fruit, ne sert à rien
-        if (parcelle.Plant.Etat == "mature")
-        {
-            parcelle.Plant.RendementMax = Math.Max(0, parcelle.Plant.RendementMax - 1);
-        }
+        //List<Recolte>Parcelle.Plant.RamasserRecoltes();
         // sinon, ne fait rien
     }
 }
