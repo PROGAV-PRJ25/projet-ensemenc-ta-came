@@ -2,11 +2,11 @@
 
 public class ElementMenu
 {
-    public string Description { set; get; }
-    public ElementMenu Parent { set; get; }
-    public List<ElementMenu> Items { set; get; }
-    public ZoneMenu MenuReference { set; get; }
-    public string Titre { set; get; }
+    public string Description { get; set; }
+    public ElementMenu Parent { get; set; }
+    public List<ElementMenu> Items { get; set; }
+    public ZoneMenu MenuReference { get; set; }
+    public string Titre { get; set; }
 
 
     public ElementMenu(ZoneMenu menuReference, string titre = "(vide)", string description = "(vide)")
@@ -50,13 +50,13 @@ public class ElementMenu
 
 public class ElementMenuNouvellePartie : ElementMenu
 {
-    public SessionJeu Session { set; get; }
-    string Ville { set; get; }
+    public SessionJeu Session { get; set; }
+    string Ville { get; set; }
 
     public ElementMenuNouvellePartie(ZoneMenu menuReference, string titre, SessionJeu session) : base(menuReference, titre)
     {
         Session = session;
-        Ville = titre;
+        Ville = titre.Split(" ")[0];
     }
 
     public override void Actionner()
@@ -67,7 +67,7 @@ public class ElementMenuNouvellePartie : ElementMenu
 
 public class ElementMenuFonctionnel : ElementMenu
 {
-    public SessionJeu Session { set; get; }
+    public SessionJeu Session { get; set; }
     public ElementMenuFonctionnel(ZoneMenu menuReference, string description, SessionJeu session) : base(menuReference, description)
     {
         Session = session;
@@ -78,10 +78,10 @@ public abstract class ElementMenuMagasin : ElementMenuFonctionnel
     public ElementMenuMagasin(ZoneMenu menuReference, string titre, SessionJeu session, ObjetJeu contenu) : base(menuReference, titre, session)
     { }
 }
-public class ElementMenuMagasinOutil : ElementMenuMagasin
+public class ElementMenuMagasinAchatOutil : ElementMenuMagasin
 {
-    public Outil Contenu { set; get; }
-    public ElementMenuMagasinOutil(ZoneMenu menuReference, SessionJeu session, Outil outil) : base(menuReference, $"{outil.Emoji} {outil.Nom} - {outil.PrixAchat} ", session, outil)
+    public Outil Contenu { get; set; }
+    public ElementMenuMagasinAchatOutil(ZoneMenu menuReference, SessionJeu session, Outil outil) : base(menuReference, $"{outil.Emoji} {outil.Nom} - {outil.PrixAchat} ", session, outil)
     {
         Contenu = outil;
     }
@@ -90,10 +90,10 @@ public class ElementMenuMagasinOutil : ElementMenuMagasin
         Session.Acheter(Contenu);
     }
 }
-public class ElementMenuMagasinSemis : ElementMenuMagasin
+public class ElementMenuMagasinAchatSemis : ElementMenuMagasin
 {
-    public Plante Contenu { set; get; }
-    public ElementMenuMagasinSemis(ZoneMenu menuReference, SessionJeu session, Plante plante) : base(menuReference, $"{plante.Emoji} {plante.Nom} - {plante.PrixAchat} ", session, plante)
+    public Plante Contenu { get; set; }
+    public ElementMenuMagasinAchatSemis(ZoneMenu menuReference, SessionJeu session, Plante plante) : base(menuReference, $"{plante.Emoji} {plante.Nom} - {plante.PrixAchat} ", session, plante)
     {
         Contenu = plante;
     }
@@ -102,9 +102,21 @@ public class ElementMenuMagasinSemis : ElementMenuMagasin
         Session.Acheter(Contenu);
     }
 }
+public class ElementMenuMagasinVenteRecolte : ElementMenuMagasin
+{
+    public Recolte Contenu { get; set; }
+    public ElementMenuMagasinVenteRecolte(ZoneMenu menuReference,string titre, SessionJeu session, Recolte recolte) : base(menuReference,titre, session, recolte)
+    {
+        Contenu = recolte;
+    }
+    public override void Actionner()
+    {
+        Session.Vendre(Contenu);
+    }
+}
 public class ElementMenuInventaireSemis : ElementMenuFonctionnel
 {
-    Plante Semis { set; get; }
+    Plante Semis { get; set; }
     public ElementMenuInventaireSemis(ZoneMenu menuReference, string description, SessionJeu session, Plante semis) : base(menuReference, description, session)
     {
         Semis = semis;
@@ -116,7 +128,7 @@ public class ElementMenuInventaireSemis : ElementMenuFonctionnel
 }
 public class ElementMenuInventaireOutil : ElementMenuFonctionnel
 {
-    public Outil Outil { set; get; }
+    public Outil Outil { get; set; }
     public ElementMenuInventaireOutil(ZoneMenu menuReference, string titre, SessionJeu session, Outil outil) : base(menuReference, titre, session)
     {
         Outil = outil;
@@ -124,6 +136,19 @@ public class ElementMenuInventaireOutil : ElementMenuFonctionnel
     public override void Actionner()
     {
         Session.UtiliserOutil(Outil);
+    }
+}
+public class ElementMenuInventaireRecolte : ElementMenuFonctionnel
+{
+    public Recolte Recolte { get; set; }
+    public ElementMenuInventaireRecolte(ZoneMenu menuReference, string titre, SessionJeu session, Recolte recolte) : base(menuReference, titre, session)
+    {
+        Recolte = recolte;
+    }
+    public override void Actionner()
+    {
+        // ne fait rien
+        //Session.ProposerVenteRecolte();
     }
 }
 public class ElementMenuJournal : ElementMenu

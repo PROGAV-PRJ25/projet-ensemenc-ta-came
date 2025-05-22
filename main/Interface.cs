@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 public abstract class Interface : Zone
 {
-    public virtual CelluleAffichage[,] Grille { set; get; }
+    public virtual CelluleAffichage[,] Grille { get; set; }
     public Interface(int positionColonne, int positionLigne, int largeur, int hauteur) : base(positionColonne, positionLigne, largeur, hauteur)
     {
         Grille = new CelluleAffichage[Largeur, Hauteur];
@@ -84,27 +84,27 @@ public abstract class Interface : Zone
 }
 public class ZoneEcranJeu : Interface
 {
-    public ZoneInteractive ZoneActive { set; get; }
+    public ZoneInteractive ZoneActive { get; set; }
     public List<Zone> ZonesInternes = new List<Zone> { };
-    public ZoneMenu Magasin { set; get; }
-    public ZoneMenu Inventaire { set; get; }
-    public ZoneMenu Journal { set; get; }
-    public ZoneMenu Suivant { set; get; }
-    public ZoneMenu Urgence { set; get; }
-    public ZoneTexte Details { set; get; }
+    public ZoneMenu Magasin { get; set; }
+    public ZoneMenu Inventaire { get; set; }
+    public ZoneMenu Journal { get; set; }
+    public ZoneMenu Suivant { get; set; }
+    public ZoneMenu Urgence { get; set; }
+    public ZoneTexte Details { get; set; }
 
-    public ZoneDialogue Dialogue { set; get; }
+    public ZoneDialogue Dialogue { get; set; }
 
-    public ZoneTexte Date { set; get; }
-    public ZoneTexte Lieu { set; get; }
-    public ZoneTexte Mode { set; get; }
-    public ZoneTexte Argent { set; get; }
-    public ZoneTexte Meteo { set; get; }
-    public ZoneTexte? Webcam { set; get; }
-    public ZoneChamps Champs { set; get; }
-    public int IndiceZoneActive { set; get; }
-    public EnsembleZoneTexte TitresMenus { set; get; }
-    public GroupeChampsDetails ChampsEtDetails { set; get; }
+    public ZoneTexte Date { get; set; }
+    public ZoneTexte Lieu { get; set; }
+    public ZoneTexte Mode { get; set; }
+    public ZoneTexte Argent { get; set; }
+    public ZoneTexte Meteo { get; set; }
+    public ZoneTexte? Webcam { get; set; }
+    public ZoneChamps Champs { get; set; }
+    public int IndiceZoneActive { get; set; }
+    public EnsembleZoneTexte TitresMenus { get; set; }
+    public GroupeChampsDetails ChampsEtDetails { get; set; }
 
     public ZoneEcranJeu(int positionColonne, int positionLigne, int largeur, int hauteur)
     : base(positionColonne, positionLigne, largeur, hauteur)
@@ -113,11 +113,11 @@ public class ZoneEcranJeu : Interface
         ConstruireLignesDirectrices();
 
         //Création des éléments composant le volet supérieur
-        Date = new ZoneTexte(1, 1, 30, 1, "2003 - Semaine 1 (printemps)");
+        Date = new ZoneTexte(1, 1, 30, 1, "2009 - Semaine 1 (hiver)");
         Lieu = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
         Mode = new ZoneTexte(Largeur - 18, 1, 12, 1, "Mode Urgence");
         Argent = new ZoneTexte(1, 2, 28, 1, "Argent : 2000 💰");
-        Meteo = new ZoneTexte(Largeur - 18, 2, 2, 15, "Meteo : 🌧️ -20°C");
+        Meteo = new ZoneTexte(Largeur - 18, 2, 15, 1, "Meteo : 🌧️ -20°C");
         // Créaction de la zone CHAMPS
         Champs = new ZoneChamps(1, 6, 10, 10);
 
@@ -139,12 +139,11 @@ public class ZoneEcranJeu : Interface
         // Création de la zone dédiée au dialogue
         Dialogue = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 7, Hauteur - 7);
+        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4)-2 , Hauteur - 7);
 
         ChampsEtDetails = new GroupeChampsDetails(Champs, Details);
         //JournalEtArticles = new GroupeJournalEtArticles;
         ZoneActive = ChampsEtDetails;
-        BasculerSurZone(0);
     }
     public ZoneEcranJeu() : this(0, 0, Console.WindowWidth, Console.WindowHeight - 1) { }
 
@@ -181,6 +180,7 @@ public class ZoneEcranJeu : Interface
         }
         Date.Afficher();
         Lieu.Afficher();
+        Meteo.Afficher();
         Mode.Afficher();
         Argent.Afficher();
         Champs.Afficher();
@@ -232,7 +232,7 @@ public class ZoneEcranJeu : Interface
 }
 public class InterfaceAccueil : Interface
 {
-    public ZoneMenu Accueil { set; get; }
+    public ZoneMenu Accueil { get; set; }
     public InterfaceAccueil(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
         Accueil = new ZoneMenu("Accueil", Position[0] + 1, Position[1] + 1, Largeur - 3, Hauteur - 3);
@@ -247,8 +247,8 @@ public class InterfaceAccueil : Interface
 
 public class GroupeChampsDetails : ZoneInteractive
 {
-    public ZoneChamps Champs { set; get; }
-    public ZoneTexte Details { set; get; }
+    public ZoneChamps Champs { get; set; }
+    public ZoneTexte Details { get; set; }
 
     public GroupeChampsDetails(ZoneChamps champs, ZoneTexte details) : base(champs.Position[0], champs.Position[1], champs.Largeur, champs.Hauteur)
     {
@@ -277,25 +277,25 @@ public class GroupeChampsDetails : ZoneInteractive
         }
     }
     public void Synchroniser()
-{
-    int x = Champs.Curseur % Champs.Largeur;
-    int y = Champs.Curseur / Champs.Largeur;
-    if (x >= 0 && x < Champs.Largeur && y >= 0 && y < Champs.Hauteur)
     {
-        CelluleChamps parcelle = Champs.Grille[x, y];
-        Details.Contenu = parcelle != null ? parcelle.ToString() : "Parcelle vide !";
-    }
-    else
-    {
-        Details.Contenu = "Curseur hors limites !";
-    }
+        // int x = Champs.Curseur % Champs.Largeur;
+        // int y = Champs.Curseur / Champs.Largeur;
+        // if (x >= 0 && x < Champs.Largeur && y >= 0 && y < Champs.Hauteur)
+        // {
+        //     Details.Contenu = Champs.Grille[x, y].ToString();
+        // }
+        // else
+        // {
+        //     Details.Contenu = "Curseur hors limites !";
+        // }
+    Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
 }
 }
 
 public class EnsembleZoneTexte
 {
-    public List<ZoneTexte> Valeurs { set; get; }
-    public List<string> Cles { set; get; }
+    public List<ZoneTexte> Valeurs { get; set; }
+    public List<string> Cles { get; set; }
 
     public EnsembleZoneTexte()
     {

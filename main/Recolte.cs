@@ -5,6 +5,10 @@ public abstract class Recolte : ObjetJeu
     // objet du jeu dont le prix de vente est null
     public Recolte(string nom, string emoji, int prixVente) : base(nom, emoji, 1, 0, prixVente) { }
 }
+public class RecolteVide : Recolte
+{
+    public RecolteVide() : base("recolte vide ", " ", 0){}
+}
 public class RecoltePommier : Recolte
 {
     public RecoltePommier() : base("Pomme", "🍎", 2) { }
@@ -29,9 +33,9 @@ public class RecolteCitronnier : Recolte
 {
     public RecolteCitronnier() : base("Citron", "🍋", 5) { }
 }
-public class RecoltePomme : Recolte
+public class RecolteTournesol : Recolte
 {
-    public RecoltePomme() : base("Pomme", "🌻", 2) { }
+    public RecolteTournesol() : base("Tournesol", "🌻", 2) { }
 }
 public class RecolteMais : Recolte
 {
@@ -73,13 +77,13 @@ public class RecoltePatateDouce : Recolte
 {
     public RecoltePatateDouce() : base("Patate douce", "🍠", 2) { }
 }
-public class RecolteThe : Recolte
+public class RecolteTheVert : Recolte
 {
-    public RecolteThe() : base("Feuille de thé", "🍵", 3) { }
+    public RecolteTheVert() : base("Feuille de thé vert", "🍵", 3) { }
 }
-public class RecolteConcombre : Recolte
+public class RecolteConcombreJaponais : Recolte
 {
-    public RecolteConcombre() : base("Concombre", "🥒", 3) { }
+    public RecolteConcombreJaponais() : base("Concombre Japonais", "🥒", 3) { }
 }
 public class RecolteBrocoli : Recolte
 {
