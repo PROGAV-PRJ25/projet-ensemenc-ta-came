@@ -4,10 +4,12 @@ using System.Security.AccessControl;
 
 public class SessionJeu
 {
-    public Joueur JoueurActuel { set; get; }
-    public InterfaceAccueil EcranAccueil { set; get; }
-    public ZoneEcranJeu EcranJeu { set; get; }
-    public ConsoleKeyInfo Touche { set; get; }
+    public Joueur JoueurActuel { get; set; }
+    public Date DateActuelle { get; set; }
+    public GestionnaireMeteo Meteo { set; get; }
+    public InterfaceAccueil EcranAccueil { get; set; }
+    public ZoneEcranJeu EcranJeu { get; set; }
+    public ConsoleKeyInfo Touche { get; set; }
     public List<ZoneMenu> MenusPrincipaux = [];
     public List<ZoneMenu> MenusUrgence = [];
     public SessionJeu()
@@ -18,6 +20,8 @@ public class SessionJeu
         ConstruireMenus();
         EcranJeu.ZoneActive = EcranAccueil.Accueil;
         JoueurActuel = new Joueur();
+        DateActuelle = JoueurActuel.DateActuelle;
+        Meteo = new GestionnaireMeteo("Carcassonne",DateActuelle);
 
     }
     // Initialisation ===========================================================
@@ -37,8 +41,10 @@ public class SessionJeu
         EcranJeu.Inventaire.Racine.Description = "Inventaire - Choisissez parmis les catégories de votre inventaire";
         ElementMenu MenuOutils = new ElementMenu(EcranJeu.Inventaire, "Outils", "Choisissez un de vos outils à utiliser !");
         ElementMenu MenuSemis = new ElementMenu(EcranJeu.Inventaire, "Semis", "Choisissez un de vos semis à planter !");
+        ElementMenu MenuRecoltes = new ElementMenu(EcranJeu.Inventaire, "Récoltes", "Voici la liste de vos récoltes !");
         EcranJeu.Inventaire.Racine.AjouterItem(MenuOutils);
         EcranJeu.Inventaire.Racine.AjouterItem(MenuSemis);
+        EcranJeu.Inventaire.Racine.AjouterItem(MenuRecoltes);
 
         EcranJeu.Magasin.Racine.Description = "Magasin - Acheter ou vendre, c'est vous qui choisissez ! ";
         ElementMenu Acheter = new ElementMenu(EcranJeu.Magasin, "Acheter", "Choisissez parmis les catégories d'articles à acheter !");
@@ -48,11 +54,11 @@ public class SessionJeu
 
         foreach (Plante plante in Plante.ListePlantes)
         {
-            Acheter.AjouterItem(new ElementMenuMagasinSemis(EcranJeu.Magasin, this, plante));
+            Acheter.AjouterItem(new ElementMenuMagasinAchatSemis(EcranJeu.Magasin, this, plante));
         }
         foreach (Outil outil in Outil.ListeOutils)
         {
-            Acheter.AjouterItem(new ElementMenuMagasinOutil(EcranJeu.Magasin, this, outil));
+            Acheter.AjouterItem(new ElementMenuMagasinAchatOutil(EcranJeu.Magasin, this, outil));
         }
 
         EcranJeu.Journal.Racine.Description = "Renseignez vous sur le fonctionnement du jeu !";
@@ -101,12 +107,50 @@ public class SessionJeu
         EcranJeu.Inventaire.Racine.Items[0].Items = itemsOutils;
         EcranJeu.Inventaire.Curseur = 0;
 
+        List<ElementMenu> itemsRecoltes = new List<ElementMenu>();
+        if (JoueurActuel.Inventaire.Recoltes.Count == 0)
+        {
+            EcranJeu.Inventaire.Racine.Items[2].Description = "Aucune récolte dans l'inventaire ! Allez planter des semis ou récolter ce qu'ils ont produit !";
+        }
+        else
+        {
+            foreach (ItemInventaireRecolte item in JoueurActuel.Inventaire.Recoltes)
+            {
+                itemsRecoltes.Add(new ElementMenuInventaireRecolte(EcranJeu.Inventaire, $"{item.Contenu.Emoji} {item.Contenu.Nom} ({item.Quantite} en stock)", this, item.Contenu));
+            }
+            EcranJeu.Inventaire.Racine.Items[2].Description = "Voici la liste de vos récoltes !";
+        }
+        EcranJeu.Inventaire.Racine.Items[2].Items = itemsRecoltes;
+        EcranJeu.Inventaire.Curseur = 0;
+
+    }
+    public void ActualiserMenuVente()
+    {
+        // Mise à jour des semis
+        List<ElementMenu> itemsRecoltes = new List<ElementMenu>();
+        if (JoueurActuel.Inventaire.Recoltes.Count == 0)
+        {
+            EcranJeu.Magasin.Racine.Items[1].Description = "Vous n'avez aucune récolte ! Allez planter des semis ou récolter ce qu'ils ont produit !";
+        }
+        else
+        {
+            foreach (ItemInventaireRecolte item in JoueurActuel.Inventaire.Recoltes)
+            {
+                itemsRecoltes.Add(new ElementMenuMagasinVenteRecolte(EcranJeu.Inventaire, $"{item.Contenu.Emoji} {item.Contenu.Nom} Prix : {item.Contenu.PrixVente} 🪙 ({item.Quantite} en stock)", this, item.Contenu));
+            }
+            EcranJeu.Magasin.Racine.Items[1].Description = "Voici la liste de vos récoltes !";
+        }
+        EcranJeu.Magasin.Racine.Items[1].Items = itemsRecoltes;
+        EcranJeu.Magasin.Curseur = 0;
     }
     // Affichage ==============================================================
-    public void RafraichirAffichageJeu()
+    public void ActualiserAffichage()
     {
-        Console.Clear();
-        EcranJeu.Afficher();
+
+        EcranJeu.Date.Contenu = DateActuelle.ToString();
+        EcranJeu.Date.Afficher();
+        EcranJeu.Meteo.Contenu = Meteo.ToString();
+        EcranJeu.Meteo.Afficher();
         //VoletSuperieur.Afficher();
         //VoletPrincipal.Afficher();
         //VoletInferieur.Afficher();
@@ -243,12 +287,14 @@ public class SessionJeu
 
     }
     // ------------------------------------------------------------------------
-    public void DemarrerNouvellePartie(string pays)
+    public void DemarrerNouvellePartie(string ville)
     {
-        JoueurActuel = new Joueur(pays);
+        JoueurActuel = new Joueur(ville);
+        Meteo = new GestionnaireMeteo(ville,DateActuelle);
         // on met à jour les zones d'affichage liées au joueur
         EcranJeu.Lieu.Contenu = JoueurActuel.Lieu;
-        EcranJeu.Date.Contenu = "2003 - Semaine 1 (printemps)";
+        EcranJeu.Date.Contenu = DateActuelle.ToString();
+        EcranJeu.Meteo.Contenu = Meteo.ToString();
         EcranJeu.Champs.Synchroniser(JoueurActuel.Potager);
         EcranJeu.BasculerSurZone(0);
         EcranJeu.ChampsEtDetails.Champs = EcranJeu.Champs;
@@ -256,6 +302,7 @@ public class SessionJeu
 
         EcranJeu.Afficher();
         ActualiserMenuInventaire();
+        ActualiserMenuVente();
     }
     // ACTIONS DURANT LA PARTIE
     // Actions Inventaire =======================================================
@@ -308,6 +355,11 @@ public class SessionJeu
             EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
             ActualiserMenuInventaire();
         }
+        else
+        {
+            EcranJeu.Dialogue.Contenu = $"ERREUR : pas assez d'argent ! Vendez un de vos biens !";
+            EcranJeu.Dialogue.Afficher();
+        }
     }
     public void Acheter(Plante semis)
     {
@@ -326,34 +378,61 @@ public class SessionJeu
             EcranJeu.Dialogue.Afficher();
         }
     }
-    public void Vendre() { }
+
+    public void Vendre(Recolte recolte)
+    {
+
+        JoueurActuel.Argent += recolte.PrixAchat;
+        JoueurActuel.Inventaire.Retirer(recolte);
+        EcranJeu.Dialogue.Contenu = $"Vente de {recolte.Nom} effectuée ! {JoueurActuel.Inventaire.RecupererQuantite(recolte)} en stock ! ";
+        EcranJeu.Dialogue.Afficher();
+        EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
+        ActualiserMenuInventaire();
+        ActualiserMenuVente();
+        EcranJeu.Magasin.Afficher();
+        
+    }
     // Actions Semaine Suivante =================================================
     public void PasserSemaineSuivante()
     {
         DeterminerDeclenchementModeUrgence();
-        JoueurActuel.Semaine += 1;
-        ActualiserDate();
-        EcranJeu.Dialogue.AfficherMessageSemaine(JoueurActuel.Semaine);
-        // { JoueurActuel.Semaine % 52} semaines se sont écoulées depuis votre arrivée !";
-        // ECRAN_JEU.DIALOGUE.Contenu += 
-        // ECRAN_JEU.DIALOGUE.Afficher();
-        // ActualiserMeteo();
-        // ActualiserEtatPlantes();
+        DateActuelle.Avancer();
+        FaireVieillirPlantes();
+        Meteo.AppliquerMeteo(JoueurActuel.Potager, DateActuelle);
+        EcranJeu.Dialogue.AfficherMessageSemaine(DateActuelle);
+        EcranJeu.ChampsEtDetails.Afficher();
+        ActualiserAffichage();
+        EcranJeu.Meteo.Afficher();
     }
     // Actualisation des données
-    public void ActualiserDate()
+    public void ActualiserAffichageDate()
     {
-        EcranJeu.Date.Contenu = $"{2003 + JoueurActuel.Semaine / 52} - Semaine {1 + JoueurActuel.Semaine % 52} ";
-        if (JoueurActuel.Semaine % 52 < 13)
-            EcranJeu.Date.Contenu += "(printemps)";
-        else if (JoueurActuel.Semaine % 52 < 26)
-            EcranJeu.Date.Contenu += "(été)";
-        else if (JoueurActuel.Semaine % 52 < 39)
-            EcranJeu.Date.Contenu += "(automne)";
-        else
-            EcranJeu.Date.Contenu += "(hiver)";
-        EcranJeu.Date.Afficher();
+        
     }
+    //
+    public void FaireVieillirPlantes()
+    {
+        for (int colonne = 0; colonne < JoueurActuel.Potager.GetLength(0); colonne++)
+        {
+            for (int ligne = 0; ligne < JoueurActuel.Potager.GetLength(1); ligne++)
+            {
+                Plante plante = JoueurActuel.Potager[colonne, ligne].Plant;
+                Terrain sol = JoueurActuel.Potager[colonne, ligne].Sol;
+
+                if (!plante.Mature)
+                {
+                    plante.Croissance += plante.VitesseCroissance + sol.Fertilite;
+
+                    if (plante.Croissance >= 100)
+                        plante.Mature = true;
+                }
+                sol.TauxHumidite -= 10;
+                sol.TauxExposition -= 5;
+
+            }
+         }       
+    }
+    
 
     // Otuils =====================================================================
     public void Arroser()

@@ -1,22 +1,25 @@
 public class Parcelle
 {
-    public bool Libre { set; get; }
-    public Plante Plant { set; get; }
-    public Terrain Sol { set; get; }
+    public bool Libre { get; set; }
+    public Plante Plant { get; set; }
+    public Terrain Sol { get; set; }
     public List<string> NuisiblesActuels;
     public List<string> Defense;
     public Random Rng = new Random();
-    public Date Date { get; set; }
 
 
-    public Parcelle()
+    public Parcelle(string ville)
     {
         Libre = true;
         Plant = new PlanteVide();
-        Sol = new TerrainArgileux();
+        if (ville == "Soconusco")
+            Sol = new TerrainArgileux();
+        else if (ville == "Hokkaido")
+            Sol = new TerrainArgileux();
+        else
+            Sol = new TerrainArgileux(); 
         NuisiblesActuels = [];
         Defense = [];
-        Date = new Date(2009, 1);
     }
     public void Planter(Plante plante)
     {
@@ -45,7 +48,7 @@ public class Parcelle
     }
     public override string ToString()
     {
-        string reponse = Plant.ToString()+ "\n" + Sol.ToString();
+        string reponse ="PLANTE\n"+Plant.ToString()+ "\n\nSOL\n" + Sol.ToString();
         return reponse;
     }
 }

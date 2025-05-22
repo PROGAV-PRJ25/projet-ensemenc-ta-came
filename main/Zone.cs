@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 public abstract class Zone
 {
     /*
@@ -15,9 +17,9 @@ public abstract class Zone
     - ZoneMenu : zone dédiée à l'affichage d'un menu, permettant de naviguer dans son arborescence
     - ZoneInformations générale : zone dédiée à l'affichage des informations générales (volet principal)
     */
-    public int Largeur { set; get; }
-    public int Hauteur { set; get; }
-    public int[] Position { set; get; }
+    public int Largeur { get; set; }
+    public int Hauteur { get; set; }
+    public int[] Position { get; set; }
 
 
     public Zone(int colonne, int ligne, int largeur, int hauteur)
@@ -127,17 +129,15 @@ public abstract class Zone
 }
 public class ZoneTexte : Zone
 {
-    public string Contenu { set; get; }
-    public ConsoleColor CouleurTexte { set; get; }
-    public ConsoleColor CouleurFond { set; get; }
-
+    public string Contenu { get; set; }
+    public ConsoleColor CouleurTexte { get; set; }
+    public ConsoleColor CouleurFond { get; set; }
     public ZoneTexte(int colonne, int ligne, int largeur, int hauteur, string contenu = "(vide)", ConsoleColor couleurTexte = ConsoleColor.White, ConsoleColor couleurFond = ConsoleColor.Black) : base(colonne, ligne, largeur, hauteur)
     {
         Contenu = contenu;
         CouleurTexte = couleurTexte;
         CouleurFond = couleurFond;
     }
-
     public override void Afficher()
     {
         Effacer();
@@ -152,71 +152,67 @@ public class ZoneDialogue : ZoneTexte
     public ZoneDialogue(int colonne, int ligne, int largeur, int hauteur, string titre, ConsoleColor couleurTexte = ConsoleColor.Blue, ConsoleColor couleurFond = ConsoleColor.Black)
         : base(colonne, ligne, largeur, hauteur, titre, couleurTexte, couleurFond)
     { }
-    public void AfficherMessageSemaine(int semaine)
+    public void AfficherMessageSemaine(Date date)
     {
+        int semaine = date.Semaine;
+        int annee = date.Annee - 2009;
         Contenu = $"Semaine passée ! ";
-        if (semaine == 1)
+        if (semaine == 2)
         {
             Contenu += $"1 semaine s'est écoulée depuis le début de votre aventure !";
         }
-        else if (semaine == 52)
+        else if (semaine == 1 && annee==1)
         {
             Contenu += $"1 an s'est écoulé depuis le début de votre aventure !";
         }
         else
         {
-            if (semaine % 52 == 0)
+            if (semaine == 1)
             {
-                Contenu += $"{semaine / 52} ans se sont écoulés depuis le début de l'aventure !";
+                Contenu += $"{annee} ans se sont écoulés depuis le début de l'aventure !";
             }
             else
             {
-                if (semaine / 52 > 1)
+                if (annee > 1)
                 {
-                    Contenu += $"{semaine / 52} ans et ";
+                    Contenu += $"{annee} ans et ";
                 }
-                else if (semaine / 52 > 0)
+                else if (annee > 0)
                 {
-                    Contenu += $"{semaine / 52} an et ";
+                    Contenu += $"{annee} an et ";
                 }
 
-                Contenu += $"{semaine % 52} semaines se sont écoulées depuis le début de votre aventure !";
+                Contenu += $"{semaine-1} semaines se sont écoulées depuis le début de votre aventure !";
             }
         }
         Afficher();
     }
-
-
 }
 public abstract class ZoneInteractive : Zone
 {
-    public int Curseur { set; get; }
+    public int Curseur { get; set; }
     public abstract void DeplacerCurseur(string direction);
     public abstract void ValiderSelection();
     public abstract void RetournerEnArriere();
     public ZoneInteractive(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur) { }
-
 }
 public class ZoneMenu : ZoneInteractive
 {
     //element d'affichage permettant de naviguer dans une arborescence et de valider un choix 
-    public string Nom { set; get; }
-    public ElementMenu NoeudActif { set; get; }
-    public ElementMenu Racine { set; get; }
-    public int AncreAffichageItems { set; get; }
+    public string Nom { get; set; }
+    public ElementMenu NoeudActif { get; set; }
+    public ElementMenu Racine { get; set; }
+    public int AncreAffichageItems { get; set; }
 
     public ZoneMenu(string nom, int positionColonne = 0, int positionLigne = 0, int largeur = 5, int hauteur = 5) : base(positionColonne, positionLigne, largeur, hauteur)
     {
-
         Curseur = 0;
         Nom = nom;
         Racine = new ElementMenu(this);
         NoeudActif = Racine;
-
     }
     public override void DeplacerCurseur(string direction)
     {
-
         if (direction == "haut" && Curseur > 0)
         {
             Curseur -= 1;

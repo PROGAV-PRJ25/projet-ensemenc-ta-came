@@ -11,7 +11,7 @@ public class ZoneChamps : ZoneInteractive
         {
             for (int indiceLigne = 0; indiceLigne < hauteur; indiceLigne++)
             {
-                Grille[indiceColonne, indiceLigne] = new CelluleChamps(new PlanteVide());
+                Grille[indiceColonne, indiceLigne] = new CelluleChamps(new Parcelle("Carcassonne")); //besoin d'assigner une ville, mais recalculé à chaque début de partie lorsque le joueur fait son choix
             }
         }
         Curseur = 22;
@@ -25,11 +25,11 @@ public class ZoneChamps : ZoneInteractive
     {
         for (int ligne = 0; ligne < Hauteur; ligne++)
             for (int colonne = 0; colonne < Largeur; colonne++)
-                Grille[colonne, ligne] = new CelluleChamps(grille[colonne, ligne].Plant);
+                Grille[colonne, ligne] = new CelluleChamps(grille[colonne, ligne]);
     }
-    public void Synchroniser(Plante plante, int colonne, int ligne)
+    public void Synchroniser(Parcelle parcelle, int colonne, int ligne)
     {
-        Grille[colonne, ligne].Contenu = plante;
+        Grille[colonne, ligne].Contenu = parcelle;
     }
     public override void RetournerEnArriere() { }
     public override void ValiderSelection() { }
@@ -71,7 +71,7 @@ public class ZoneChamps : ZoneInteractive
 
             for (int colonne = 0; colonne < Largeur; colonne++)
             {
-                Console.Write(Grille[colonne, ligne].Contenu.Emoji);
+                Console.Write(Grille[colonne, ligne].Contenu.Plant.Emoji);
             }
         }
         Console.ResetColor();
@@ -81,53 +81,17 @@ public class ZoneChamps : ZoneInteractive
     {
         Console.BackgroundColor = ConsoleColor.White;
         Console.SetCursorPosition(Position[0] + (Curseur % Largeur) * 2 , Position[1] + (Curseur / Largeur));
-        Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.Emoji);
+        Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.Plant.Emoji);
         Console.ResetColor();
     }
     public void AfficherCelluleChamps(int colonne, int ligne)
     {
         Console.BackgroundColor = Grille[colonne, ligne].CouleurFond;
         Console.SetCursorPosition(Position[0] + colonne*2 , Position[1] + ligne);
-        Console.Write(Grille[colonne, ligne].Contenu.Emoji);
+        Console.Write(Grille[colonne, ligne].Contenu.Plant.Emoji);
         Console.ResetColor();
     }
-    public void Ajouter(Plante semis, int[] position)
-    {
-        if (Grille[position[0], position[1]].Libre)
-        {
-            Grille[position[0], position[1]].Contenu = semis;
-            AcutaliserEspaceLibre();
-        }
-    }
     
-    public void Retirer(Plante plante)
-    {
-        //retirer une plante
-    }
-    public void AcutaliserEspaceLibre()
-    {
-        for (int x = 0; x < Grille.GetLength(0); x++)
-            for (int y = 0; y < Grille.GetLength(1); y++)
-                DiffuserEffets(x, y);
-    }
-    public void DiffuserEffets(int x, int y)
-    {
-        CelluleChamps CelluleChamps = Grille[x, y];
-        int portee = CelluleChamps.Contenu.Espace;
-        if (portee > 1)
-        {
-            for (int colonne = x - portee; colonne < x + 1 + portee; colonne++)
-            {
-                for (int ligne = y - portee; ligne < y + 1 + portee; ligne++)
-                {
-                    if (EstDansTerrain(colonne, ligne) && colonne != x && ligne != y)
-                    {
-                        CelluleChamps.Libre = false;
-                    }
-                }
-            }
-        }
-    }
     public bool EstDansTerrain(int colonne, int ligne)
     {
         return (colonne >= 0) && (ligne >= 0) && (colonne < Grille.GetLength(0)) && (ligne < Grille.GetLength(1));
@@ -137,19 +101,16 @@ public class ZoneChamps : ZoneInteractive
 
 public class CelluleChamps : CelluleAffichage
 {
-    public new Plante Contenu { set; get; } // on utilise new car le contenu devient une plante cette fois
+    public new Parcelle Contenu { set; get; } // on utilise new car le contenu devient une plante cette fois
     public bool Libre { set; get; }
     public List<string> NuisiblesActuels { get; set; }
-    public string Defense => Contenu.Defense;
-    
-    public CelluleChamps(Plante plante) : base()
+    public CelluleChamps(Parcelle parcelle) : base()
     {
         Libre = true;
-        Contenu = plante;
+        Contenu = parcelle;
         CouleurFond = ConsoleColor.DarkGreen;
         NuisiblesActuels = new List<string>();
     }
-
     public bool NuisibleSemainePro(string nom)
     {
         return NuisiblesActuels.Contains(nom);

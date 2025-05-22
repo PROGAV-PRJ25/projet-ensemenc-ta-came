@@ -1,12 +1,13 @@
 public abstract class ObjetJeu
 {
-    public string Nom { private set; get; }
-    public string Emoji { set; get; }
-    public int PrixAchat { private set; get; }
-    public int PrixVente { private set; get; }
+    public string Nom { get; private set; }
+    public string Emoji { get; set; }
+    public int PrixAchat { get; private set; }
+    public int PrixVente { get; private set; }
 
     public ObjetJeu(string nom, string emoji, int decallageAffichage, int prixAchat = 0, int prixVente = 0)
     {
+        //Decallage affichage est sensé prendre en compte la taille que prend un emoji (1 ou 2)
         Nom = nom;
         Emoji = emoji;
         PrixAchat = prixAchat;
@@ -26,52 +27,53 @@ public abstract class Plante : ObjetJeu
         new Citronnier(),
         new Tournesol()
     };
-    public string Type { set; get; }
-    public int SaisonSemis { set; get; }
-    public int SaisonRecolte { set; get; }
-    public string TerrainDePreference { set; get; }
+    public string Type { get; set; }
+    public int SaisonSemis { get; set; }
+    public int SaisonRecolte { get; set; }
+    public string TerrainDePreference { get; set; }
     // si elle n'est pas plantée sur son terrain de préférence -> santé -10
-    public bool CraintFroid { set; get; }
-    public bool CraintSecheresse { set; get; }
-    public int BesoinEau { set; get; }
+    public bool CraintFroid { get; set; }
+    public bool CraintSecheresse { get; set; }
+    public int BesoinEau { get; set; }
     // indique la quantité nécessaire chaque semaine
-    public int TemperaturePreferee { set; get; }
+    public int TemperaturePreferee { get; set; }
     // temperature preferee, si > ou
-    public string EsperanceDeVie { set; get; }
+    public string EsperanceDeVie { get; set; }
 
     // EtatActuel, varie selon les saisons, les années, les nuisibles, la météo et les années
-    string[] Etats { set; get; }
-    public int Croissance { set; get; }
-    public int VitesseCroissance { set; get; }
-    public bool Mature { set; get; }
-    public int Age { set; get; }
+    string[] Etats { get; set; }
+    public int Croissance { get; set; }
+    public int VitesseCroissance { get; set; }
+    public bool Mature { get; set; }
+    public int Age { get; set; }
     // ajoute +1 à chaque semaine, si annuelle et atteint 52 alors elle meurt
-    public int EspeDeVie { set; get; }
+    public int EspeDeVie { get; set; }
     // change avec les outils et nuisibles
-    public int Sante { set; get; }
+    public int Sante { get; set; }
     // sur 100 détermine la santé de la plante, si < 50 elle meurt
 
-    public string Etat { set; get; }
+    public string Etat { get; set; }
     // indique l'état de la plante, défini à chaque nouvelle semaine
 
-    public int QuantiteEau { set; get; }
+    public int QuantiteEau { get; set; }
     //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
-    public int BesoinSoleil { set; get; } //change en fonction de la météo
-    public int QuantiteSoleil { set; get; }
+    public int BesoinSoleil { get; set; } //change en fonction de la météo
+    public int QuantiteSoleil { get; set; }
 
-    public string Nuisible { set; get; } //change en fonction de la classe nuisible 
-    public string Defense { set; get; } //change en fonction d'outils
-    public int Espace { set; get; } //change quand on taille la plante
-    public int[] Rendement { set; get; } //change en fonction de la saison, de la météo et de l'outil panier
-    public int RendementActuel { set; get; }
+    public List<string> Nuisibles { get; set; } //change en fonction de la classe nuisible 
+    public string Defense { get; set; } //change en fonction d'outils
+    public int Espace { get; set; } //change quand on taille la plante
+    public int[] Rendement { get; set; } //change en fonction de la saison, de la météo et de l'outil panier
+    public Recolte TypeRecolte { get; set; } //
+    public int RendementActuel { get; set; }
 
-    //public int QuantiteEau { set; get; }  
-    //public int BesoinSoleil { set; get; } 
+    //public int QuantiteEau { get; set; }  
+    //public int BesoinSoleil { get; set; } 
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
-     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool craintFroid, bool crainSecheresse,
-    string nuisible, string defence, int espace, int[] rendement, int saisonRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
+     int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool craintFroid, bool craintSecheresse,
+    List<string> nuisibles, string defence, int espace, int[] rendement, int saisonRecolte, Recolte typeRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
     : base(nom, emoji, prixAchat, prixVente)
     {
         Emoji = emoji;
@@ -85,12 +87,13 @@ public abstract class Plante : ObjetJeu
         QuantiteEau = quantiteEau;
         BesoinSoleil = besoinSoleil;
         CraintFroid = craintFroid;
-        CraintSecheresse = crainSecheresse;
-        Nuisible = nuisible;
+        CraintSecheresse = craintSecheresse;
+        Nuisibles = nuisibles;
         Defense = defence;
         Espace = espace;
         Rendement = rendement;
         SaisonRecolte = saisonRecolte;
+        TypeRecolte = typeRecolte;
         TemperaturePreferee = temperaturePref;
         EsperanceDeVie = espeDeVie;
         Age = 0;
@@ -105,16 +108,47 @@ public abstract class Plante : ObjetJeu
         if (Type == "plante vide")
             reponse = "Emplacement vide !";
         else
+        {
             reponse =
             $"{Emoji} {Nom} ({Type})\n" +
-            $"Etat : {Etat}\n" +
-            $"Quantité d'eau : {QuantiteEau}\n" +
-            $"Taux d'exposition au soleil : {BesoinSoleil}";
+            $"- Etat : {Etat}\n" +
+            $"- Nuisibles :";
+            if (Nuisibles.Count() == 0) reponse += " aucun\n";
+            else
+            {
+                for (int i = 0; i < Nuisibles.Count(); i++)
+                {
+                    reponse += " " + Nuisibles[i];
+                }
+                reponse += "\n";
+            }
+            reponse += $"- Options :";
+            if (Nuisibles.Count() == 0) reponse += " aucun\n";
+            else
+            {
+                for (int i = 0; i < Nuisibles.Count(); i++)
+                {
+                    reponse += " " + Nuisibles[i];
+                }
+                reponse += "\n";
+            }
+        }
+
+
         return reponse;
     }
     public void Vieillir()
     {
         Age += 1;
+        if (!Mature)
+        {
+            Croissance += VitesseCroissance;
+            if (Croissance > 100)
+            {
+                Mature = true;
+            }
+        }
+
     }
     public void Mourir()
     {
@@ -137,11 +171,13 @@ public class PlanteVide : Plante
     besoinSoleil: 0,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "",
+    craintSecheresse: false,
+    nuisibles: [],
     defence: "",
     espace: 0,
-    rendement: new int[] { 0, 0, 0, 0, 0 },saisonRecolte: 0,
+    rendement: new int[] { 0, 0, 0, 0, 0 },
+    saisonRecolte: 0,
+    typeRecolte: new RecolteVide(),
     temperaturePref: 0,
     espeDeVie: "",
     prixAchat: 0,
@@ -175,12 +211,13 @@ public class Pommier : Plante
     besoinSoleil: 30,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: true,
-    nuisible: "chenilles ou oiseaux",
+    craintSecheresse: true,
+    nuisibles: ["chenilles", "oiseaux"],
     defence: "fermier en colère, tailler",
     espace: 8,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 4, 8, 12, 20 },
+    saisonRecolte: 2,
+    typeRecolte: new RecoltePommier(),
     temperaturePref: 18,
     espeDeVie: "vivace",
     prixAchat: 150,
@@ -213,12 +250,13 @@ public class Ble : Plante
     besoinSoleil: 80,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: false,
-    nuisible: "pucerons , Maladie",
+    craintSecheresse: false,
+    nuisibles: ["pucerons", "maladie"],
     defence: "Traitement , coccinnelle",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 1, 3, 5, 8 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteBle(),
     temperaturePref: 16,
     espeDeVie: "annuel",
     prixAchat: 20,
@@ -247,12 +285,13 @@ public class Carotte : Plante
     besoinSoleil: 90,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "lapins",
+    craintSecheresse: false,
+    nuisibles: ["lapins"],
     defence: "fermier en colère",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 1, 2, 3, 6 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteCarotte(),
     temperaturePref: 18,
     espeDeVie: "annuel",
     prixAchat: 15,
@@ -281,12 +320,13 @@ public class Pecher : Plante
     besoinSoleil: 80,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: true,
-    nuisible: "pucerons , champignons, maladies, gelées",
+    craintSecheresse: true,
+    nuisibles: ["pucerons", "champignons", "maladies", "gelées"],
     defence: "Traitement , coccinnelle",
     espace: 8,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 2, 5, 8, 15 },
+    saisonRecolte: 2,
+    typeRecolte: new RecoltePecher(),
     temperaturePref: 18,
     espeDeVie: "vivace",
     prixAchat: 120,
@@ -315,11 +355,13 @@ public class VignesArtaban : Plante
     besoinSoleil: 80,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: false,
-    nuisible: "Maladies, gelée",
+    craintSecheresse: false,
+    nuisibles: ["maladies, gelée"],
     defence: "Traitement , taille",
     espace: 4,
-    rendement: new int[] { 0, 2, 4, 7, 10 },saisonRecolte: 0,
+    rendement: new int[] { 0, 2, 4, 7, 10 },
+    saisonRecolte: 0,
+    typeRecolte: new RecolteVigne(),
     temperaturePref: 25,
     espeDeVie: "vivace",
     prixAchat: 100,
@@ -348,12 +390,13 @@ public class Citronnier : Plante
     besoinSoleil: 80,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: false,
-    nuisible: "chenilles, gelées, pucerons",
+    craintSecheresse: false,
+    nuisibles: ["chenilles, gelées, pucerons"],
     defence: "Taille, traitement, coccinnelle",
     espace: 8,
-    saisonRecolte: 3,
     rendement: new int[] { 0, 1, 2, 3, 5 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteCitronnier(),
     temperaturePref: 20,
     espeDeVie: "vivace",
     prixAchat: 180,
@@ -383,12 +426,13 @@ public class Tournesol : Plante
     besoinSoleil: 70,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: false,
-    nuisible: "pucerons , oiseaux",
+    craintSecheresse: false,
+    nuisibles: ["pucerons , oiseaux"],
     defence: "fermier en colère , coccinnelle",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 0, 1, 1, 1 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteTournesol(),
     temperaturePref: 22,
     espeDeVie: "annuel",
     prixAchat: 25,
@@ -423,12 +467,13 @@ public class Mais : Plante
     besoinSoleil: 90,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "pyrales, pucerons",
+    craintSecheresse: false,
+    nuisibles: ["pyrales", "pucerons"],
     defence: "traitements bio",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 0, 1, 2, 3 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteMais(),
     temperaturePref: 25,
     espeDeVie: "annuelle",
     prixAchat: 20,
@@ -456,11 +501,13 @@ public class Haricot : Plante
     besoinSoleil: 85,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "bruches, pucerons",
+    craintSecheresse: false,
+    nuisibles: ["bruches", "pucerons"],
     defence: "filets anti-insectes",
     espace: 4,
-    rendement: new int[] { 0, 2, 5, 8, 15 },saisonRecolte: 3,
+    rendement: new int[] { 0, 2, 5, 8, 15 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteHaricot(),
     temperaturePref: 22,
     espeDeVie: "annuelle",
     prixAchat: 15,
@@ -488,12 +535,13 @@ public class Tomate : Plante
     besoinSoleil: 75,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "mildiou, aleurodes",
+    craintSecheresse: false,
+    nuisibles: ["mildiou", "aleurodes"],
     defence: "paillage, traitements naturels",
     espace: 4,
-    saisonRecolte: 3,
     rendement: new int[] { 0, 1, 2, 3, 5 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteTomate(),
     temperaturePref: 22,
     espeDeVie: "annuelle",
     prixAchat: 25,
@@ -521,12 +569,13 @@ public class Avocat : Plante
     besoinSoleil: 70,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "cochenilles, acariens",
+    craintSecheresse: true,
+    nuisibles: ["cochenilles", "acariens"],
     defence: "traitements bio, paillage",
     espace: 6,
-    saisonRecolte: 3,
     rendement: new int[] { 0, 5, 15, 30, 50 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteAvocat(),
     temperaturePref: 25,
     espeDeVie: "pérenne",
     prixAchat: 80,
@@ -554,12 +603,13 @@ public class Cafe : Plante
     besoinSoleil: 65,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "nématodes, rouille",
+    craintSecheresse: true,
+    nuisibles: ["nématodes", "rouille"],
     defence: "ombres, traitements naturels",
-    espace: 8,
-    saisonRecolte: 3,
+    espace: 6,
     rendement: new int[] { 0, 0, 1, 1, 2 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteCafe(),
     temperaturePref: 21,
     espeDeVie: "pérenne",
     prixAchat: 100,
@@ -587,12 +637,13 @@ public class Cacaoyer : Plante
     besoinSoleil: 60,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "charançons, pourriture",
+    craintSecheresse: true,
+    nuisibles: ["charançons", "pourriture"],
     defence: "ombres, paillage, traitement naturel",
-    espace: 8,
-    saisonRecolte: 3,
+    espace: 6,
     rendement: new int[] { 0, 2, 5, 10, 18 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteCacaoyer(),
     temperaturePref: 26,
     espeDeVie: "pérenne",
     prixAchat: 120,
@@ -620,12 +671,13 @@ public class Tabac : Plante
     besoinSoleil: 85,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: false,
-    nuisible: "pucerons, chenilles",
+    craintSecheresse: false,
+    nuisibles: ["pucerons, chenilles"],
     defence: "traitements bio, rotation cultures",
     espace: 3,
-    saisonRecolte: 3,
     rendement: new int[] { 0, 2, 5, 10, 20 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteTabac(),
     temperaturePref: 24,
     espeDeVie: "annuelle",
     prixAchat: 18,
@@ -653,12 +705,13 @@ public class Piment : Plante
     besoinSoleil: 90,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "pucerons, thrips",
+    craintSecheresse: true,
+    nuisibles: ["pucerons, thrips"],
     defence: "traitements naturels, paillage",
     espace: 3,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 3, 8, 15, 25 },
+    saisonRecolte: 2,
+    typeRecolte: new RecoltePiment(),
     temperaturePref: 30,
     espeDeVie: "annuelle",
     prixAchat: 22,
@@ -690,12 +743,13 @@ public class Riz : Plante
     besoinSoleil: 85,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "pyriculariose, insectes aquatiques",
+    craintSecheresse: true,
+    nuisibles: ["pyriculariose", "insectes aquatiques"],
     defence: "traitement, fermier en colère",
     espace: 4,
-    saisonRecolte: 3,
     rendement: new int[] { 0, 5, 20, 40, 80 },
+    saisonRecolte: 3,
+    typeRecolte: new RecolteRiz(),
     temperaturePref: 28,
     espeDeVie: "annuelle",
     prixAchat: 15,
@@ -723,12 +777,13 @@ public class PatateDouce : Plante
     besoinSoleil: 90,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "charançons, nématodes",
+    craintSecheresse: false,
+    nuisibles: ["charançons", "nématodes"],
     defence: "traitements naturels",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 0, 1, 2, 3 },
+    saisonRecolte: 2,
+    typeRecolte: new RecoltePatateDouce(),
     temperaturePref: 24,
     espeDeVie: "annuelle",
     prixAchat: 20,
@@ -756,12 +811,13 @@ public class TheVert : Plante
     besoinSoleil: 40,
     quantiteEau: 0,
     craintFroid: false,
-    crainSecheresse: false,
-    nuisible: "acariens, champignons",
+    craintSecheresse: false,
+    nuisibles: ["acariens", "champignons"],
     defence: "taille, traitements bio",
     espace: 4,
-    saisonRecolte: 1,
     rendement: new int[] { 0, 5, 20, 40, 80 },
+    saisonRecolte: 1,
+    typeRecolte: new RecolteTheVert(),
     temperaturePref: 21,
     espeDeVie: "pérenne",
     prixAchat: 50,
@@ -791,12 +847,13 @@ public class ConcombreJaponais : Plante
     besoinSoleil: 75,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "oïdium, pucerons",
+    craintSecheresse: true,
+    nuisibles: ["oïdium", "pucerons"],
     defence: "paillage, traitements naturels",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 1, 3, 6, 10 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteConcombreJaponais(),
     temperaturePref: 24,
     espeDeVie: "annuelle",
     prixAchat: 22,
@@ -828,12 +885,13 @@ public class Brocoli : Plante
     besoinSoleil: 80,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "altises, chenilles",
+    craintSecheresse: true,
+    nuisibles: ["altises", "chenilles"],
     defence: "filets, fermier en colère",
     espace: 4,
-    saisonRecolte: 2,
     rendement: new int[] { 0, 0, 1, 1, 2 },
+    saisonRecolte: 2,
+    typeRecolte: new RecolteBrocoli(),
     temperaturePref: 18,
     espeDeVie: "annuelle",
     prixAchat: 30,
@@ -861,11 +919,12 @@ public class Tulipe : Plante
     besoinSoleil: 70,
     quantiteEau: 0,
     craintFroid: true,
-    crainSecheresse: true,
-    nuisible: "pucerons, maladiesaltises, chenilles",
+    craintSecheresse: true,
+    nuisibles: ["pucerons", "maladiesaltises", "chenilles"],
     defence: "paillage, coccinnelle",
     espace: 4,
     saisonRecolte: 1,
+    typeRecolte: new RecolteTulipe(),
     rendement: new int[] { 0, 0, 1, 1, 2 },
     temperaturePref: 18,
     espeDeVie: "annuelle",

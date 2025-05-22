@@ -16,8 +16,8 @@ public abstract class Outil : ObjetJeu
         new IrrigationUrgente(),
         new Paillage()
     };
-    public string Verbe { set; get; }
-    public bool UsageUrgence { set; get; }
+    public string Verbe { get; set; }
+    public bool UsageUrgence { get; set; }
     public abstract void Actionner(Parcelle parcelle);
 
 

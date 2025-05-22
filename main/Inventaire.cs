@@ -1,8 +1,8 @@
 public class Repertoire
 {
-    public List<ItemInventaireOutil> Outils { set; get; }
-    public List<ItemInventaire> Recoltes { set; get; }
-    public List<ItemInventaireSemis> Semis { set; get; }
+    public List<ItemInventaireOutil> Outils { get; set; }
+    public List<ItemInventaireRecolte> Recoltes { get; set; }
+    public List<ItemInventaireSemis> Semis { get; set; }
 
     public Repertoire()
     {
@@ -34,6 +34,17 @@ public class Repertoire
         }
         return reponse;
     }
+    public int RecupererIndice(Recolte recolte)
+    {
+
+        int reponse = -1;
+        for (int i = 0; i < Recoltes.Count(); i++)
+        {
+            if (Recoltes[i].Contenu.Nom == recolte.Nom)
+                reponse = i;
+        }
+        return reponse;
+    }
     public int RecupererQuantite(Plante plante)
     {
 
@@ -44,6 +55,11 @@ public class Repertoire
     {
         int indice = RecupererIndice(outil);
         return indice == -1 ? 0 : Outils[indice].Quantite;
+    }
+    public int RecupererQuantite(Recolte recolte)
+    {
+        int indice = RecupererIndice(recolte);
+        return indice == -1 ? 0 : Recoltes[indice].Quantite;
     }
 
     public void Ajouter(Plante plante)
@@ -70,6 +86,18 @@ public class Repertoire
             Outils[indice].Quantite += 1;
         }
     }
+    public void Ajouter(Recolte recolte)
+    {
+        int indice = RecupererIndice(recolte);
+        if (indice == -1)
+        {
+            Recoltes.Add(new ItemInventaireRecolte(recolte));
+        }
+        else
+        {
+            Recoltes[indice].Quantite += 1;
+        }
+    }
     public void Retirer(Plante plante)
     {
         int indice = RecupererIndice(plante);
@@ -82,11 +110,23 @@ public class Repertoire
             }
         }
     }
+    public void Retirer(Recolte recolte)
+    {
+        int indice = RecupererIndice(recolte);
+        if (indice != -1)
+        {
+            Recoltes[indice].Quantite -= 1;
+            if (RecupererQuantite(recolte) == 0)
+            {
+                Recoltes.RemoveAt(indice);
+            }
+        }
+    }
 
 }
 public class ItemInventaire
 {
-    private int _quantite { set; get; }
+    private int _quantite { get; set; }
     public int Quantite
     {
         set
@@ -98,7 +138,7 @@ public class ItemInventaire
             return _quantite;
         }
     }
-    public string Nom { set; get; }
+    public string Nom { get; set; }
     public ItemInventaire(string nom = "", int quantite = 1)
     {
         Quantite = quantite;
@@ -107,7 +147,7 @@ public class ItemInventaire
 }
 public class ItemInventaireSemis : ItemInventaire
 {
-    public Plante Contenu { set; get; }
+    public Plante Contenu { get; set; }
     public ItemInventaireSemis(Plante plante)
     {
         Contenu = plante;
@@ -118,12 +158,22 @@ public class ItemInventaireSemis : ItemInventaire
 }
 public class ItemInventaireOutil : ItemInventaire
 {
-    public Outil Contenu { set; get; }
+    public Outil Contenu { get; set; }
     public ItemInventaireOutil(Outil outil)
     {
         Contenu = outil;
         Nom = outil.Nom;
         Quantite = 1;
 
+    }
+}
+public class ItemInventaireRecolte : ItemInventaire
+{
+    public Recolte Contenu { get; set; }
+    public ItemInventaireRecolte(Recolte recolte)
+    {
+        Contenu = recolte;
+        Nom = recolte.Nom;
+        Quantite = 1;
     }
 }

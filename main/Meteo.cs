@@ -1,57 +1,84 @@
-public class Meteo
+public class GestionnaireMeteo
 {
-
-    private Temperature Temperature { set; get; }
-    public int TemperatureActuelle { get; set; }
-    public Temps TempsActuel { get; set; }
-    public Meteo(string ville)
+    private static Random rng = new Random();
+    public Date DateActuelle { get; private set; }
+    private Temperature Temperature { get; set; }
+    private Temps TempsActuel { get; set; }
+    protected List<Temps> ListeTemps { set; get; }
+    public GestionnaireMeteo(string ville, Date date)
     {
         Temperature = new Temperature(ville);
         TempsActuel = new Soleil();
+        ListeTemps = new List<Temps> { new Soleil(), new Pluie(), new Nuage() };
+        TempsActuel = ListeTemps[0];
+        DateActuelle = date;
+    }
+    public void AppliquerMeteo(Parcelle[,] parcelles, Date date)
+    {
+        GenererTemps(date);
+        for (int colonne = 0; colonne < parcelles.GetLength(0); colonne++)
+        {
+            for (int ligne = 0; ligne < parcelles.GetLength(1); ligne++)
+            {
+                if (parcelles[colonne, ligne].Plant.Type != "plante vide")
+                {
+                    Temperature.AppliquerTemperature(parcelles[colonne, ligne], date);
+                }
+
+                TempsActuel.AppliquerTemps(parcelles[colonne, ligne]);
+            }
+        }
+
+    }
+    public void GenererTemps(Date date) // si jamais le temps dépend de la saison
+    {
+        string[] probas = ["soleil", "pluie", "nuage", "nuage"];
+        string tempsChoisi = probas[rng.Next(probas.Length)];
+        if (tempsChoisi == "soleil")
+            TempsActuel = ListeTemps[0];
+        else if (tempsChoisi == "pluie")
+            TempsActuel = ListeTemps[1];
+        else if (tempsChoisi == "nuage")
+            TempsActuel = ListeTemps[2];
+    }
+    public override string ToString()
+    {
+        return $"{TempsActuel.Emoji} { Temperature.RecupererValeur(DateActuelle)}°C" ;
     }
 }
 
 public abstract class Temps
 {
-    public string NOM { set; get; }
-    public string EMOJI { set; get; }
-    public abstract void Affecter(Parcelle parcelle);
+    protected static Random rng = new Random() ; // inutile d'avoir plusieurs objets randoms pour chaque occurence de la classe donc static
+    public string Nom { get; set; }
+    public string Emoji { get; set; }
+    public abstract void AppliquerTemps(Parcelle parcelle);
 
     protected Temps(string nom, string emoji)
     {
-        NOM = nom;
-        EMOJI = emoji;
-    }
-    public void Affecter(Parcelle[,] parcelles)
-    {
-        for (int colonne = 0; colonne < parcelles.GetLength(0); colonne++)
-        {
-            for (int ligne = 0; ligne < parcelles.GetLength(1); ligne++)
-            {
-                Affecter(parcelles[colonne, ligne]);
-            }
-        }
+        Nom = nom;
+        Emoji = emoji;
     }
 }
 public class Pluie : Temps
 {
-    public Pluie(string nom = "Pluie", string emoji = "🌧️") : base(nom, emoji)
+    public Pluie(string nom = "Pluie", string emoji = "🌧️ ") : base(nom, emoji)
     {
 
     }
-    public override void Affecter(Parcelle parcelle)
+    public override void AppliquerTemps(Parcelle parcelle)
     {
-        //dépend du besoin eau de la plante mais rajoute +10 à quantitéeau
-        //si dépasse besoin eau de 30, santé -20
-        //sinon si besoin eau atteint (à +30% pret), santé +10
-        parcelle.Plant.QuantiteEau += 10;
-        if (parcelle.Plant.QuantiteEau > parcelle.Plant.BesoinEau + 30)
-        {
-            parcelle.Plant.Sante -= 20;
-        }
-        else if (Math.Abs(parcelle.Plant.QuantiteEau - parcelle.Plant.BesoinEau) <= parcelle.Plant.BesoinEau * 0.3)
+        // la pluie rajoute de 10 à 25 % d'humidité au terrain
+        parcelle.Sol.TauxHumidite += 10 + Convert.ToInt32(rng.Next(16));
+        //si besoin eau atteint (à +10% pret), santé +10%
+        if (Math.Abs(parcelle.Sol.TauxHumidite - parcelle.Plant.BesoinEau) <= parcelle.Plant.BesoinEau + 10)
         {
             parcelle.Plant.Sante += 10;
+        }
+        // sinon santé -20;
+        else if (parcelle.Sol.TauxHumidite > parcelle.Plant.BesoinEau + 30 || parcelle.Plant.BesoinEau < parcelle.Sol.TauxHumidite)
+        {
+            parcelle.Plant.Sante -= 20;
         }
     }
 }
@@ -62,7 +89,7 @@ public class Soleil : Temps
     {
         ;
     }
-    public override void Affecter(Parcelle parcelle)
+    public override void AppliquerTemps(Parcelle parcelle)
     {
         //dépend du besoinsoleil de la plante, rajoute +15 à quantité soleil
         //si dépasse besoin soleil de 5 et quantitéeau qui est en dessous de besoin eau,  ce mois ci, santé-25
@@ -83,24 +110,26 @@ public class Soleil : Temps
 public class VentAutan : Temps
 {
     public VentAutan(string nom = "Vent d'Autan", string emoji = "🌬️") : base(nom, emoji) { }
-    public override void Affecter(Parcelle parcelle)
+    public override void AppliquerTemps(Parcelle parcelle)
     {
         //vent sec et chaud : réduit la quantité d'eau de -15%
         //si réduit trop quantitéeau en dessous de besoineau, santé-25
-        //accelere la vitessecroissance de +2 (en mois) donc récolte plus tot
+
         parcelle.Plant.QuantiteEau = (int)(parcelle.Plant.QuantiteEau * 0.85);
         if (parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
         {
             parcelle.Plant.Sante -= 25;
         }
+        //accelere la vitessecroissance de +2 (en mois), grandit + rapidement
         parcelle.Plant.VitesseCroissance += 2;
+        
     }
 }
 
 public class Gel : Temps
 {
     public Gel(string nom = "Gel", string emoji = "🥶") : base(nom, emoji) { }
-    public override void Affecter(Parcelle parcelle)
+    public override void AppliquerTemps(Parcelle parcelle)
     {
         //si gel et crainfroid true, santé =-20
         //si fumier ou tente, protège du gel et ne fait rien
@@ -116,11 +145,9 @@ public class Gel : Temps
 }
 
 public class Nuage : Temps {
-    public Nuage(string nom, string emoji) : base(nom, emoji) {
-        NOM = "Nuage";
-        EMOJI = "🌥️";
+    public Nuage(string nom= "Nuage",string  emoji="🌥️ ") : base(nom, emoji) {
     }
-    public override void Affecter(Parcelle parcelle) 
+    public override void AppliquerTemps(Parcelle parcelle) 
     {
 
         // nuage ; pas d'ensoleillement et 0 humidité
@@ -130,11 +157,11 @@ public class Nuage : Temps {
 
 public class Temperature
 {
-    private double[][] Temperatures { set; get; }
+    private double[][] Temperatures { get; set; }
 
-    public Temperature(string ville)
+    public Temperature(string lieu)
     {
-        if (ville == "Carcassonne")
+        if (lieu == "Carcassonne")
         {
 
             Temperatures = new double[][]
@@ -162,14 +189,11 @@ public class Temperature
             Temperatures = new double[15][];
     }
 
-    public void AppliquerTemperature(Parcelle parcelle)
+    public void AppliquerTemperature(Parcelle parcelle, Date date)
     {
-        
 
-        if (parcelle.Date == null) return;
-
-        int annee = parcelle.Date.Annee;
-        int semaine = parcelle.Date.Semaine;
+        int annee = date.Annee;
+        int semaine = date.Semaine;
 
         double temperature = Temperatures[annee - 2009][semaine - 1];
 
@@ -183,6 +207,10 @@ public class Temperature
         {
             parcelle.Plant.Sante -= 15;
         }
+    }
+    public double RecupererValeur(Date date)
+    {
+        return Temperatures[date.Annee - 2009][date.Semaine -1];
     }
 
 
