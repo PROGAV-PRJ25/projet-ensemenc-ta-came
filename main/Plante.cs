@@ -847,4 +847,36 @@ public class Brocoli : Plante
     }
 }
 
+public class Tulipe : Plante
+{
+    public Tulipe() :
+    base(nom: "Tulipe",
+    emoji: "🌷",
+    etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
+    type: "fleur",
+    saisonSemi: 2,
+    terrainPref: "Léger, bien drainé",
+    vitesseCroissance: 3,
+    besoinEau: 30,
+    besoinSoleil: 70,
+    quantiteEau: 0,
+    craintFroid: true,
+    crainSecheresse: true,pucerons maladiesaltises, chenilles",
+    defence: "paillage, coccinnelle",
+    espace: 4,
+    saisonRecolte: 1,
+    rendement: new int[] { 0, 0, 1, 1, 2 },
+    temperaturePref: 18,
+    espeDeVie: "annuelle",
+    prixAchat: 25,
+    prixVente: 60
+    )
+    { }
+
+    public override Plante Dupliquer()
+    {
+        return new Brocoli();
+    }
+}
+
 
