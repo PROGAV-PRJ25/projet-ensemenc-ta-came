@@ -53,6 +53,12 @@ Soleil :
 - santé -5 si la quantité de soleil est à 100% (trop d'exposition tue l'exposition)
 Température
 - santé -15 si la différence de température avec la température de préférence est > à 15°C
+### Nuisible
+Chaque semaine, un nuisible vient s'installer sur une des plantes
+On choisit pour une plante dans le champs un des nuisibles qu'il possède et on l'ajoute à la liste.
+Chaque catégorie de plante possède ses propres types de nuisibles.
+Chaque nuisible peut être retiré selon son outil.
+
 ### Terrains
 Il existe 3 types de terrains selon la localisation où vous vous trouvez.
 Le terrain à Carcassonne est argileux;
