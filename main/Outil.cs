@@ -258,10 +258,7 @@ public class Serre : Outil
         {
             // Protège : rien à faire
         }
-        if (parcelle.NuisiblesActuels.Contains("Oiseau"))
-        {
-            parcelle.NuisiblesActuels.Remove("Oiseau");
-        }
+        
         // Empêche la pluie d'agir
         // --> À gérer dans la météo, via une vérification de présence de serre
         // Augmente la température
