@@ -6,8 +6,6 @@ public class Parcelle
     public List<string> NuisiblesActuels;
     public List<string> Defense;
     public Random Rng = new Random();
-
-
     public Parcelle(string ville)
     {
         Libre = true;
@@ -17,7 +15,7 @@ public class Parcelle
         else if (ville == "Hokkaido")
             Sol = new TerrainArgileux();
         else
-            Sol = new TerrainArgileux(); 
+            Sol = new TerrainArgileux();
         NuisiblesActuels = [];
         Defense = [];
     }
@@ -30,14 +28,11 @@ public class Parcelle
     {
 
     }
-    public void Arroser()
+    public void DeterrerPlante()
     {
-
+        Plant = new PlanteVide();
     }
-    public bool NuisibleSemainePro(string nom)
-    {
-        return false;
-    }
+    
     public bool AvancerAge()
     {
         if (Plant.Type == "plante vide")

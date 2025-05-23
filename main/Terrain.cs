@@ -44,6 +44,7 @@ public abstract class Terrain
     {
         string reponse = "↓ Etat du sol \n";
         reponse += $"- Humidité: {TauxHumidite}%\n";
+        reponse += $"- Exposition: {TauxExposition}%\n";
         reponse += $"- Fertilité: {Fertilite}";
         return reponse;
     }

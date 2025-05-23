@@ -9,7 +9,6 @@ public class Repertoire
         Outils = [];
         Recoltes = [];
         Semis = [];
-
     }
 
     public int RecupererIndice(Plante plante)

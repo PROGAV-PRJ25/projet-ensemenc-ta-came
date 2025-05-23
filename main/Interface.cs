@@ -139,7 +139,7 @@ public class ZoneEcranJeu : Interface
         // Création de la zone dédiée au dialogue
         Dialogue = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4)-2 , Hauteur - 7);
+        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 3, Hauteur - 7);
 
         ChampsEtDetails = new GroupeChampsDetails(Champs, Details);
         //JournalEtArticles = new GroupeJournalEtArticles;
@@ -224,9 +224,9 @@ public class ZoneEcranJeu : Interface
         Argent.Contenu = $"Argent : {argent} 💰";
         Argent.Afficher();
     }
-    public void ActualiserAffichageMeteo(int temperature)
+    public void ActualiserAffichageMeteo(GestionnaireMeteo meteo, Date date)
     {
-        Meteo.Contenu = $"Meteo : {temperature}°C";
+        Meteo.Contenu = $"Meteo : {meteo.Temperature.RecupererValeur(date)}°C";
     }
 
 }

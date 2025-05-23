@@ -1,20 +1,4 @@
-public abstract class ObjetJeu
-{
-    public string Nom { get; private set; }
-    public string Emoji { get; set; }
-    public int PrixAchat { get; private set; }
-    public int PrixVente { get; private set; }
-
-    public ObjetJeu(string nom, string emoji, int decallageAffichage, int prixAchat = 0, int prixVente = 0)
-    {
-        //Decallage affichage est sensé prendre en compte la taille que prend un emoji (1 ou 2)
-        Nom = nom;
-        Emoji = emoji;
-        PrixAchat = prixAchat;
-        PrixVente = prixVente;
-    }
-}
-public abstract class Plante : ObjetJeu
+public abstract class Plante : ObjetJeuAchatVente
 {
     // Caractéristiques : ne bouge pas
     public static List<Plante> ListePlantes = new List<Plante>
@@ -111,6 +95,7 @@ public abstract class Plante : ObjetJeu
         {
             reponse =
             $"{Emoji} {Nom} ({Type})\n" +
+            $"- Santé : {Sante}%\n"+
             $"- Etat : {Etat}\n" +
             $"- Nuisibles :";
             if (Nuisibles.Count() == 0) reponse += " aucun\n";
@@ -133,8 +118,6 @@ public abstract class Plante : ObjetJeu
                 reponse += "\n";
             }
         }
-
-
         return reponse;
     }
     public void Vieillir()
@@ -154,7 +137,14 @@ public abstract class Plante : ObjetJeu
     {
         Etat = "mort";
         Emoji = "💀";
+
     }
+    // public int AjouterNuisible()
+    // {
+    //     int indice = rng.Next(Nuisibles.Count);
+
+    // }
+    
     public abstract Plante Dupliquer();
 }
 public class PlanteVide : Plante

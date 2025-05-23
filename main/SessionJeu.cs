@@ -1,7 +1,3 @@
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-
 public class SessionJeu
 {
     public Joueur JoueurActuel { get; set; }
@@ -12,6 +8,7 @@ public class SessionJeu
     public ConsoleKeyInfo Touche { get; set; }
     public List<ZoneMenu> MenusPrincipaux = [];
     public List<ZoneMenu> MenusUrgence = [];
+    private Random rng = new Random();
     public SessionJeu()
     {
         Touche = new ConsoleKeyInfo();
@@ -21,7 +18,7 @@ public class SessionJeu
         EcranJeu.ZoneActive = EcranAccueil.Accueil;
         JoueurActuel = new Joueur();
         DateActuelle = JoueurActuel.DateActuelle;
-        Meteo = new GestionnaireMeteo("Carcassonne",DateActuelle);
+        Meteo = new GestionnaireMeteo("Carcassonne", DateActuelle);
 
     }
     // Initialisation ===========================================================
@@ -66,7 +63,7 @@ public class SessionJeu
         ElementMenu Meteo = new ElementMenu(EcranJeu.Journal, "Meteo", "Devenez incollables sur la météo !");
         EcranJeu.Journal.Racine.AjouterItem(Plantes);
         EcranJeu.Journal.Racine.AjouterItem(Meteo);
-        
+
         EcranJeu.Suivant.Racine.Description = "Voulez vous vraiment passer à la semaine suivante ? Vous ne pourrez pas revenir en Arrière";
         ElementMenu Oui = new ElementMenuSuivant(EcranJeu.Suivant, "Oui je le veux", this);
         EcranJeu.Suivant.Racine.AjouterItem(Oui);
@@ -150,7 +147,16 @@ public class SessionJeu
         EcranJeu.Date.Contenu = DateActuelle.ToString();
         EcranJeu.Date.Afficher();
         EcranJeu.Meteo.Contenu = Meteo.ToString();
-        EcranJeu.Meteo.Afficher();
+
+        EcranJeu.ActualiserAffichageMeteo(Meteo, DateActuelle);
+        EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
+        EcranJeu.ChampsEtDetails.Synchroniser();
+        EcranJeu.ChampsEtDetails.Afficher();
+        if (EcranJeu.IndiceZoneActive == 0)
+        {
+
+        }
+
         //VoletSuperieur.Afficher();
         //VoletPrincipal.Afficher();
         //VoletInferieur.Afficher();
@@ -290,7 +296,7 @@ public class SessionJeu
     public void DemarrerNouvellePartie(string ville)
     {
         JoueurActuel = new Joueur(ville);
-        Meteo = new GestionnaireMeteo(ville,DateActuelle);
+        Meteo = new GestionnaireMeteo(ville, DateActuelle);
         // on met à jour les zones d'affichage liées au joueur
         EcranJeu.Lieu.Contenu = JoueurActuel.Lieu;
         EcranJeu.Date.Contenu = DateActuelle.ToString();
@@ -332,6 +338,7 @@ public class SessionJeu
         EcranJeu.Dialogue.Afficher();
         EcranJeu.BasculerSurZone(1); // retour à l'inventaire
     }
+    // Actions Inventaire > Outils ==============================================
     public void UtiliserOutil(Outil outil)
     {
         EcranJeu.Dialogue.Contenu = $"Choisissez un emplacement où {outil.Verbe}!"; // plus tard {JoueurActuel.Inventaire.Semis[INVENTAIRE.Curseur].NOM}
@@ -339,7 +346,29 @@ public class SessionJeu
         int indiceParcelle = DemanderPositionPotager();
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
-        outil.Actionner(JoueurActuel.Potager[colonne, ligne]);
+        bool succes = outil.Actionner(JoueurActuel.Potager[colonne, ligne]);
+        EcranJeu.Dialogue.Contenu = succes ? outil.MessageSucces : outil.MessageEchec;
+        EcranJeu.Dialogue.Contenu += " Retour à l'inventaire.";
+        EcranJeu.Dialogue.Afficher();
+        EcranJeu.BasculerSurZone(1);//retour à l'inventaire
+        ActualiserAffichage();
+    }
+    public void Arroser()
+    {
+        int indice = DemanderPositionPotager();
+        int colonne = indice % JoueurActuel.Potager.GetLength(0);
+        int ligne = indice / JoueurActuel.Potager.GetLength(0);
+        // JoueurActuel.Potager[colonne,ligne].Contenu.Arroser(indice);
+        // //si dessous besoineau , augmente l'hydratation de +15%
+        // //si au dessus besoineau , attention plante surhydraté et santé -20
+        // if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
+        // {
+        //     parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BESOIN_EAU * 0.15);
+        // }
+        // else
+        // {
+        //     parcelle.Contenu.Sante -= 20;
+        // }
     }
     // Actions Journal ==========================================================
     public void AfficherArticle() { }
@@ -390,7 +419,7 @@ public class SessionJeu
         ActualiserMenuInventaire();
         ActualiserMenuVente();
         EcranJeu.Magasin.Afficher();
-        
+
     }
     // Actions Semaine Suivante =================================================
     public void PasserSemaineSuivante()
@@ -407,7 +436,7 @@ public class SessionJeu
     // Actualisation des données
     public void ActualiserAffichageDate()
     {
-        
+
     }
     //
     public void FaireVieillirPlantes()
@@ -430,28 +459,24 @@ public class SessionJeu
                 sol.TauxExposition -= 5;
 
             }
-         }       
+        }
     }
-    
+    public void AjouterNuisible()
+    {
+        int cibleLigne;
+        int cibleColonne;
+        do
+        {
+            cibleLigne = rng.Next(JoueurActuel.Potager.GetLength(0));
+            cibleColonne = rng.Next(JoueurActuel.Potager.GetLength(1));
+
+        } while (JoueurActuel.Potager[cibleLigne, cibleColonne].Plant.Type != "plante vide");
+        JoueurActuel.Potager[cibleLigne, cibleColonne].Plant.AjouterNuisible();
+
+    }
+
 
     // Otuils =====================================================================
-    public void Arroser()
-    {
-        int indice = DemanderPositionPotager();
-        int colonne = indice % JoueurActuel.Potager.GetLength(0);
-        int ligne = indice / JoueurActuel.Potager.GetLength(0);
-        // JoueurActuel.Potager[colonne,ligne].Contenu.Arroser(indice);
-        // //si dessous besoineau , augmente l'hydratation de +15%
-        // //si au dessus besoineau , attention plante surhydraté et santé -20
-        // if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
-        // {
-        //     parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BESOIN_EAU * 0.15);
-        // }
-        // else
-        // {
-        //     parcelle.Contenu.Sante -= 20;
-        // }
-    }
     public void DeclencherModeUrgence(int scenario = 0)
     {
         EcranJeu.Urgence.Racine.Description = "URGENCE ! {}";

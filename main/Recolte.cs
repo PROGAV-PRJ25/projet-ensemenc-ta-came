@@ -1,6 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 
-public abstract class Recolte : ObjetJeu
+public abstract class Recolte : ObjetJeuAchatVente
 {
     // objet du jeu dont le prix de vente est null
     public Recolte(string nom, string emoji, int prixVente) : base(nom, emoji, 1, 0, prixVente) { }

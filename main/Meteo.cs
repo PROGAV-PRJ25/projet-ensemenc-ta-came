@@ -2,7 +2,7 @@ public class GestionnaireMeteo
 {
     private static Random rng = new Random();
     public Date DateActuelle { get; private set; }
-    private Temperature Temperature { get; set; }
+    public Temperature Temperature { get; private set; }
     private Temps TempsActuel { get; set; }
     protected List<Temps> ListeTemps { set; get; }
     public GestionnaireMeteo(string ville, Date date)
