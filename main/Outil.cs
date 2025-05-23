@@ -10,7 +10,7 @@ public abstract class Outil : ObjetJeu
         new CD(),
         new Fumier(),
         new Traitement(),
-        new Coccinnelle(),
+        new Coccinelle(),
         new FermierEnColere(),
         new Serre(),
         new IrrigationUrgente(),
