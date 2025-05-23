@@ -149,9 +149,9 @@ public class Traitement : Outil
     }
 }
 
-public class Coccinnelle : Outil
+public class Coccinelle : Outil
 {
-    public Coccinnelle() : base("Coccinnelle", "🐞",0, "déposer vos coccinelles")
+    public Coccinelle() : base("Coccinnelle", "🐞",0, "déposer vos coccinelles")
     {
     }
     public override void Actionner(Parcelle parcelle)
@@ -246,12 +246,14 @@ public class Paillage : Outil
     }
     public override void Actionner(Parcelle parcelle)
     {
+        //permet de limiter les maladies : A CODER
+        //si trop d'eau, paille absorbe : A CODER
         if (parcelle.Plant.Etat == "sècheresse")
         {
             // sauve les plantes mais sante -5
             parcelle.Plant.Sante -= 5;
         }
-        else 
+        else
         {
             //ne fait rien 
         }
