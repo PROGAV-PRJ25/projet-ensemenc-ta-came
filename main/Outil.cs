@@ -250,7 +250,7 @@ public class Serre : Outil
     }
     public override bool Actionner(Parcelle parcelle)
     {
-        //si gel,protège du gel
+        //si gel,protège du gel : OUTIL URGENCE
         //si oiseau, oiseau-1
         //si pluis, quantitéeau ne bouge pas
         //augmente la temperature de +5 degré
@@ -308,6 +308,7 @@ public class Paillage : Outil
         else
         {
             //ne fait rien 
+            //PERMET DE LIMITER L'EAU SI TROP DEAU OU PAS ASSEZ
         }
         return true;
     
