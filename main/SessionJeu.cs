@@ -1,13 +1,22 @@
+// =======================================================================
+// Classe SessionJeu
+// -----------------------------------------------------------------------
+// Cette classe centralise la logique principale du jeu
+// Elle gère :
+//   - Les menus et l'affichage
+//   - La navigation utilisateur
+//   - Les actions sur l'inventaire, le magasin et le potager
+//   - La progression du temps et les événements spéciaux
+// =======================================================================
 public class SessionJeu
 {
-    public Joueur JoueurActuel { get; set; }
-    public Date DateActuelle { get; set; }
-    public GestionnaireMeteo Meteo { set; get; }
-    public InterfaceAccueil EcranAccueil { get; set; }
-    public ZoneEcranJeu EcranJeu { get; set; }
-    public ConsoleKeyInfo Touche { get; set; }
-    public List<ZoneMenu> MenusPrincipaux = [];
-    public List<ZoneMenu> MenusUrgence = [];
+    public Joueur JoueurActuel { get; private set; }
+    public Date DateActuelle { get; private set; }
+    public GestionnaireMeteo Meteo { set; private get; }
+    public InterfaceAccueil EcranAccueil { get; private set; }
+    public ZoneEcranJeu EcranJeu { get; private set; }
+    public ConsoleKeyInfo Touche { get; private set; }
+    private bool ModeUregenceActif { get; set; }
     private Random rng = new Random();
     public SessionJeu()
     {
@@ -19,6 +28,7 @@ public class SessionJeu
         JoueurActuel = new Joueur();
         DateActuelle = JoueurActuel.DateActuelle;
         Meteo = new GestionnaireMeteo("Carcassonne", DateActuelle);
+        ModeUregenceActif = false;
 
     }
     // Initialisation ===========================================================
@@ -32,6 +42,24 @@ public class SessionJeu
         NouvellePartie.AjouterItem(new ElementMenuNouvellePartie(EcranAccueil.Accueil, "Hokkaido (Japon)", this));
 
         ElementMenu ApprendreJeu = new ElementMenu(EcranAccueil.Accueil, "Apprendre les commandes de base");
+        ApprendreJeu.Description = (
+            "Bienvenue dans Ensemence !\n" +
+            "Dans ce jeu de gestion de potager, vous incarnez un cultivateur qui doit semer, entretenir et récolter ses cultures au fil des saisons, que vous soyez à Carcassonne, Soconusco ou Hokkaido. Gérez votre inventaire, faites face à la météo et aux imprévus, et développez votre exploitation !\n\n" +
+            "Navigation dans le jeu :\n" +
+            "- Utilisez les flèches directionnelles pour vous déplacer dans les menus ou à travers le champ.\n" +
+            "- Appuyez sur Entrée pour valider une sélection.\n" +
+            "- Utilisez la touche Retour arrière ou Echap pour revenir en arrière.\n" +
+            "- Raccourcis clavier :\n" +
+            "    P : Potager\n" +
+            "    I : Inventaire\n" +
+            "    J : Journal\n" +
+            "    M : Magasin\n" +
+            "    S : Semaine suivante\n" +
+            "    C : Commandes de base (aide)\n" +
+            "    U : Tester l'affichage en mode urgence \n" +
+            "    X : Quitter instantanément la partie\n" +
+            "\nAppuyez sur la touche ECHAP ou RETOUR pour continuer"
+        );
         EcranAccueil.Accueil.Racine.AjouterItem(NouvellePartie);
         EcranAccueil.Accueil.Racine.AjouterItem(ApprendreJeu);
 
@@ -145,23 +173,12 @@ public class SessionJeu
     {
 
         EcranJeu.Date.Contenu = DateActuelle.ToString();
-        EcranJeu.Date.Afficher();
         EcranJeu.Meteo.Contenu = Meteo.ToString();
-
+        EcranJeu.Date.Afficher();
         EcranJeu.ActualiserAffichageMeteo(Meteo, DateActuelle);
         EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
         EcranJeu.ChampsEtDetails.Synchroniser();
         EcranJeu.ChampsEtDetails.Afficher();
-        if (EcranJeu.IndiceZoneActive == 0)
-        {
-
-        }
-
-        //VoletSuperieur.Afficher();
-        //VoletPrincipal.Afficher();
-        //VoletInferieur.Afficher();
-        //Dialogue.Afficher();
-        //Details.Afficher();
     }
     // -------------------------------------------------------------------------
     public void ReinitialiserAffichage()
@@ -207,8 +224,7 @@ public class SessionJeu
                 if (Touche.Key == ConsoleKey.C)
                 {
                     //Comment jouer?
-                    EcranJeu.BasculerSurZone(6); // 0 = fenêtre d'aide aux commandes de base
-
+                    PresenterAide(); // 5 = fenêtre d'aide aux commandes de base
                 }
                 else if (Touche.Key == ConsoleKey.P)
                 {
@@ -242,7 +258,7 @@ public class SessionJeu
                 }
                 else if (Touche.Key == ConsoleKey.U)
                 {
-                    DeclencherModeUrgence();
+                    if (!ModeUregenceActif) DeclencherModeUrgence(); else RevenirModeNormal();
                 }
             }
             else
@@ -286,6 +302,7 @@ public class SessionJeu
     // Lancement d'une partie =================================================
     public void Demarrer()
     {
+        Console.ResetColor();
         Console.Clear();
         EcranAccueil.Afficher();
         EcranAccueil.Accueil.Afficher();
@@ -295,7 +312,8 @@ public class SessionJeu
     // ------------------------------------------------------------------------
     public void DemarrerNouvellePartie(string ville)
     {
-        JoueurActuel = new Joueur(ville);
+        // on fait le choix de déterminer la taille du champs en fonction de la taille de fenêtre
+        JoueurActuel = new Joueur(ville, EcranJeu.Champs.Largeur, EcranJeu.Hauteur);
         Meteo = new GestionnaireMeteo(ville, DateActuelle);
         // on met à jour les zones d'affichage liées au joueur
         EcranJeu.Lieu.Contenu = JoueurActuel.Lieu;
@@ -310,6 +328,16 @@ public class SessionJeu
         ActualiserMenuInventaire();
         ActualiserMenuVente();
     }
+    private void PresenterAide()
+    {
+        Console.Clear();
+        EcranAccueil.Accueil.Racine.Items[1].Actionner();
+        do
+            Touche = Console.ReadKey(intercept: true);
+        while (Touche.Key != ConsoleKey.Escape && Touche.Key != ConsoleKey.Backspace);
+        EcranJeu.Afficher();
+
+    }
     // ACTIONS DURANT LA PARTIE
     // Actions Inventaire =======================================================
     public void PlanterSemis(Plante plante)
@@ -319,7 +347,11 @@ public class SessionJeu
         int indiceParcelle = DemanderPositionPotager();
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
-        if (JoueurActuel.Potager[colonne, ligne].Libre)
+        if (plante.SaisonSemis == DateActuelle.Saison)
+        {
+            EcranJeu.Dialogue.Contenu = $"OPERATION ANNULEE : cette plante ne se sème pas durant cette saison !";
+        }
+        else if (JoueurActuel.Potager[colonne, ligne].Libre)
         {
             JoueurActuel.Potager[colonne, ligne].Planter(plante);//on ajoute la plante au potager
             JoueurActuel.Inventaire.Retirer(plante); //on actualise l'inventaire
@@ -330,7 +362,7 @@ public class SessionJeu
         }
         else
         {
-            EcranJeu.Dialogue.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Plant.Nom} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle pour libérer cet emplacement";
+            EcranJeu.Dialogue.Contenu = $"{JoueurActuel.Potager[colonne, ligne].Plant.Nom} OPERATION ANNULEE : cet emplacement n'est pas libre ! Utilisez la pelle";
 
         }
         ActualiserMenuInventaire();
@@ -350,28 +382,25 @@ public class SessionJeu
         EcranJeu.Dialogue.Contenu = succes ? outil.MessageSucces : outil.MessageEchec;
         EcranJeu.Dialogue.Contenu += " Retour à l'inventaire.";
         EcranJeu.Dialogue.Afficher();
+        if (outil.Nom == "Panier")
+        {
+            ViderPanier();
+        }
         EcranJeu.BasculerSurZone(1);//retour à l'inventaire
         ActualiserAffichage();
     }
-    public void Arroser()
-    {
-        int indice = DemanderPositionPotager();
-        int colonne = indice % JoueurActuel.Potager.GetLength(0);
-        int ligne = indice / JoueurActuel.Potager.GetLength(0);
-        // JoueurActuel.Potager[colonne,ligne].Contenu.Arroser(indice);
-        // //si dessous besoineau , augmente l'hydratation de +15%
-        // //si au dessus besoineau , attention plante surhydraté et santé -20
-        // if (parcelle.Contenu.QuantiteEau < parcelle.Contenu.BESOIN_EAU)
-        // {
-        //     parcelle.Contenu.QuantiteEau += (int)(parcelle.Contenu.BESOIN_EAU * 0.15);
-        // }
-        // else
-        // {
-        //     parcelle.Contenu.Sante -= 20;
-        // }
+    public void ViderPanier()
+    {   // on vide le PanierRecoltes de chaque parcelle
+        foreach (Parcelle parcelle in JoueurActuel.Potager)
+        {
+            for (int i = 0; i < parcelle.Plant.PanierRecoltes; i++)
+            {
+                JoueurActuel.Inventaire.Ajouter(parcelle.Plant.TypeRecolte);
+            }
+            parcelle.Plant.PanierRecoltes = 0;
+        }
+
     }
-    // Actions Journal ==========================================================
-    public void AfficherArticle() { }
     // Actions Magasin ==========================================================
     public void Acheter(Outil outil)
     {
@@ -407,7 +436,6 @@ public class SessionJeu
             EcranJeu.Dialogue.Afficher();
         }
     }
-
     public void Vendre(Recolte recolte)
     {
 
@@ -418,6 +446,7 @@ public class SessionJeu
         EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
         ActualiserMenuInventaire();
         ActualiserMenuVente();
+        EcranJeu.ActualiserAffichageArgent(JoueurActuel.Argent);
         EcranJeu.Magasin.Afficher();
 
     }
@@ -426,65 +455,64 @@ public class SessionJeu
     {
         DeterminerDeclenchementModeUrgence();
         DateActuelle.Avancer();
-        FaireVieillirPlantes();
+        // if(Date.Annee()==)
         Meteo.AppliquerMeteo(JoueurActuel.Potager, DateActuelle);
+        FaireVieillirPotager();
         EcranJeu.Dialogue.AfficherMessageSemaine(DateActuelle);
         EcranJeu.ChampsEtDetails.Afficher();
         ActualiserAffichage();
         EcranJeu.Meteo.Afficher();
     }
-    // Actualisation des données
-    public void ActualiserAffichageDate()
+    // Actualisation des données==================================================
+    public void FaireVieillirPotager()
     {
-
-    }
-    //
-    public void FaireVieillirPlantes()
-    {
+        List<Plante> PlantesPossédées = [];
         for (int colonne = 0; colonne < JoueurActuel.Potager.GetLength(0); colonne++)
         {
             for (int ligne = 0; ligne < JoueurActuel.Potager.GetLength(1); ligne++)
             {
-                Plante plante = JoueurActuel.Potager[colonne, ligne].Plant;
-                Terrain sol = JoueurActuel.Potager[colonne, ligne].Sol;
-
-                if (!plante.Mature)
+                JoueurActuel.Potager[colonne, ligne].AppliquerConditionsHebdomadaires();
+                if (JoueurActuel.Potager[colonne, ligne].Plant.Type != "plante vide")
                 {
-                    plante.Croissance += plante.VitesseCroissance + sol.Fertilite;
-
-                    if (plante.Croissance >= 100)
-                        plante.Mature = true;
+                    PlantesPossédées.Add(JoueurActuel.Potager[colonne, ligne].Plant);
                 }
-                sol.TauxHumidite -= 10;
-                sol.TauxExposition -= 5;
-
             }
         }
+        PlantesPossédées[rng.Next(PlantesPossédées.Count())].AjouterNuisible();
     }
-    public void AjouterNuisible()
+    // Outils =====================================================================
+    public void DeterminerDeclenchementModeUrgence()
     {
-        int cibleLigne;
-        int cibleColonne;
-        do
+        if (rng.Next(53) < 4) // proba d'apparition 4 fois dans une année
+            return;
+        if (DateActuelle.Saison == 0)
         {
-            cibleLigne = rng.Next(JoueurActuel.Potager.GetLength(0));
-            cibleColonne = rng.Next(JoueurActuel.Potager.GetLength(1));
+            ElementMenu typeUrgence = new ElementMenu(EcranJeu.Urgence, "URGENCE EN COURS", "Du gel est à prévoir l'année prochaine ! Que voulez vous faire ?");
+            ElementMenuInventaireOutil solution = new ElementMenuInventaireOutil(EcranJeu.Urgence, "Protéger ses parcelles avec une serre", this, new IrrigationUrgence());
 
-        } while (JoueurActuel.Potager[cibleLigne, cibleColonne].Plant.Type != "plante vide");
-        JoueurActuel.Potager[cibleLigne, cibleColonne].Plant.AjouterNuisible();
-
+        }
+        ElementMenu alternative = new ElementMenu(EcranJeu.Urgence, "Ne rien faire, tant pis");
+        { }
     }
-
-
-    // Otuils =====================================================================
     public void DeclencherModeUrgence(int scenario = 0)
     {
-        EcranJeu.Urgence.Racine.Description = "URGENCE ! {}";
+        ModeUregenceActif = true;
+        EcranJeu.Urgence.Racine.Description = "URGENCE ! Faites quelque chose ! ";
+        EcranJeu.Mode.Contenu = "MODE URGENCE";
+        EcranJeu.Mode.CouleurTexte = ConsoleColor.Red;
         Console.ForegroundColor = ConsoleColor.Red;
         EcranJeu.AfficherLignesDirectrices();
-        //JoueurAnimation();
+        Console.ResetColor();
+        EcranJeu.AfficherContenu();
     }
-    public void DeterminerDeclenchementModeUrgence() { }
+    public void RevenirModeNormal()
+    {
+        ModeUregenceActif = false;
+        Console.ResetColor();
+        EcranJeu.Mode.Contenu = "Mode Normal";
+        EcranJeu.Mode.CouleurTexte = ConsoleColor.White;
+        EcranJeu.Afficher();
+    }
 
 
     //   public string RecupererASCII(string nomFichierTxt)
@@ -498,30 +526,8 @@ public class SessionJeu
     //   {
     //     return true;
     //   }
-    //   public void ActualiserAffichageMenus(List<ElementMenu> menus)
-    //   {
-    //     foreach (ElementMenu item in menus)
-    //     {
-    //       Console.ForegroundColor = item.Actif ? ConsoleColor.Red : ConsoleColor.White;
-    //       Console.SetCursorPosition(item.Position[0], item.Position[1]);
-    //       Console.Write(item.Nom);
-    //       Console.ResetColor();
     //     }
     //   }
-
-    //   public void PresenterTutoriel()
-    //   {
-    //     ZoneEcran EcranTutoriel = new ZoneEcran();
-    //     EcranTutoriel.ConstruireCadre();
-    //     string introduction =  "Bonjour et bienvenue dans ENSEMENCE!\n" +
-    //                       "Dans ce jeu vous pourrez cultiver votre propre potager chez vous! "+
-    //                       "Achetez vos premiers semis et prévoyez vos moyens de défense contre les différents dangers qui peuvent survenir !\n" +
-    //                       "Voici les principales commandes :\n" +
-    //                       " - Touche I => accéder à l'Inventaire pour utiliser les éléments que vous possédez\n" +
-    //                       " - Touche J => accéder au Journal pour tout connaître sur les plantes\n" +
-    //                       " - Touche M => accéder au Magasin pour acheter vos semis, outils et autres moyens de défense contre les différents dangers ! \n" +
-    //                       " - Touche P => accéder à la semaine suivante !";
-    //     EcranTutoriel.InsererTexte(introduction);
 
 
     //   }

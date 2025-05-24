@@ -1,5 +1,29 @@
-using System.Security.AccessControl;
+// CLASSE OUTIL
+/* ============================================================================
+    Les classes Outil et ses dérivées représentent les outils utilisables dans le jeu pour interagir avec les parcelles.
 
+    La classe abstraite Outil définit :
+    - les propriétés communes à tous les outils (nom, emoji, prix, messages, etc.)
+    - la méthode abstraite Actionner(Parcelle) à implémenter pour chaque outil
+    - une liste statique ListeOutils contenant tous les outils disponibles
+
+    Chaque classe dérivée de Outil (Arrosoir, Panier, Pioche, Secateur, CD, Fumier, Traitement, Coccinelle, Megaphone, Serre, IrrigationUrgence, Paillage) représente un outil spécifique avec :
+    - ses propres messages et effets sur la parcelle ou la plante
+    - une implémentation personnalisée de la méthode Actionner(Parcelle) qui applique l'effet de l'outil
+
+    Exemples d'effets :
+    - Arrosoir : augmente l'hydratation du sol
+    - Panier : permet de récolter les plantes
+    - Pioche : améliore le sol ou retire une plante
+    - Secateur : taille la plante ou retire des nuisibles
+    - CD, Coccinelle, Megaphone : repoussent ou éliminent certains nuisibles
+    - Fumier : fertilise le sol
+    - Traitement : élimine maladies ou champignons
+    - Serre, Paillage : protègent la plante
+    - IrrigationUrgence : outil spécial utilisable en cas d'urgence
+
+    Ces classes permettent d'encapsuler la logique de chaque outil et de faciliter leur utilisation dans le jeu.
+*/
 public abstract class Outil : ObjetJeuAchatVente
 {
     public static List<Outil> ListeOutils = new List<Outil>
@@ -11,10 +35,12 @@ public abstract class Outil : ObjetJeuAchatVente
         new Fumier(),
         new Traitement(),
         new Coccinelle(),
-        new FermierEnColere(),
+        new Megaphone(),
         new Serre(),
-        new IrrigationUrgente(),
-        new Paillage()
+        new IrrigationUrgence(),
+        new Paillage(),
+        new Panier(),
+        new Pioche(),
     };
     public string MessageInitial { get; set; }
     public string MessageSucces { get; protected set; }
@@ -24,7 +50,7 @@ public abstract class Outil : ObjetJeuAchatVente
     public abstract bool Actionner(Parcelle parcelle);
 
 
-    protected Outil(string nom, string emoji, int decallageAffichage, string verbe, string messageInitial, string messageSucces, string messageEchec, bool usageUrgence = false) : base(nom, emoji, decallageAffichage)
+    protected Outil(string nom, string emoji, int decallageAffichage, int prixAchat, string verbe, string messageInitial, string messageSucces, string messageEchec, bool usageUrgence = false) : base(nom, emoji, decallageAffichage, prixAchat)
     {
 
         Verbe = verbe;
@@ -32,12 +58,11 @@ public abstract class Outil : ObjetJeuAchatVente
         MessageInitial = messageInitial;
         MessageSucces = messageSucces;
         MessageEchec = messageEchec;
-        
     }
 }
 public class Arrosoir : Outil
 {
-    public Arrosoir() : base("Arrosoir", "💦",0, "arroser","Choisissez une parcelle à arroser !", "Plante arrosée !","Vous ne pouvez pas arroser ici !") { }
+    public Arrosoir() : base("Arrosoir", "💦", 0, 50, "arroser", "Choisissez une parcelle à arroser !", "Plante arrosée !", "Vous ne pouvez pas arroser ici !") { }
     public override bool Actionner(Parcelle parcelle)
     {
         //si dessous besoineau , augmente l'hydratation de +15%
@@ -49,32 +74,21 @@ public class Arrosoir : Outil
 
 public class Panier : Outil
 {
-    public Panier() : base("Panier", "🧺", 0, "ramasser vos récoltes", "Choisissez une parcelle à récolter !", "Récolte(s) ajoutée(s) à votre inventaire !"
+    public Panier() : base("Panier", "🧺", 0, 40, "ramasser vos récoltes", "Choisissez une parcelle à récolter !", "Récolte(s) ajoutée(s) à votre inventaire !"
 , "Aucune récolte disponible sur cette parcelle !")
     { }
-    public override bool Actionner(Parcelle parceller)
+    public override bool Actionner(Parcelle parcelle)
     {
-        //permet de récolter des fruits et de les ajouter dans l"inventaire d'un joueur
-        //
-        //si pas fruit, ne sert à rien
-        //List<Recolte>Parcelle.Plant.RamasserRecoltes();
-        // sinon, ne fait rien
-        return true;
+
+        return parcelle.PlacerRecoltesDansPanier();
     }
 }
 public class Pioche : Outil
 {
     public Pioche() : base(
-        "Pioche",
-        "⛏️",
-        0,
-        "creuser",
-        "Choisissez une parcelle à travailler avec la pioche !",
-        "Sol travaillé, drainage amélioré ou cailloux retirés !",
-        "Impossible d'utiliser la pioche ici !"
+        "Pioche", "⛏️", 0, 90, "creuser", "Choisissez une parcelle à travailler avec la pioche !", "Sol travaillé, drainage amélioré ou cailloux retirés !", "Impossible d'utiliser la pioche ici !"
     )
-    {
-    }
+    { }
 
     public override bool Actionner(Parcelle parcelle)
     {
@@ -89,10 +103,9 @@ public class Pioche : Outil
 }
 public class Secateur : Outil
 {
-    public Secateur() : base("Secateur", "🪓", 1, "tailler", "Choisissez une parcelle à tailler !", "Plante taillée avec succès !", "Impossible de tailler ici !"
+    public Secateur() : base("Secateur", "🪓", 1, 60, "tailler", "Choisissez une parcelle à tailler !", "Plante taillée avec succès !", "Impossible de tailler ici !"
 )
-    {
-    }
+    { }
     public override bool Actionner(Parcelle parcelle)
     {
         //si prend trop de place , tailler et cases -2
@@ -102,39 +115,37 @@ public class Secateur : Outil
         {
             parcelle.Plant.Espace -= 2;
         }
-        else if (parcelle.NuisiblesActuels.Contains("Chenille"))
+        else if (parcelle.Contient("Chenille"))
         {
-            parcelle.NuisiblesActuels.Remove("Chenille");
+            parcelle.Retirer("Chenille");
         }
         else
         {
             parcelle.Plant.Sante -= 15;
         }
-
         return true;
     }
 }
 
 public class CD : Outil
 {
-    public CD() : base("CD", "💿", 0,"installer votre CD","Choisissez une parcelle à protéger avec un CD !","CD installé, les nuisibles sont repoussés !","Aucun effet, les nuisibles ne sont pas concernés !"
+    public CD() : base("CD", "💿", 0, 20, "installer votre CD", "Choisissez une parcelle à protéger avec un CD !", "CD installé, les nuisibles sont repoussés !", "Aucun effet, les nuisibles ne sont pas concernés !"
     )
-    {
-
-    }
+    { }
     public override bool Actionner(Parcelle parcelle)
     {
         //si oiseau, cd et oiseau -1
         //si chenille, cd et chenille -1
         //sinon , sert de déco mais inutile
-        if (parcelle.NuisiblesActuels.Contains("Oiseau"))
+        if (parcelle.Contient("Oiseau"))
         {
-            parcelle.NuisiblesActuels.Remove("Oiseau");
+            parcelle.Retirer("Oiseau");
         }
-        else if (parcelle.NuisiblesActuels.Contains("Chenille"))
+        else if (parcelle.Contient("Chenille"))
         {
-            parcelle.NuisiblesActuels.Remove("Chenille");
+            parcelle.Retirer("Chenille");
         }
+        parcelle.Plant.Options.Add(this);
         // sinon, décoration uniquement
         return true;
     }
@@ -142,33 +153,22 @@ public class CD : Outil
 
 public class Fumier : Outil
 {
-    public Fumier() : base("Fumier", "💩", 0,"mettre du fumier","Choisissez une parcelle à fertiliser !","Fumier ajouté, croissance boostée !","Impossible de fertiliser ici !"
+    public Fumier() : base("Fumier", "💩", 0, 30, "mettre du fumier", "Choisissez une parcelle à fertiliser !", "Fumier ajouté, croissance boostée !", "Sol déjà fertilisé ici !"
 )
     {
     }
     public override bool Actionner(Parcelle parcelle)
     {
-        //engrais naturel donc booste la croissance des plantes de +2
-        //si trop, ça pue et santé -15
-        //si gel, protège du gel
-        parcelle.Plant.VitesseCroissance += 2;
+        // la fertilité est remise à son max
+        parcelle.Sol.Fertilite = 10;
 
-        if (parcelle.Plant.VitesseCroissance > 10) // valeur seuil à adapter
-        {
-            parcelle.Plant.Sante -= 15;
-        }
-
-        if (parcelle.Plant.Etat == "gelé")
-        {
-            // Protège du gel : rien à faire ici car c’est une immunité 
-        }
         return true;
     }
 }
 
 public class Traitement : Outil
 {
-    public Traitement() : base("Traitement", "🧪",0,"traiter","Choisissez une parcelle à traiter !","Traitement appliqué, nuisible(s) éliminé(s) !","Aucun nuisible à traiter sur cette parcelle !"
+    public Traitement() : base("Traitement", "🧪", 0, 80, "traiter", "Choisissez une parcelle à traiter !", "Traitement appliqué, nuisible(s) éliminé(s) !", "Aucun nuisible à traiter sur cette parcelle !"
 )
     {
     }
@@ -177,13 +177,13 @@ public class Traitement : Outil
         //si maladies , traitement => maladie-1
         //si champignon , traitement => champi-1
         //sinon , trop de chimie => santé -20
-        if (parcelle.NuisiblesActuels.Contains("Maladie"))
+        if (parcelle.Contient("Maladie"))
         {
-            parcelle.NuisiblesActuels.Remove("Maladie");
+            parcelle.Retirer("Maladie");
         }
-        else if (parcelle.NuisiblesActuels.Contains("Champignon"))
+        else if (parcelle.Contient("Champignon"))
         {
-            parcelle.NuisiblesActuels.Remove("Champignon");
+            parcelle.Retirer("Champignon");
         }
         else
         {
@@ -195,7 +195,7 @@ public class Traitement : Outil
 
 public class Coccinelle : Outil
 {
-    public Coccinelle() : base("Coccinnelle", "🐞",0, "déposer vos coccinelles","Choisissez une parcelle à déposer des coccinelles !","Coccinelles déposées, les pucerons sont éliminés !","Aucun puceron à éliminer ici !"
+    public Coccinelle() : base("Coccinnelle", "🐞", 0, 70, "déposer vos coccinelles", "Choisissez une parcelle à déposer des coccinelles !", "Coccinelles déposées, les pucerons sont éliminés !", "Aucun puceron à éliminer ici !"
 )
     {
     }
@@ -203,18 +203,19 @@ public class Coccinelle : Outil
     {
         //si pucerons, coccinelle => pucerons -1
         //sinon , fait joli
-        if (parcelle.NuisiblesActuels.Contains("Pucerons"))
+        if (parcelle.Contient("Pucerons"))
         {
-            parcelle.NuisiblesActuels.Remove("Pucerons");
+            parcelle.Retirer("Pucerons");
         }
+        
         // sinon, jolie décoration
-        return true;
+            return true;
     }
 }
 
-public class FermierEnColere : Outil
+public class Megaphone : Outil
 {
-    public FermierEnColere() : base("Fermier en colère", "🤬",0, "faire peur","Choisissez une parcelle à surveiller !","Nuisible effrayé ou plante renforcée !","Aucun effet, aucun nuisible concerné !"
+    public Megaphone() : base("Mégaphone", "📢", 100, 0, "faire peur", "Choisissez une parcelle à surveiller !", "Nuisible effrayé ou plante renforcée !", "Aucun effet, aucun nuisible concerné !"
 )
     {
 
@@ -224,93 +225,73 @@ public class FermierEnColere : Outil
         //si oiseaux, => oiseau-1
         //si lapin, => lapin-1
         //sinon , sert de prévention et santé =+10
-        if (parcelle.NuisiblesActuels.Contains("Oiseau"))
-        {
-            parcelle.NuisiblesActuels.Remove("Oiseau");
-        }
-        else if (parcelle.NuisiblesActuels.Contains("Lapin"))
-        {
-            parcelle.NuisiblesActuels.Remove("Lapin");
-        }
-        else
-        {
-            parcelle.Plant.Sante += 10;
-        }
+        for (int i = 0; i < parcelle.Plant.NuisiblesActuels.Count; i++)
+            if (parcelle.Contient("Oiseau"))
+            {
+                parcelle.Retirer("Oiseau");
+            }
+            else if (parcelle.Contient("Lapin"))
+            {
+                parcelle.Retirer("Lapin");
+            }
+            else
+            {
+                parcelle.Plant.Sante += 10;
+            }
         return true;
     }
 }
-
 public class Serre : Outil
-{
-    public Serre() : base("Serre", "⛺️",0, "protéger vos récoltes","Choisissez une parcelle à protéger avec une serre !","Serre installée, la plante est protégée !"
-
-,"Impossible d’installer une serre ici !"
+{ 
+    public Serre() : base("Serre", "⛺️", 0, 200, "protéger vos récoltes", "Choisissez une parcelle à protéger avec une serre !", "Serre installée, la plante est protégée !", "Impossible d’installer une serre ici !", true
 )
-    {
-    }
+    { }
     public override bool Actionner(Parcelle parcelle)
     {
-        //si gel,protège du gel : OUTIL URGENCE
-        //si oiseau, oiseau-1
-        //si pluis, quantitéeau ne bouge pas
-        //augmente la temperature de +5 degré
-        if (parcelle.Plant.Etat == "gelé")
+        if (!parcelle.Contient(this.Nom))
         {
-            // Protège : rien à faire
+            parcelle.Plant.Options.Add(this);
+            return true;
         }
-        
-        // Empêche la pluie d'agir
-        // --> À gérer dans la météo, via une vérification de présence de serre
-        // Augmente la température
-        //meteo.Temperature += 5;
-        return true;
+        return false;
     }
 }
 
-public class IrrigationUrgente : Outil
+public class IrrigationUrgence : Outil
 {
-    public IrrigationUrgente() : base("Irrigation d'urgence", "🚿",0, "attention","Choisissez une parcelle à irriguer en urgence !","Irrigation d'urgence effectuée !","Aucune plante en situation critique ici !"
+    public IrrigationUrgence() : base("Irrigation d'urgence", "🚿", 0, 120, "attention", "Choisissez une parcelle à irriguer en urgence !", "Irrigation d'urgence effectuée !", "Vous ne pouvez utiliser cet objet qu'en cas d'urgence !", true
 )
-    {
-    }
+    { }
     public override bool Actionner(Parcelle parcelle)
     {
-        if (parcelle.Plant.Etat == "sècheresse")
-        {
-            // sauve les plantes mais sante -10
-            parcelle.Plant.Sante -= 10;
-        }
-        else
-        {
-            //inonde les plantations 
-            parcelle.Plant.Sante -= 25;
-        }
-        return true;
+        return false; // outil non implémenté 
     }
 }
 
 public class Paillage : Outil
 {
-    public Paillage() : base("Paillage", "🍂", 0, "attention","Choisissez une parcelle à pailler !","Paillage appliqué, la plante est protégée !","Impossible de pailler ici !"
+    public Paillage() : base("Paillage", "🍂", 25, 0, "attention", "Choisissez une parcelle à pailler !", "Paillage appliqué, la plante est protégée !", "Impossible de pailler ici !"
 )
-    {
-        
-    }
+    { }
     public override bool Actionner(Parcelle parcelle)
     {
         //permet de limiter les maladies : A CODER
         //si trop d'eau, paille absorbe : A CODER
-        if (parcelle.Plant.Etat == "sècheresse")
+        if (parcelle.Sol.TauxHumidite < parcelle.Plant.BesoinEau)
         {
             // sauve les plantes mais sante -5
-            parcelle.Plant.Sante -= 5;
+            parcelle.Sol.TauxHumidite = parcelle.Plant.BesoinEau;
         }
-        else
+        else if (parcelle.Sol.TauxHumidite > 80)
         {
-            //ne fait rien 
-            //PERMET DE LIMITER L'EAU SI TROP DEAU OU PAS ASSEZ
+            parcelle.Sol.TauxHumidite = 75;
         }
-        return true;
-    
+        // on ajoute le paillage aux options de la plante
+        if (!parcelle.Contient(this.Nom))
+        {
+            parcelle.Plant.Options.Add(this);
+            return true;
+        }
+        return false;
     }
 }

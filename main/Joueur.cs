@@ -12,13 +12,13 @@ public class Joueur
 
 
 
-    public Joueur(string lieu = "")
+    public Joueur(string lieu = "",int largeurPotager=10,int hauteurPotager=10)
     {
         Argent = 2000;
         DateActuelle = new Date();
         Lieu = lieu;
         Inventaire = new Repertoire();
-        Potager = new Parcelle[10,10];
+        Potager = new Parcelle[largeurPotager,hauteurPotager];
         CreerPotager();
         Inventaire.Ajouter(new Tournesol());
         Inventaire.Ajouter(new Pecher());

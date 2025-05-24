@@ -1,4 +1,14 @@
-using System.Runtime.InteropServices;
+// =======================================================================
+// Classes d'Interface et de gestion d'affichage
+// -----------------------------------------------------------------------
+// Ces classes centralisent la logique d'affichage et d'interaction utilisateur
+// Elles gèrent :
+//   - La navigation utilisateur et la gestion des zones actives grâce au curseurs
+//   - L'affichage et la synchronisation des informations (titres, détails, météo, argent, etc.)
+//   - Les groupes de zones interactives et la gestion des différents menus
+// =======================================================================
+using System.ComponentModel;
+
 public abstract class Interface : Zone
 {
     public virtual CelluleAffichage[,] Grille { get; set; }
@@ -99,6 +109,7 @@ public class ZoneEcranJeu : Interface
     public ZoneTexte Lieu { get; set; }
     public ZoneTexte Mode { get; set; }
     public ZoneTexte Argent { get; set; }
+    public ZoneTexte Aide { get; set; }
     public ZoneTexte Meteo { get; set; }
     public ZoneTexte? Webcam { get; set; }
     public ZoneChamps Champs { get; set; }
@@ -115,12 +126,13 @@ public class ZoneEcranJeu : Interface
         //Création des éléments composant le volet supérieur
         Date = new ZoneTexte(1, 1, 30, 1, "2009 - Semaine 1 (hiver)");
         Lieu = new ZoneTexte(Largeur / 2, 1, 20, 1, "Carcassonne");
-        Mode = new ZoneTexte(Largeur - 18, 1, 12, 1, "Mode Urgence");
+        Aide = new ZoneTexte(Largeur / 2, 1, 20, 1, "Comment Jouer ? (C)");
+        Mode = new ZoneTexte(Largeur - 20, 1, 12, 1, "Mode Normal");
         Argent = new ZoneTexte(1, 2, 28, 1, "Argent : 2000 💰");
-        Meteo = new ZoneTexte(Largeur - 18, 2, 15, 1, "Meteo : 🌧️ -20°C");
+        Meteo = new ZoneTexte(Largeur - 20, 2, 18, 1, "Meteo : 🌧️ -20°C");
+        
         // Créaction de la zone CHAMPS
-        Champs = new ZoneChamps(1, 6, 10, 10);
-
+        Champs = new ZoneChamps(1, 6, Largeur / 3 - 2, (Hauteur * 2 / 5));
         //Création des éléments composant la barre de navigation
         int hauteurNavBar = Hauteur - (Hauteur / 3);
         TitresMenus = new EnsembleZoneTexte();
@@ -129,17 +141,19 @@ public class ZoneEcranJeu : Interface
         TitresMenus.Ajouter("Journal", new ZoneTexte(19, hauteurNavBar, 11, 1, "Journal (J)"));
         TitresMenus.Ajouter("Magasin", new ZoneTexte(33, hauteurNavBar, 11, 1, "Magasin (M)"));
         TitresMenus.Ajouter("Suivant", new ZoneTexte(47, hauteurNavBar, 20, 1, "Semaine Suivante (S)"));
+        // Création du menu lié au mode urgence
+        Urgence = new ZoneMenu("Mode Urgence", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
 
         //Création des différents menus de l'affichage
-        Inventaire = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        Journal = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        Magasin = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        Suivant = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
-        Urgence = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 3 / 4) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Inventaire = new ZoneMenu("Inventaire", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Journal = new ZoneMenu("Journal", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Magasin = new ZoneMenu("Magasin", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Suivant = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
+        Urgence = new ZoneMenu("Suivant", 2, hauteurNavBar + 2, (Largeur * 2 / 3) - 3, Hauteur - 3 - (hauteurNavBar + 2));
         // Création de la zone dédiée au dialogue
         Dialogue = new ZoneDialogue(2, Hauteur - 2, Largeur - 4, 1, "Bienvenue dans cette nouvelle partie ! Par quoi veux-tu commencer ?");
         //Création de la zone dédiée aux détails
-        Details = new ZoneTexte(Largeur * 3 / 4 + 2, 4, (Largeur * 1 / 4) - 3, Hauteur - 7);
+        Details = new ZoneTexte(Largeur * 2 / 3 + 2, 4, (Largeur * 1 / 3) - 3, Hauteur - 7);
 
         ChampsEtDetails = new GroupeChampsDetails(Champs, Details);
         //JournalEtArticles = new GroupeJournalEtArticles;
@@ -152,17 +166,17 @@ public class ZoneEcranJeu : Interface
     public void ConstruireLignesDirectrices()
     {
         ConstruireCadre();
-
+        // on ajoute la seconde ligne
         InsererLigne(3, '├', '┤');
         InsererLigne(Hauteur - 3, '├', '┤');
-        InsererColonne(Largeur * 3 / 4, 3, Hauteur - 3, '┬', '┴');
+        InsererColonne(Largeur * 2 / 3, 3, Hauteur - 3, '┬', '┴');
 
         InsererColonne(14, 3, 5, '┬', '┘');
         InsererLigne(5, 0, 14, '├', '┘');
 
         int ligneNavBar = Hauteur - 1 - (Hauteur / 3);
-        InsererLigne(ligneNavBar, 0, Largeur * 3 / 4, '├', '┤');
-        InsererLigne(ligneNavBar + 2, 0, Largeur * 3 / 4, '├', '┤');
+        InsererLigne(ligneNavBar, 0, Largeur * 2 / 3, '├', '┤');
+        InsererLigne(ligneNavBar + 2, 0, Largeur * 2 / 3, '├', '┤');
         // //0 17 31 45 67
         InsererColonne(17, ligneNavBar, ligneNavBar + 2, '┬', '┴');
         InsererColonne(31, ligneNavBar, ligneNavBar + 2, '┬', '┴');
@@ -178,6 +192,11 @@ public class ZoneEcranJeu : Interface
         {
             element.Afficher();
         }
+        AfficherContenu();
+    }
+    public void AfficherContenu()
+    {
+        Aide.Afficher();
         Date.Afficher();
         Lieu.Afficher();
         Meteo.Afficher();
@@ -224,9 +243,10 @@ public class ZoneEcranJeu : Interface
         Argent.Contenu = $"Argent : {argent} 💰";
         Argent.Afficher();
     }
+    
     public void ActualiserAffichageMeteo(GestionnaireMeteo meteo, Date date)
     {
-        Meteo.Contenu = $"Meteo : {meteo.Temperature.RecupererValeur(date)}°C";
+        Meteo.Contenu = $"Meteo : {meteo}";
     }
 
 }
@@ -288,8 +308,8 @@ public class GroupeChampsDetails : ZoneInteractive
         // {
         //     Details.Contenu = "Curseur hors limites !";
         // }
-    Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
-}
+        Details.Contenu = Champs.Grille[Champs.Curseur % Champs.Largeur, Champs.Curseur / Champs.Largeur].Contenu.ToString();
+    }
 }
 
 public class EnsembleZoneTexte

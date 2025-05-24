@@ -1,75 +1,106 @@
+// =======================================================================
+// Classes Nuisible et dérivées
+// -----------------------------------------------------------------------
+// Ces classes représentent les nuisibles pouvant affecter les parcelles du jeu.
+// Chaque classe dérivée (Maladie, Champignon, Chenille, Pucerons, Lapin, Oiseau)
+// représente un type spécifique de nuisible avec son effet propre sur la santé des plantes.
+// =======================================================================
 public abstract class Nuisible : ObjetJeu
 {
-    public abstract void Action(Parcelle parcelle);
+    public abstract void Actionner(Parcelle parcelle);
+    // on applique l'action à la parcelle
+    // en pensant qu'on pourrait ajouter des
+    // effets à appliquer sur le sol
     protected Nuisible(string nom, string emoji) : base(nom, emoji)
     {
-        Nom = nom;
-        Emoji = emoji;
     }
     public override string ToString()
     {
-        return "{Emoji} {Nom}";
+        return $"{Emoji} {Nom}";
     }
+    public abstract Nuisible Dupliquer();
 }
-public class Maladie : Nuisible {
-    public Maladie (string nom, string emoji) : base(nom, emoji) {
-        Nom = "Maladie";
-        Emoji = "🦠";
+public class Maladie : Nuisible
+{
+    public Maladie() : base("Maladie", "🦠")
+    {
     }
-    public override void Action(Parcelle parcelle) 
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 10;
     }
-}
-public class Champignon : Nuisible {
-    public Champignon(string nom, string emoji) : base(nom, emoji) {
-        Nom = "Champignon";
-        Emoji = "🍄";
+    public override Nuisible Dupliquer()
+    {
+        return new Maladie();
     }
-    public override void Action(Parcelle parcelle) 
+}
+public class Champignon : Nuisible
+{
+    public Champignon() : base("Champignon", "🍄")
+    {
+    }
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 20;
     }
-}
-public class Chenille : Nuisible {
-    public Chenille(string nom, string emoji) : base(nom, emoji) {
-        Nom = "Chenille";
-        Emoji = "🐛";
+    public override Nuisible Dupliquer()
+    {
+        return new Champignon();
     }
-    public override void Action(Parcelle parcelle) 
+}
+public class Chenille : Nuisible
+{
+    public Chenille() : base("Chenille", "🐛")
+    {
+    }
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 15;
     }
+    public override Nuisible Dupliquer()
+    {
+        return new Chenille();
+    }
+
+    
 }
 
-public class Pucerons : Nuisible {
-    public Pucerons(string nom, string emoji) : base(nom, emoji) {
-        Nom = "Pucerons";
-        Emoji = "🐜"; //lol cest le plus ressemblant
-    }
-    public override void Action(Parcelle parcelle) 
+public class Pucerons : Nuisible
+{
+    public Pucerons() : base("Pucerons", "🐜") { }
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 10;
     }
-}
-public class Lapin : Nuisible {
-    public Lapin(string nom, string emoji) : base(nom, emoji) {
-        Nom = "Lapin";
-        Emoji = "🐇";
+    public override Nuisible Dupliquer()
+    {
+        return new Pucerons();
     }
-    public override void Action(Parcelle parcelle) 
+}
+public class Lapin : Nuisible
+{
+    public Lapin() : base("Lapin", "🐇")
+    {
+    }
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 10;
     }
-}
-public class Oiseau : Nuisible {
-    public Oiseau(string nom, string emoji) : base(nom, emoji) {
-        Nom = "Oiseau";
-        Emoji = "🐦‍⬛";
+    public override Nuisible Dupliquer()
+    {
+        return new Lapin();
     }
-    public override void Action(Parcelle parcelle) 
+}
+public class Oiseau : Nuisible
+{
+    public Oiseau() : base("Oiseau", "🐦‍⬛") { }
+    public override void Actionner(Parcelle parcelle)
     {
         parcelle.Plant.Sante -= 20;
+    }
+    public override Nuisible Dupliquer()
+    {
+        return new Oiseau();
     }
 }
 

@@ -1,3 +1,13 @@
+// =======================================================================
+// Classe Plante et dérivées
+// -----------------------------------------------------------------------
+// Cette classe centralise la logique des plantes du jeu
+// Elle gère :
+//   - Les caractéristiques des plantes (santé, croissance, besoins, etc.)
+//   - Les interactions avec les nuisibles, outils, météo, etc.
+//   - Les actions principales : vieillir, mourir, récolter, dupliquer
+//   - Les différentes espèces de plantes disponibles dans le jeu
+// =======================================================================
 public abstract class Plante : ObjetJeuAchatVente
 {
     // Caractéristiques : ne bouge pas
@@ -14,6 +24,7 @@ public abstract class Plante : ObjetJeuAchatVente
     public string Type { get; set; }
     public int SaisonSemis { get; set; }
     public int SaisonRecolte { get; set; }
+    
     public string TerrainDePreference { get; set; }
     // si elle n'est pas plantée sur son terrain de préférence -> santé -10
     public bool CraintFroid { get; set; }
@@ -35,29 +46,30 @@ public abstract class Plante : ObjetJeuAchatVente
     // change avec les outils et nuisibles
     public int Sante { get; set; }
     // sur 100 détermine la santé de la plante, si < 50 elle meurt
-
     public string Etat { get; set; }
     // indique l'état de la plante, défini à chaque nouvelle semaine
-
     public int QuantiteEau { get; set; }
     //change en fonction de la météo et de l'arosoir , // sur 100 détermine les besoins en eau, si < 20 ou > 80 =>santé -10
     public int BesoinSoleil { get; set; } //change en fonction de la météo
-    public int QuantiteSoleil { get; set; }
-
-    public List<string> Nuisibles { get; set; } //change en fonction de la classe nuisible 
+    public List<Nuisible> Nuisibles { get; set; } //change en fonction de la classe nuisible
+    public List<Nuisible> NuisiblesActuels { get; set; }
+    public List<Outil> Options { get; set; }
     public string Defense { get; set; } //change en fonction d'outils
     public int Espace { get; set; } //change quand on taille la plante
     public int[] Rendement { get; set; } //change en fonction de la saison, de la météo et de l'outil panier
     public Recolte TypeRecolte { get; set; } //
+    public bool RecolteEffectuee {get;protected set;}
+    public int PanierRecoltes { get; set; }
+    
     public int RendementActuel { get; set; }
 
-    //public int QuantiteEau { get; set; }  
+    //public int QuantiteEau { get; set; }
     //public int BesoinSoleil { get; set; } 
 
 
     public Plante(string nom, string emoji, string[] etats, string type, int saisonSemi, string terrainPref,
      int vitesseCroissance, int besoinEau, int besoinSoleil, int quantiteEau, bool craintFroid, bool craintSecheresse,
-    List<string> nuisibles, string defence, int espace, int[] rendement, int saisonRecolte, Recolte typeRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
+    List<Nuisible> nuisibles, string defense, int espace, int[] rendement, int saisonRecolte, Recolte typeRecolte, int temperaturePref, string espeDeVie, int prixAchat, int prixVente)
     : base(nom, emoji, prixAchat, prixVente)
     {
         Emoji = emoji;
@@ -73,18 +85,23 @@ public abstract class Plante : ObjetJeuAchatVente
         CraintFroid = craintFroid;
         CraintSecheresse = craintSecheresse;
         Nuisibles = nuisibles;
-        Defense = defence;
+        NuisiblesActuels = [];
+        Options = [];
+        Defense = defense;
         Espace = espace;
         Rendement = rendement;
         SaisonRecolte = saisonRecolte;
         TypeRecolte = typeRecolte;
+        RecolteEffectuee = false;
         TemperaturePreferee = temperaturePref;
         EsperanceDeVie = espeDeVie;
         Age = 0;
         Etat = "semis";
         RendementActuel = 0;
+        PanierRecoltes = 0;
         Mature = false;
         Croissance = 0;
+        Sante = 100;
     }
     public override string ToString()
     {
@@ -98,22 +115,18 @@ public abstract class Plante : ObjetJeuAchatVente
             $"- Santé : {Sante}%\n"+
             $"- Etat : {Etat}\n" +
             $"- Nuisibles :";
-            if (Nuisibles.Count() == 0) reponse += " aucun\n";
-            else
+            for (int i = 0; i < NuisiblesActuels.Count(); i++)
             {
-                for (int i = 0; i < Nuisibles.Count(); i++)
-                {
-                    reponse += " " + Nuisibles[i];
-                }
-                reponse += "\n";
+                    reponse += " " + NuisiblesActuels[i];
             }
+            reponse += "\n";
             reponse += $"- Options :";
-            if (Nuisibles.Count() == 0) reponse += " aucun\n";
+            if (Options.Count() == 0) reponse += " aucun\n";
             else
             {
-                for (int i = 0; i < Nuisibles.Count(); i++)
+                for (int i = 0; i < Options.Count(); i++)
                 {
-                    reponse += " " + Nuisibles[i];
+                    reponse += " " + Options[i];
                 }
                 reponse += "\n";
             }
@@ -131,7 +144,6 @@ public abstract class Plante : ObjetJeuAchatVente
                 Mature = true;
             }
         }
-
     }
     public void Mourir()
     {
@@ -139,12 +151,27 @@ public abstract class Plante : ObjetJeuAchatVente
         Emoji = "💀";
 
     }
-    // public int AjouterNuisible()
-    // {
-    //     int indice = rng.Next(Nuisibles.Count);
-
-    // }
-    
+    public void AjouterNuisible()
+    {
+        if (Nuisibles.Count !=0)
+        {
+            
+            int indice = rng.Next(Nuisibles.Count);
+            NuisiblesActuels.Add(Nuisibles[indice].Dupliquer());
+        }
+    }
+    public bool Recolter()
+    {
+        if (!RecolteEffectuee)
+            return false;
+        RecolteEffectuee = true;
+        PanierRecoltes = RendementActuel;
+        if (RendementActuel == 0)
+        {
+            return false;
+        }
+        return true;
+    }
     public abstract Plante Dupliquer();
 }
 public class PlanteVide : Plante
@@ -163,7 +190,7 @@ public class PlanteVide : Plante
     craintFroid: false,
     craintSecheresse: false,
     nuisibles: [],
-    defence: "",
+    defense: "",
     espace: 0,
     rendement: new int[] { 0, 0, 0, 0, 0 },
     saisonRecolte: 0,
@@ -179,51 +206,86 @@ public class PlanteVide : Plante
     {
         return new PlanteVide();
     }
-
 }
-
-
-//////////////////
-////Carcassonne /
-/////////////////
-
-public class Pommier : Plante
+public class PlanteMorte : Plante
 {
-    public Pommier() :
-    base(nom: "Pommier",
-    emoji: "🍎",
+    public PlanteMorte() :
+    base(nom: "Plante morte",
+    emoji: "💀",
     etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
-    type: "arbre fruitier",
-    saisonSemi: 1,
-    terrainPref: "argileux, drainé",
-    vitesseCroissance: 10,
-    besoinEau: 50,
-    besoinSoleil: 30,
+    type: "plante morte",
+    saisonSemi: 0,
+    terrainPref: "",
+    vitesseCroissance: 0,
+    besoinEau: 0,
+    besoinSoleil: 0,
     quantiteEau: 0,
     craintFroid: false,
-    craintSecheresse: true,
-    nuisibles: ["chenilles", "oiseaux"],
-    defence: "fermier en colère, tailler",
-    espace: 8,
-    rendement: new int[] { 0, 4, 8, 12, 20 },
-    saisonRecolte: 2,
-    typeRecolte: new RecoltePommier(),
-    temperaturePref: 18,
-    espeDeVie: "vivace",
-    prixAchat: 150,
-    prixVente: 120
-    )
-
+    craintSecheresse: false,
+    nuisibles: [],
+    defense: "",
+    espace: 0,
+    rendement: new int[] { 0, 0, 0, 0, 0 },
+    saisonRecolte: 0,
+    typeRecolte: new RecolteVide(),
+    temperaturePref: 0,
+    espeDeVie: "",
+    prixAchat: 0,
+    prixVente: 0)
     {
-
+        //corps du constructeur
     }
-    public override Plante Dupliquer()
+    public override PlanteMorte Dupliquer()
     {
-        return new Pommier();
+        return new PlanteMorte();
     }
-
-
+    public override string ToString()
+    {
+        return "Plante morte : vous m'avez tué...";
+    }
 }
+
+//////////////////
+    ////Carcassonne /
+    /////////////////
+
+    public class Pommier : Plante
+    {
+        public Pommier() :
+        base(nom: "Pommier",
+        emoji: "🍎",
+        etats: ["semis", "mature", "déshydraté", "gelé", "malade", "mort"],
+        type: "arbre fruitier",
+        saisonSemi: 1,
+        terrainPref: "argileux, drainé",
+        vitesseCroissance: 10,
+        besoinEau: 50,
+        besoinSoleil: 30,
+        quantiteEau: 0,
+        craintFroid: false,
+        craintSecheresse: true,
+        nuisibles: [new Chenille(), new Oiseau()],
+        defense: "fermier en colère, tailler",
+        espace: 8,
+        rendement: new int[] { 0, 4, 8, 12, 20 },
+        saisonRecolte: 2,
+        typeRecolte: new RecoltePommier(),
+        temperaturePref: 18,
+        espeDeVie: "vivace",
+        prixAchat: 150,
+        prixVente: 120
+        )
+
+        {
+
+        }
+        public override Plante Dupliquer()
+        {
+            return new Pommier();
+        }
+
+
+    }
 
 
 public class Ble : Plante
@@ -241,8 +303,8 @@ public class Ble : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: false,
-    nuisibles: ["pucerons", "maladie"],
-    defence: "Traitement , coccinnelle",
+    nuisibles: [new Pucerons(),new Maladie()],
+    defense: "Traitement , coccinnelle",
     espace: 4,
     rendement: new int[] { 0, 1, 3, 5, 8 },
     saisonRecolte: 2,
@@ -276,8 +338,8 @@ public class Carotte : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["lapins"],
-    defence: "fermier en colère",
+    nuisibles: [new Lapin()],
+    defense: "fermier en colère",
     espace: 4,
     rendement: new int[] { 0, 1, 2, 3, 6 },
     saisonRecolte: 2,
@@ -311,8 +373,8 @@ public class Pecher : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: true,
-    nuisibles: ["pucerons", "champignons", "maladies", "gelées"],
-    defence: "Traitement , coccinnelle",
+    nuisibles: [new Pucerons(), new Champignon(), new Maladie()],
+    defense: "Traitement , coccinnelle",
     espace: 8,
     rendement: new int[] { 0, 2, 5, 8, 15 },
     saisonRecolte: 2,
@@ -346,8 +408,8 @@ public class VignesArtaban : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: false,
-    nuisibles: ["maladies, gelée"],
-    defence: "Traitement , taille",
+    nuisibles: [new Maladie()],
+    defense: "Traitement , taille",
     espace: 4,
     rendement: new int[] { 0, 2, 4, 7, 10 },
     saisonRecolte: 0,
@@ -381,8 +443,8 @@ public class Citronnier : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: false,
-    nuisibles: ["chenilles, gelées, pucerons"],
-    defence: "Taille, traitement, coccinnelle",
+    nuisibles: [new Chenille(),new Pucerons()],
+    defense: "Taille, traitement, coccinnelle",
     espace: 8,
     rendement: new int[] { 0, 1, 2, 3, 5 },
     saisonRecolte: 3,
@@ -417,8 +479,8 @@ public class Tournesol : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: false,
-    nuisibles: ["pucerons , oiseaux"],
-    defence: "fermier en colère , coccinnelle",
+    nuisibles: [new Pucerons(), new Oiseau()],
+    defense: "fermier en colère , coccinnelle",
     espace: 4,
     rendement: new int[] { 0, 0, 1, 1, 1 },
     saisonRecolte: 2,
@@ -437,12 +499,9 @@ public class Tournesol : Plante
     }
 
 }
-
-
 ////////////////////////////
 ////Mexique : Soconusco ////
 ///////////////////////////
-
 public class Mais : Plante
 {
     public Mais() :
@@ -458,8 +517,8 @@ public class Mais : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["maladie", "pucerons"],
-    defence: "traitements bio",
+    nuisibles: [new Maladie(), new Pucerons()],
+    defense: "traitements bio",
     espace: 4,
     rendement: new int[] { 0, 0, 1, 2, 3 },
     saisonRecolte: 2,
@@ -470,13 +529,11 @@ public class Mais : Plante
     prixVente: 40
     )
     { }
-
     public override Plante Dupliquer()
     {
         return new Mais();
     }
 }
-
 public class Haricot : Plante
 {
     public Haricot() :
@@ -492,8 +549,8 @@ public class Haricot : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["maladie", "pucerons"],
-    defence: "filets anti-insectes",
+    nuisibles: [new Maladie(),new Pucerons()],
+    defense: "filets anti-insectes",
     espace: 4,
     rendement: new int[] { 0, 2, 5, 8, 15 },
     saisonRecolte: 3,
@@ -504,7 +561,6 @@ public class Haricot : Plante
     prixVente: 35
     )
     { }
-
     public override Plante Dupliquer()
     {
         return new Haricot();
@@ -526,8 +582,8 @@ public class Tomate : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["maldie"],
-    defence: "paillage, traitements naturels",
+    nuisibles: [new Maladie()],
+    defense: "paillage, traitements naturels",
     espace: 4,
     rendement: new int[] { 0, 1, 2, 3, 5 },
     saisonRecolte: 3,
@@ -560,8 +616,8 @@ public class Avocat : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["chenilles", "pucerons"],
-    defence: "traitements bio, paillage",
+    nuisibles: [new Chenille(),new Pucerons()],
+    defense: "traitements bio, paillage",
     espace: 6,
     rendement: new int[] { 0, 5, 15, 30, 50 },
     saisonRecolte: 3,
@@ -594,8 +650,8 @@ public class Cafe : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: [ "maladie"],
-    defence: "ombres, traitements naturels",
+    nuisibles: [new Maladie()],
+    defense: "ombres, traitements naturels",
     espace: 6,
     rendement: new int[] { 0, 0, 1, 1, 2 },
     saisonRecolte: 3,
@@ -628,8 +684,8 @@ public class Cacaoyer : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["maladie"],
-    defence: "ombres, paillage, traitement naturel",
+    nuisibles: [new Maladie()],
+    defense: "ombres, paillage, traitement naturel",
     espace: 6,
     rendement: new int[] { 0, 2, 5, 10, 18 },
     saisonRecolte: 3,
@@ -662,8 +718,8 @@ public class Tabac : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: false,
-    nuisibles: ["pucerons, chenilles"],
-    defence: "traitements bio, rotation cultures",
+    nuisibles: [new Pucerons(),new Chenille()],
+    defense: "traitements bio, rotation cultures",
     espace: 3,
     rendement: new int[] { 0, 2, 5, 10, 20 },
     saisonRecolte: 3,
@@ -696,8 +752,8 @@ public class Piment : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["pucerons"],
-    defence: "traitements naturels, paillage",
+    nuisibles: [new Pucerons()],
+    defense: "traitements naturels, paillage",
     espace: 3,
     rendement: new int[] { 0, 3, 8, 15, 25 },
     saisonRecolte: 2,
@@ -734,8 +790,8 @@ public class Riz : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["pucerons"],
-    defence: "traitement, fermier en colère",
+    nuisibles: [new Pucerons()],
+    defense: "traitement, fermier en colère",
     espace: 4,
     rendement: new int[] { 0, 5, 20, 40, 80 },
     saisonRecolte: 3,
@@ -768,8 +824,8 @@ public class PatateDouce : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["maladie"],
-    defence: "traitements naturels",
+    nuisibles: [new Maladie()],
+    defense: "traitements naturels",
     espace: 4,
     rendement: new int[] { 0, 0, 1, 2, 3 },
     saisonRecolte: 2,
@@ -802,8 +858,8 @@ public class TheVert : Plante
     quantiteEau: 0,
     craintFroid: false,
     craintSecheresse: false,
-    nuisibles: ["pucerons"],
-    defence: "taille, traitements bio",
+    nuisibles: [new Pucerons()],
+    defense: "taille, traitements bio",
     espace: 4,
     rendement: new int[] { 0, 5, 20, 40, 80 },
     saisonRecolte: 1,
@@ -838,8 +894,8 @@ public class ConcombreJaponais : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["maladie", "pucerons"],
-    defence: "paillage, traitements naturels",
+    nuisibles: [new Maladie(), new Pucerons()],
+    defense: "paillage, traitements naturels",
     espace: 4,
     rendement: new int[] { 0, 1, 3, 6, 10 },
     saisonRecolte: 2,
@@ -876,8 +932,8 @@ public class Brocoli : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["maladie", "chenilles"],
-    defence: "filets, fermier en colère",
+    nuisibles: [new Maladie(), new Chenille()],
+    defense: "filets, fermier en colère",
     espace: 4,
     rendement: new int[] { 0, 0, 1, 1, 2 },
     saisonRecolte: 2,
@@ -910,8 +966,8 @@ public class Tulipe : Plante
     quantiteEau: 0,
     craintFroid: true,
     craintSecheresse: true,
-    nuisibles: ["pucerons", "chenilles"],
-    defence: "paillage, coccinnelle",
+    nuisibles: [new Pucerons(), new Chenille()],
+    defense: "paillage, coccinnelle",
     espace: 4,
     saisonRecolte: 1,
     typeRecolte: new RecolteTulipe(),
@@ -928,5 +984,6 @@ public class Tulipe : Plante
         return new Brocoli();
     }
 }
+
 
 

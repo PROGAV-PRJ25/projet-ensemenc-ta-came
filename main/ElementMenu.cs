@@ -1,5 +1,13 @@
-
-
+// =======================================================================
+// Classe ElementMenu
+// -----------------------------------------------------------------------
+// Cette classe représente un élément de menu dans l'interface du jeu.
+// Elle gère :
+//   - La structure hiérarchique des menus (parent/enfants)
+//   - Les actions associées à chaque élément de menu
+//   - L'affichage et la navigation dans les menus
+//   - Les liens avec la session de jeu et les objets du jeu
+// =======================================================================
 public class ElementMenu
 {
     public string Description { get; set; }
@@ -56,7 +64,7 @@ public class ElementMenuNouvellePartie : ElementMenu
     public ElementMenuNouvellePartie(ZoneMenu menuReference, string titre, SessionJeu session) : base(menuReference, titre)
     {
         Session = session;
-        Ville = titre.Split(" ")[0];
+        Ville = "Carcassonne";// si jamais plusieurs villes : titre.Split(" ")[0];
     }
 
     public override void Actionner()
@@ -67,6 +75,7 @@ public class ElementMenuNouvellePartie : ElementMenu
 
 public class ElementMenuFonctionnel : ElementMenu
 {
+    // menu lié à la session de jeu, peut appliquer une méthode de session jeu
     public SessionJeu Session { get; set; }
     public ElementMenuFonctionnel(ZoneMenu menuReference, string description, SessionJeu session) : base(menuReference, description)
     {
@@ -105,7 +114,7 @@ public class ElementMenuMagasinAchatSemis : ElementMenuMagasin
 public class ElementMenuMagasinVenteRecolte : ElementMenuMagasin
 {
     public Recolte Contenu { get; set; }
-    public ElementMenuMagasinVenteRecolte(ZoneMenu menuReference,string titre, SessionJeu session, Recolte recolte) : base(menuReference,titre, session, recolte)
+    public ElementMenuMagasinVenteRecolte(ZoneMenu menuReference, string titre, SessionJeu session, Recolte recolte) : base(menuReference, titre, session, recolte)
     {
         Contenu = recolte;
     }
@@ -148,7 +157,6 @@ public class ElementMenuInventaireRecolte : ElementMenuFonctionnel
     public override void Actionner()
     {
         // ne fait rien
-        //Session.ProposerVenteRecolte();
     }
 }
 public class ElementMenuJournal : ElementMenu

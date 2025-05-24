@@ -1,12 +1,20 @@
-using System.Reflection.Metadata.Ecma335;
-
+// =======================================================================
+// Classe ZoneChamps et CelluleChamps
+// -----------------------------------------------------------------------
+// Ces classes centralisent la logique de gestion des champs du jeu
+// Elles gèrent :
+//   - La grille de cellules représentant le champ
+//   - L'affichage et la navigation du curseur dans la zone de champ
+//   - La synchronisation avec les parcelles du jeu
+//   - Les interactions utilisateur sur les cellules du champ
+// =======================================================================
 public class ZoneChamps : ZoneInteractive
 {
 
     public CelluleChamps[,] Grille { set; get; }
     public ZoneChamps(int colonne, int ligne, int largeur, int hauteur) : base(colonne, ligne, largeur, hauteur)
     {
-        Grille = new CelluleChamps[largeur,hauteur];
+        Grille = new CelluleChamps[largeur, hauteur];
         for (int indiceColonne = 0; indiceColonne < largeur; indiceColonne++)
         {
             for (int indiceLigne = 0; indiceLigne < hauteur; indiceLigne++)
@@ -23,9 +31,12 @@ public class ZoneChamps : ZoneInteractive
     }
     public void Synchroniser(Parcelle[,] grille)
     {
-        for (int ligne = 0; ligne < Hauteur; ligne++)
-            for (int colonne = 0; colonne < Largeur; colonne++)
+        for (int colonne = 0; colonne < Largeur; colonne++)
+        {
+            for (int ligne = 0; ligne < Hauteur; ligne++)
                 Grille[colonne, ligne] = new CelluleChamps(grille[colonne, ligne]);
+        }
+
     }
     public void Synchroniser(Parcelle parcelle, int colonne, int ligne)
     {
@@ -80,18 +91,18 @@ public class ZoneChamps : ZoneInteractive
     public void AfficherCurseur()
     {
         Console.BackgroundColor = ConsoleColor.White;
-        Console.SetCursorPosition(Position[0] + (Curseur % Largeur) * 2 , Position[1] + (Curseur / Largeur));
+        Console.SetCursorPosition(Position[0] + (Curseur % Largeur) * 2, Position[1] + (Curseur / Largeur));
         Console.Write(Grille[Curseur % Largeur, Curseur / Largeur].Contenu.Plant.Emoji);
         Console.ResetColor();
     }
     public void AfficherCelluleChamps(int colonne, int ligne)
     {
         Console.BackgroundColor = Grille[colonne, ligne].CouleurFond;
-        Console.SetCursorPosition(Position[0] + colonne*2 , Position[1] + ligne);
+        Console.SetCursorPosition(Position[0] + colonne * 2, Position[1] + ligne);
         Console.Write(Grille[colonne, ligne].Contenu.Plant.Emoji);
         Console.ResetColor();
     }
-    
+
     public bool EstDansTerrain(int colonne, int ligne)
     {
         return (colonne >= 0) && (ligne >= 0) && (colonne < Grille.GetLength(0)) && (ligne < Grille.GetLength(1));

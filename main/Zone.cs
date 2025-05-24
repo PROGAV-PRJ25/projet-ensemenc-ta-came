@@ -1,8 +1,4 @@
-using System.ComponentModel;
-
-public abstract class Zone
-{
-    /*
+/*
     Les classes Zone permettent de gérer des zones d'affichage.
     Chaque Zone peut : 
     - afficher son contenu
@@ -16,7 +12,11 @@ public abstract class Zone
     - ZoneInteractive : zone permettant de naviguer à travers son contenu à l'aide d'un curseur
     - ZoneMenu : zone dédiée à l'affichage d'un menu, permettant de naviguer dans son arborescence
     - ZoneInformations générale : zone dédiée à l'affichage des informations générales (volet principal)
-    */
+    - ZoneMenuDialogue qui possède une méthode pour l'affichage de la semaine prochaine, mais qui pourrait avoir d'autres méthodes dédiés qui sont éparpillées dans le reste du code.
+*/
+public abstract class Zone
+{
+
     public int Largeur { get; set; }
     public int Hauteur { get; set; }
     public int[] Position { get; set; }
@@ -161,7 +161,7 @@ public class ZoneDialogue : ZoneTexte
         {
             Contenu += $"1 semaine s'est écoulée depuis le début de votre aventure !";
         }
-        else if (semaine == 1 && annee==1)
+        else if (semaine == 1 && annee == 1)
         {
             Contenu += $"1 an s'est écoulé depuis le début de votre aventure !";
         }
@@ -182,7 +182,7 @@ public class ZoneDialogue : ZoneTexte
                     Contenu += $"{annee} an et ";
                 }
 
-                Contenu += $"{semaine-1} semaines se sont écoulées depuis le début de votre aventure !";
+                Contenu += $"{semaine - 1} semaines se sont écoulées depuis le début de votre aventure !";
             }
         }
         Afficher();
@@ -268,7 +268,7 @@ public class ZoneMenu : ZoneInteractive
     }
     public override void ValiderSelection()
     {
-        if(NoeudActif.Items.Count()!=0)
+        if (NoeudActif.Items.Count() != 0)
             NoeudActif.Items[Curseur].Actionner();
     }
     public override void RetournerEnArriere()
@@ -278,6 +278,7 @@ public class ZoneMenu : ZoneInteractive
         Afficher();
     }
 }
+// nous avions essayé d'intégrer des dessins mais au final nous ne l'avons pas fait
 public class ZoneDessin : Zone
 {
     public string[] Dessin;

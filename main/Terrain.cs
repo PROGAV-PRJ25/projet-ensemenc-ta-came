@@ -1,8 +1,18 @@
+// =======================================================================
+// Classe Terrain
+// -----------------------------------------------------------------------
+// Cette classe abstraite centralise la logique principale des terrains
+// Elle gère :
+//   - Les propriétés d'humidité, d'exposition, de drainage et de fertilité
+//   - Les méthodes pour arroser et afficher l'état du terrain
+//   - Les règles de validation pour chaque propriété
+// =======================================================================
 public abstract class Terrain
 {
     protected int _tauxHumidite;
     protected int _tauxExposition;
-    public int TauxHumidite {
+    public int TauxHumidite
+    {
         get
         {
             return _tauxHumidite;
@@ -15,11 +25,13 @@ public abstract class Terrain
                 _tauxHumidite = 0;
             else
                 _tauxHumidite = value;
-        } }
+        }
+    }
     // taux d'humidité sur 100, fournit la plante en eau
     // pour les fleurs arbres et arbustes, entre 21 et 40%
     // pour les légumes entre 40 et 80% (idéal 60)
-    public int TauxExposition {
+    public int TauxExposition
+    {
         get
         {
             return _tauxExposition;
@@ -32,18 +44,34 @@ public abstract class Terrain
                 _tauxExposition = 0;
             else
                 _tauxExposition = value;
-        } }
+        }
+    }
     public int Drainage { get; set; }
     // indique la quantité d'eau perdue durant une semaine
-    public int Fertilite { get; set; }
+    private int _fertilite;
+    public int Fertilite
+    {
+        get
+        {
+            return _fertilite;
+        }
+        set
+        {
+            if (value > 10)
+                _fertilite = 10;
+            else if (value < 0)
+                _fertilite = 0;
+            else
+                _fertilite = value;
+        }
+    }
     public void Arroser(int quantiteEau)
     {
         TauxHumidite = TauxHumidite + quantiteEau > 100 ? 100 : TauxHumidite + quantiteEau;
     }
     public override string ToString()
     {
-        string reponse = "↓ Etat du sol \n";
-        reponse += $"- Humidité: {TauxHumidite}%\n";
+        string reponse = $"- Humidité: {TauxHumidite}%\n";
         reponse += $"- Exposition: {TauxExposition}%\n";
         reponse += $"- Fertilité: {Fertilite}";
         return reponse;
@@ -60,7 +88,7 @@ public class TerrainArgileux : Terrain
         TauxExposition = 50;
 
     }
-    
+
 }
 
 

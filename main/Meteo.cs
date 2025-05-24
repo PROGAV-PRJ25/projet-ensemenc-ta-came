@@ -1,3 +1,13 @@
+// =======================================================================
+// Classe GestionnaireMeteo et classes associées
+// -----------------------------------------------------------------------
+// Ces classes centralisent la logique de gestion de la météo dans le jeu.
+// Elles gèrent :
+//   - La génération et l'application des conditions météorologiques (Temps, Température)
+//   - L'impact de la météo sur les parcelles et les plantes (humidité, exposition, santé, croissance)
+//   - La récupération des températures historiques selon la ville et la date
+//   - Les différents types de temps (Soleil, Pluie, Nuage, VentAutan) et leurs effets spécifiques
+// =======================================================================
 public class GestionnaireMeteo
 {
     private static Random rng = new Random();
@@ -43,22 +53,16 @@ public class GestionnaireMeteo
     }
     public override string ToString()
     {
-        return $"{TempsActuel.Emoji} { Temperature.RecupererValeur(DateActuelle)}°C" ;
+        return $"{TempsActuel.Emoji} {Temperature.RecupererValeur(DateActuelle)}°C";
     }
 }
 
-public abstract class Temps
+public abstract class Temps : ObjetJeu
 {
-    protected static Random rng = new Random() ; // inutile d'avoir plusieurs objets randoms pour chaque occurence de la classe donc static
-    public string Nom { get; set; }
-    public string Emoji { get; set; }
     public abstract void AppliquerTemps(Parcelle parcelle);
 
-    protected Temps(string nom, string emoji)
-    {
-        Nom = nom;
-        Emoji = emoji;
-    }
+    protected Temps(string nom, string emoji) : base(nom,emoji)
+    {}
 }
 public class Pluie : Temps
 {
@@ -69,17 +73,7 @@ public class Pluie : Temps
     public override void AppliquerTemps(Parcelle parcelle)
     {
         // la pluie rajoute de 10 à 25 % d'humidité au terrain
-        parcelle.Sol.TauxHumidite += 10 + Convert.ToInt32(rng.Next(16));
-        //si besoin eau atteint (à +10% pret), santé +10%
-        if (Math.Abs(parcelle.Sol.TauxHumidite - parcelle.Plant.BesoinEau) <= parcelle.Plant.BesoinEau + 10)
-        {
-            parcelle.Plant.Sante += 10;
-        }
-        // sinon santé -20;
-        else if (parcelle.Sol.TauxHumidite > parcelle.Plant.BesoinEau + 30 || parcelle.Plant.BesoinEau < parcelle.Sol.TauxHumidite)
-        {
-            parcelle.Plant.Sante -= 20;
-        }
+        parcelle.Sol.TauxHumidite += 10 + rng.Next(16);
     }
 }
 
@@ -91,19 +85,8 @@ public class Soleil : Temps
     }
     public override void AppliquerTemps(Parcelle parcelle)
     {
-        //dépend du besoinsoleil de la plante, rajoute +15 à quantité soleil
-        //si dépasse besoin soleil de 5 et quantitéeau qui est en dessous de besoin eau,  ce mois ci, santé-25
-        //sinon, si besoinsoleil atteint (à +_ 5%), santé +5
-        parcelle.Plant.BesoinSoleil += 15;
-        if (parcelle.Plant.BesoinSoleil > parcelle.Plant.BesoinEau + 5 &&
-            parcelle.Plant.QuantiteEau < parcelle.Plant.BesoinEau)
-        {
-            parcelle.Plant.Sante -= 25;
-        }
-        else if (Math.Abs(parcelle.Plant.BesoinSoleil - parcelle.Plant.BesoinEau) <= 5)
-        {
-            parcelle.Plant.Sante += 5;
-        }
+        //rajoute +15 à quantité soleil
+        parcelle.Sol.TauxExposition += 15 + rng.Next(5);
     }
 }
 
@@ -122,35 +105,19 @@ public class VentAutan : Temps
         }
         //accelere la vitessecroissance de +2 (en mois), grandit + rapidement
         parcelle.Plant.VitesseCroissance += 2;
-        
+
     }
 }
 
-public class Gel : Temps
+public class Nuage : Temps
 {
-    public Gel(string nom = "Gel", string emoji = "🥶") : base(nom, emoji) { }
+    public Nuage(string nom = "Nuage", string emoji = "🌥️ ") : base(nom, emoji)
+    {
+    }
     public override void AppliquerTemps(Parcelle parcelle)
     {
-        //si gel et crainfroid true, santé =-20
-        //si fumier ou tente, protège du gel et ne fait rien
-        bool protegeParFumierOuSerre = parcelle.Defense != null &&
-            (parcelle.Defense.Contains("Fumier") || parcelle.Defense.Contains("Serre"));
 
-        if (parcelle.Plant.CraintFroid && !protegeParFumierOuSerre)
-        {
-            parcelle.Plant.Sante -= 20;
-            parcelle.Plant.Etat = "gelé";
-        }
-    }
-}
-
-public class Nuage : Temps {
-    public Nuage(string nom= "Nuage",string  emoji="🌥️ ") : base(nom, emoji) {
-    }
-    public override void AppliquerTemps(Parcelle parcelle) 
-    {
-
-        // nuage ; pas d'ensoleillement et 0 humidité
+        // nuage ; pas d'ensoleillement et 0 humidité, il ne se passe rien
     }
 
 }
@@ -210,7 +177,7 @@ public class Temperature
     }
     public double RecupererValeur(Date date)
     {
-        return Temperatures[date.Annee - 2009][date.Semaine -1];
+        return Temperatures[date.Annee - 2009][date.Semaine - 1];
     }
 
 
