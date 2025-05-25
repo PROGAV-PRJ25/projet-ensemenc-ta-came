@@ -121,6 +121,18 @@ public class Repertoire
             }
         }
     }
+    public void Retirer(Outil outil)
+    {
+        int indice = RecupererIndice(outil);
+        if (indice != -1)
+        {
+            Outils[indice].Quantite -= 1;
+            if (RecupererQuantite(outil) == 0)
+            {
+                Outils.RemoveAt(indice);
+            }
+        }
+    }
 
 }
 public class ItemInventaire

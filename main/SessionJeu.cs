@@ -379,7 +379,12 @@ public class SessionJeu
         int colonne = indiceParcelle % JoueurActuel.Potager.GetLength(0);
         int ligne = indiceParcelle / JoueurActuel.Potager.GetLength(0);
         bool succes = outil.Actionner(JoueurActuel.Potager[colonne, ligne]);
-        EcranJeu.Dialogue.Contenu = succes ? outil.MessageSucces : outil.MessageEchec;
+        if (succes || outil.Consommable)
+        {
+            JoueurActuel.Inventaire.Retirer(outil);
+            ActualiserMenuInventaire();
+        }
+            EcranJeu.Dialogue.Contenu = succes ? outil.MessageSucces : outil.MessageEchec;
         EcranJeu.Dialogue.Contenu += " Retour à l'inventaire.";
         EcranJeu.Dialogue.Afficher();
         if (outil.Nom == "Panier")
