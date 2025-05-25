@@ -45,19 +45,20 @@ public abstract class Outil : ObjetJeuAchatVente
     public string MessageInitial { get; set; }
     public string MessageSucces { get; protected set; }
     public string MessageEchec { get; protected set; }
-    public string Verbe { get; set; }
-    public bool UsageUrgence { get; set; }
+    public string Verbe { get;  protected set; }
+    public bool UsageUrgence { get; protected set; }
+    public bool Consommable { get; protected set; }
     public abstract bool Actionner(Parcelle parcelle);
 
 
-    protected Outil(string nom, string emoji, int decallageAffichage, int prixAchat, string verbe, string messageInitial, string messageSucces, string messageEchec, bool usageUrgence = false) : base(nom, emoji, decallageAffichage, prixAchat)
+    protected Outil(string nom, string emoji, int decallageAffichage, int prixAchat, string verbe, string messageInitial, string messageSucces, string messageEchec, bool consommable=false, bool usageUrgence = false) : base(nom, emoji, decallageAffichage, prixAchat)
     {
-
         Verbe = verbe;
-        UsageUrgence = usageUrgence;
         MessageInitial = messageInitial;
         MessageSucces = messageSucces;
         MessageEchec = messageEchec;
+        Consommable = consommable;
+        UsageUrgence = usageUrgence;
     }
 }
 public class Arrosoir : Outil
@@ -129,7 +130,7 @@ public class Secateur : Outil
 
 public class CD : Outil
 {
-    public CD() : base("CD", "💿", 0, 20, "installer votre CD", "Choisissez une parcelle à protéger avec un CD !", "CD installé, les nuisibles sont repoussés !", "Aucun effet, les nuisibles ne sont pas concernés !"
+    public CD() : base("CD", "💿", 0, 20, "installer votre CD", "Choisissez une parcelle à protéger avec un CD !", "CD installé, les nuisibles sont repoussés !", "Aucun effet, les nuisibles ne sont pas concernés !",true
     )
     { }
     public override bool Actionner(Parcelle parcelle)
@@ -153,7 +154,7 @@ public class CD : Outil
 
 public class Fumier : Outil
 {
-    public Fumier() : base("Fumier", "💩", 0, 30, "mettre du fumier", "Choisissez une parcelle à fertiliser !", "Fumier ajouté, croissance boostée !", "Sol déjà fertilisé ici !"
+    public Fumier() : base("Fumier", "💩", 0, 30, "mettre du fumier", "Choisissez une parcelle à fertiliser !", "Fumier ajouté, croissance boostée !", "Sol déjà fertilisé ici !",true
 )
     {
     }
@@ -168,7 +169,7 @@ public class Fumier : Outil
 
 public class Traitement : Outil
 {
-    public Traitement() : base("Traitement", "🧪", 0, 80, "traiter", "Choisissez une parcelle à traiter !", "Traitement appliqué, nuisible(s) éliminé(s) !", "Aucun nuisible à traiter sur cette parcelle !"
+    public Traitement() : base("Traitement", "🧪", 0, 80, "traiter", "Choisissez une parcelle à traiter !", "Traitement appliqué, nuisible(s) éliminé(s) !", "Aucun nuisible à traiter sur cette parcelle !",true
 )
     {
     }
@@ -195,7 +196,7 @@ public class Traitement : Outil
 
 public class Coccinelle : Outil
 {
-    public Coccinelle() : base("Coccinnelle", "🐞", 0, 70, "déposer vos coccinelles", "Choisissez une parcelle à déposer des coccinelles !", "Coccinelles déposées, les pucerons sont éliminés !", "Aucun puceron à éliminer ici !"
+    public Coccinelle() : base("Coccinnelle", "🐞", 0, 70, "déposer vos coccinelles", "Choisissez une parcelle à déposer des coccinelles !", "Coccinelles déposées, les pucerons sont éliminés !", "Aucun puceron à éliminer ici !",true
 )
     {
     }
@@ -243,7 +244,7 @@ public class Megaphone : Outil
 }
 public class Serre : Outil
 { 
-    public Serre() : base("Serre", "⛺️", 0, 200, "protéger vos récoltes", "Choisissez une parcelle à protéger avec une serre !", "Serre installée, la plante est protégée !", "Impossible d’installer une serre ici !", true
+    public Serre() : base("Serre", "⛺️", 0, 200, "protéger vos récoltes", "Choisissez une parcelle à protéger avec une serre !", "Serre installée, la plante est protégée !", "Impossible d’installer une serre ici !", true,true
 )
     { }
     public override bool Actionner(Parcelle parcelle)
@@ -259,7 +260,7 @@ public class Serre : Outil
 
 public class IrrigationUrgence : Outil
 {
-    public IrrigationUrgence() : base("Irrigation d'urgence", "🚿", 0, 120, "attention", "Choisissez une parcelle à irriguer en urgence !", "Irrigation d'urgence effectuée !", "Vous ne pouvez utiliser cet objet qu'en cas d'urgence !", true
+    public IrrigationUrgence() : base("Irrigation d'urgence", "🚿", 0, 120, "attention", "Choisissez une parcelle à irriguer en urgence !", "Irrigation d'urgence effectuée !", "Vous ne pouvez utiliser cet objet qu'en cas d'urgence !", true,true
 )
     { }
     public override bool Actionner(Parcelle parcelle)
@@ -270,7 +271,7 @@ public class IrrigationUrgence : Outil
 
 public class Paillage : Outil
 {
-    public Paillage() : base("Paillage", "🍂", 25, 0, "attention", "Choisissez une parcelle à pailler !", "Paillage appliqué, la plante est protégée !", "Impossible de pailler ici !"
+    public Paillage() : base("Paillage", "🍂", 25, 0, "attention", "Choisissez une parcelle à pailler !", "Paillage appliqué, la plante est protégée !", "Impossible de pailler ici !",true
 )
     { }
     public override bool Actionner(Parcelle parcelle)

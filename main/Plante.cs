@@ -121,7 +121,7 @@ public abstract class Plante : ObjetJeuAchatVente
             }
             reponse += "\n";
             reponse += $"- Options :";
-            if (Options.Count() == 0) reponse += " aucun\n";
+            if (Options.Count() == 0) reponse += "";
             else
             {
                 for (int i = 0; i < Options.Count(); i++)

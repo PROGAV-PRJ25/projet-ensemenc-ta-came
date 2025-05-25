@@ -14,10 +14,6 @@ public abstract class Nuisible : ObjetJeu
     protected Nuisible(string nom, string emoji) : base(nom, emoji)
     {
     }
-    public override string ToString()
-    {
-        return $"{Emoji} {Nom}";
-    }
     public abstract Nuisible Dupliquer();
 }
 public class Maladie : Nuisible
